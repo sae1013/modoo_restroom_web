@@ -1,0 +1,7 @@
+@baseUrl= https://openapi.naver.com/v1/search/local.json
+@X-Naver-Client-Id=H88KPkGcvJ0c72bnhW8b
+@X-Naver-Client-Secret=UD3dZTWCYw
+### 가게검색
+GET {{baseUrl}}?query=서울특별시 중구 남대문로9길 40&display=5&start=1
+X-Naver-Client-Id: {{X-Naver-Client-Id}}
+X-Naver-Client-Secret: {{X-Naver-Client-Secret}}
