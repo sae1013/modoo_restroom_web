@@ -17,9 +17,14 @@ export default function RootLayout({ children }: Readonly<{
 
     <body>
     {children}
-    <Script src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.clientId}`}
+    <Script src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}`}
             strategy={'beforeInteractive'}></Script>
+    <Script
+      src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}&submodules=geocoder`}
+      strategy={'beforeInteractive'}></Script>
     </body>
     </html>
   );
 }
+
+// <script type="text/javascript" src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=YOUR_CLIENT_ID&submodules=geocoder"></script>
