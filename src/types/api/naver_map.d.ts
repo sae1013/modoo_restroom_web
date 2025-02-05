@@ -10,6 +10,10 @@ export interface ReverseGeocodeResponse {
   v2: {
     results: ReverseGeocodeAddress[]; // 주소 정보 배열
     // 필요에 따라 meta 정보나 추가 필드가 있을 수 있음
+    address: {
+      jibunAddress: string;   // 지번 주소
+      roadAddress: string;    // 도로명 주소
+    };
   };
 }
 
@@ -62,9 +66,6 @@ export interface ReverseGeocodeAddress {
     type?: string; // 지번주소만 사용(지번주소 타입:1)
     name?: string; // 도로명주소만 사용 (ex. 신반포로)
   };
-  address: {
-    jibunAddress: string;   // 지번 주소
-    roadAddress: string;    // 도로명 주소
-  };
+
   name: 'addr' | 'roadaddr';
 }

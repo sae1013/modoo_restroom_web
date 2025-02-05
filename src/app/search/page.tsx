@@ -3,12 +3,13 @@ import React from 'react';
 import NaverMap from '@/components/NaverMap';
 
 const Page = () => {
-  console.log(process.env);
+
+  const onClickMapHandler = (addresses: string[]) => {
+    console.log('addresses', addresses);
+  };
   return (
-    <NaverMap />
+    <NaverMap onClick={onClickMapHandler} />
   );
 };
 
 export default Page;
-
-

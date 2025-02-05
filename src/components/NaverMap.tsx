@@ -4,14 +4,8 @@ import React, { useEffect, useRef } from 'react';
 import {
   ReverseGeocodeResponse, ServiceStatus, ReverseGeocodeAddress,
 } from '@api/naver_map';
+import { makeAddress } from '@/lib/map_utils';
 
-function checkLastString(word: string, lastString: string) {
-  return new RegExp(lastString + '$').test(word);
-}
-
-function hasAddition(addition: { value: string }) {
-  return !!(addition && addition.value);
-}
 
 interface NaverMapProps {
   width?: string | number;
@@ -19,9 +13,17 @@ interface NaverMapProps {
   lat?: number;
   lng?: number;
   zoom?: number;
+  onClick?: (addresses: string[]) => void;
 }
 
-const NaverMap = ({ width = '100%', height = 500, lat = 37.511337, lng = 127.012084, zoom = 15 }: NaverMapProps) => {
+const NaverMap = ({
+                    width = '100%',
+                    height = 500,
+                    lat = 37.511337,
+                    lng = 127.012084,
+                    zoom = 15,
+                    onClick,
+                  }: NaverMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   const initMap = () => {
@@ -47,110 +49,56 @@ const NaverMap = ({ width = '100%', height = 500, lat = 37.511337, lng = 127.012
     map.setCursor('pointer');
   };
 
-  const onClickMapListener = (e: { coord: object }) => {
-    searchCoordinateToAddress(e.coord);
+  const onClickMapListener = async (e: { coord: object }) => {
+    const addresses: string[] = await searchCoordinateToAddress(e.coord);
+    console.log('asd', addresses);
+    if (onClick) {
+      onClick(addresses);
+    }
+
   };
   const initGeocoder = () => {
     window.map.addListener('click', onClickMapListener);
   };
 
-  const makeAddress = (item: ReverseGeocodeAddress) => {
-    if (!item) {
-      return;
-    }
-
-    let name = item.name,
-      region = item.region,
-      land = item.land,
-      isRoadAddress = name === 'roadaddr';
-
-    let sido = '', sigugun = '', dongmyun = '', ri = '', rest = '';
-
-
-    sido = region.area1.name || '';
-
-    sigugun = region.area2.name || '';
-
-    dongmyun = region.area3?.name || '';
-
-    ri = region.area4?.name || '';
-
-    if (land) {
-      if (land.number1) {
-        if (land.type && land.type === '2') {
-          rest += '산';
-        }
-
-        rest += land.number1;
-
-        if (land.number2) {
-          rest += ('-' + land.number2);
-        }
-      }
-
-      if (isRoadAddress) {
-        if (checkLastString(dongmyun, '면')) {
-          ri = land.name || '';
-        } else {
-          dongmyun = land.name || '';
-          ri = '';
-        }
-
-        if (hasAddition(land.addition0)) {
-          rest += ' ' + land.addition0.value;
-        }
-      }
-    }
-
-    return [sido, sigugun, dongmyun, ri, rest].join(' ');
-  };
-  const searchCoordinateToAddress = (latlng: object) => {
+  const searchCoordinateToAddress = async (latlng: object): Promise<string[]> => {
     const { infoWindow, map, naver } = window;
     infoWindow.close();
+    let addresses: string[] = [];
 
-    naver.maps.Service.reverseGeocode({
-      coords: latlng,
-      orders: [
-        naver.maps.Service.OrderType.ADDR,
-        naver.maps.Service.OrderType.ROAD_ADDR,
-      ].join(','),
-    }, function(status: 200 | 500, response: ReverseGeocodeResponse) {
+    return new Promise((resolve, reject) => {
+      naver.maps.Service.reverseGeocode({
+        coords: latlng,
+        orders: [
+          naver.maps.Service.OrderType.ADDR,
+          naver.maps.Service.OrderType.ROAD_ADDR,
+        ].join(','),
+      }, async function(status: 200 | 500, response: ReverseGeocodeResponse) {
 
-      if (status === naver.maps.Service.Status.ERROR) {
-        return alert('Something Wrong!');
-      }
-      const items = response.v2.results;
+        if (status === naver.maps.Service.Status.ERROR) {
+          reject('존재하지 않는 주소');
 
-      let address = '';
-      let htmlAddresses = [];
+        }
+        const items = response.v2.results;
+        // console.log(response.v2.results[0].address.jibunAddress);
+        console.log(response.v2.address);
+        let address = '';
+        let htmlAddresses: string[] = [];
 
-      for (const [index, item] of items.entries()) {
-        address = makeAddress(item) || '';
-        const addrType = item.name === 'roadaddr' ? '[도로명주소]' : '[지번주소]';
-        htmlAddresses.push(`${index + 1}. ${addrType}: ${address}`);
-      }
-      const infoContent = [
-        '<div style="padding:10px;min-width:200px;line-height:150%;">',
-        '<h4 style="margin-top:5px;">검색 좌표</h4><br />',
-        htmlAddresses.join('<br />'),
-        '</div>',
-      ].join('\n');
+        for (const [index, item] of items.entries()) {
+          address = makeAddress(item) || '';
+          addresses.push(address);
 
-      infoWindow.setContent(infoContent);
-      infoWindow.setOptions({
-        maxWidth: 140,
-        backgroundColor: '#eee',
-        borderColor: '#2db400',
-        borderWidth: 1,
-        anchorSize: new naver.maps.Size(10, 10),
-        anchorSkew: true,
-        anchorColor: '#eee',
+          const addrType = item.name === 'roadaddr' ? '[도로명주소]' : '[지번주소]';
+          htmlAddresses.push(`${index + 1}. ${addrType}: ${address}`);
+        }
+        
+        resolve(addresses);
       });
 
-      infoWindow.open(map, latlng);
     });
-
   };
+
   useEffect(() => {
     if (window.naver && window.naver.maps) {
       initMap();
