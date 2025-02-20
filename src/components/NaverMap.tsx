@@ -18,7 +18,7 @@ interface NaverMapProps {
 
 const NaverMap = ({
                     width = '100%',
-                    height = 500,
+                    height = '100vh',
                     lat = 37.511337,
                     lng = 127.012084,
                     zoom = 15,
@@ -50,10 +50,11 @@ const NaverMap = ({
   };
 
   const onClickMapListener = async (e: { coord: object }) => {
-    const addressInfo: object = await searchCoordinateToAddress(e.coord);
-    // console.log('asd', addresses);
+    const selectedAddrInfo: object = await searchCoordinateToAddress(e.coord);
+    const coordInfo = await searchAddressToCoord(selectedAddrInfo);
+    console.log(coordInfo);
     if (onClick) {
-      onClick(addressInfo);
+      onClick({ ...selectedAddrInfo, ...coordInfo });
     }
 
   };
@@ -61,6 +62,20 @@ const NaverMap = ({
     window.map.addListener('click', onClickMapListener);
   };
 
+  const searchAddressToCoord = async (addressInfo) => {
+    const { naver } = window;
+    const { jibunAddress, roadAddress } = addressInfo;
+    return new Promise((resolve, reject) => {
+      naver.maps.Service.geocode({
+        query: roadAddress || jibunAddress,
+      }, (status, response) => {
+        console.log(status, response);
+        resolve({ lat: response.v2.addresses[0].x, lng: response.v2.addresses[0].y });
+      });
+    });
+  };
+
+  // 클릭한 위치좌표를 기반으로 주소 획득
   const searchCoordinateToAddress = async (latlng: object): Promise<object> => {
     const { infoWindow, map, naver } = window;
     infoWindow.close();
@@ -75,34 +90,15 @@ const NaverMap = ({
         ].join(','),
       }, async function(status: 200 | 500, response: ReverseGeocodeResponse) {
 
-        console.log(latlng);
-        // 유저가 클릭했을 때, y,x 정보로 클릭한 지점의 jibun,address 알아내고 이게 등록되어있는지? 살펴본다.
-        // jibun으로 먼저 캐시를 찾아본다. 없으면 새로생성하고 캐시에 저장한다.
-
         if (status === naver.maps.Service.Status.ERROR) {
           reject('존재하지 않는 주소');
-
         }
+        console.log(response.v2);
         const items = response.v2.results;
-
-
         const selectedCoordInfo = {
-          // id: items[0]?.code?.mappingId || items[1]?.code?.mappingId,
           jibunAddress: response.v2.address.jibunAddress || '',
           roadAddress: response.v2.address.jibunAddress || '',
-          // lat: latlng._lat,
-          // lng: latlng._lng,
         };
-
-
-        // for (const [index, item] of items.entries()) {
-        //   address = makeAddress(item) || '';
-        //   addresses.push(address);
-        //
-        //   const addrType = item.name === 'roadaddr' ? '[도로명주소]' : '[지번주소]';
-        //   htmlAddresses.push(`${index + 1}. ${addrType}: ${address}`);
-        // }
-
         resolve(selectedCoordInfo);
       });
 
