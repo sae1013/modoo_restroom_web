@@ -42,7 +42,7 @@ const NaverMap = ({
     window.map = map;
     window.infoWindow = infoWindow;
 
-    new naver.maps.Marker({
+    let marker = new naver.maps.Marker({
       position: new naver.maps.LatLng(lat, lng),
       map,
     });
