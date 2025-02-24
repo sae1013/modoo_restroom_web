@@ -5,7 +5,7 @@ import React from 'react';
 import StyledJsxRegistry from '@/app/registry';
 import axios from 'axios';
 import HeaderLayout from '@/components/HeaderLayout';
-import { UserStoreProvider } from '@/provider/user-store-provider';
+import { RootStoreProvider } from '@/provider/root-store-provider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -25,10 +25,12 @@ export default async function RootLayout({ children }: Readonly<{
     <html lang="en">
     <body>
     <StyledJsxRegistry>
-      <UserStoreProvider data={initUser}>
+      {/*<UserStoreProvider data={initUser}>*/}
+      <RootStoreProvider userData={initUser}>
         <HeaderLayout></HeaderLayout>
         {children}
-      </UserStoreProvider>
+      </RootStoreProvider>
+      {/*</UserStoreProvider>*/}
     </StyledJsxRegistry>
 
     <Script src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}`}
