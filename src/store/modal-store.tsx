@@ -19,18 +19,18 @@ export const createModalStore = () => {
       componentStack: [],
       hashStack: [],
 
-      openModal: (modal, hashName = 'modal') => {
+      openModalState: (modal, hashName = 'modal') => {
         set((state) => {
           return {
             componentStack: [...state.componentStack, modal],
             hashStack: [...state.hashStack, hashName],
           };
         });
-
+        if (typeof window === 'undefined') return;
         Router.push(`${Router.pathname}#${hashName}`, undefined, { shallow: true });
       },
 
-      closeModal: () => {
+      closeModalState: () => {
         const state = get();
         if (state.hashStack.length < 1) return;
         set({
