@@ -1,8 +1,13 @@
 import Router from 'next/router';
+import { ReactNode } from 'react';
 import { createStore } from 'zustand/vanilla';
 
+export interface IModalOption {
+  component: ReactNode;
+}
+
 export type ModalState = {
-  componentStack: any[];
+  modalStack: IModalOption[];
   hashStack: any[];
 };
 
@@ -16,13 +21,13 @@ export type ModalStore = ModalState & ModalActions;
 export const createModalStore = () => {
   return createStore<ModalStore>()((set, get) => {
     return {
-      componentStack: [],
+      modalStack: [],
       hashStack: [],
 
       openModalState: (modal, hashName = 'modal') => {
         set((state) => {
           return {
-            componentStack: [...state.componentStack, modal],
+            modalStack: [...state.modalStack, modal],
             hashStack: [...state.hashStack, hashName],
           };
         });
@@ -34,7 +39,7 @@ export const createModalStore = () => {
         const state = get();
         if (state.hashStack.length < 1) return;
         set({
-          componentStack: [...state.componentStack.slice(0, -1)],
+          modalStack: [...state.modalStack.slice(0, -1)],
           hashStack: [...state.hashStack.slice(0, -1)],
         });
         const curHashStack = state.hashStack;

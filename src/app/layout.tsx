@@ -6,7 +6,7 @@ import StyledJsxRegistry from '@/app/registry';
 import axios from 'axios';
 import HeaderLayout from '@/components/HeaderLayout';
 import { RootStoreProvider } from '@/provider/root-store-provider';
-import Modal from '@/components/common/Modal';
+import Modal from '@/components/modal/Modal';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -29,6 +29,7 @@ export default async function RootLayout({
       <body>
         <StyledJsxRegistry>
           <RootStoreProvider userData={initUser}>
+            <div id="modal-root"></div>
             <Modal></Modal>
             <HeaderLayout></HeaderLayout>
             {children}

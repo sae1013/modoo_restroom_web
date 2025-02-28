@@ -1,10 +1,5 @@
 import axios from 'axios';
 
-export default async function SearchLayout({ children }) {
-
-  return (
-    <div>
-      {children}
-    </div>
-  );
+export default async function Layout({ children }) {
+  return <div>{children}</div>;
 }
