@@ -6,7 +6,7 @@ import StyledJsxRegistry from '@/app/registry';
 import axios from 'axios';
 import HeaderLayout from '@/components/HeaderLayout';
 import { RootStoreProvider } from '@/provider/root-store-provider';
-import Modal from '@/components/modal/Modal';
+import Modal from '@/components/common/Modal';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -14,8 +14,8 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({
-  children,
-}: Readonly<{
+                                           children,
+                                         }: Readonly<{
   children: React.ReactNode;
 }>) {
   const res = await axios.get('http://jsonplaceholder.typicode.com/posts/');
@@ -26,19 +26,22 @@ export default async function RootLayout({
   };
   return (
     <html lang="en">
-      <body>
-        <StyledJsxRegistry>
-          <RootStoreProvider userData={initUser}>
-            <div id="modal-root"></div>
-            <Modal></Modal>
-            <HeaderLayout></HeaderLayout>
-            {children}
-          </RootStoreProvider>
-        </StyledJsxRegistry>
+    <body>
+    <StyledJsxRegistry>
+      <RootStoreProvider userData={initUser}>
+        <div id="modal-root"></div>
+        <Modal></Modal>
+        <HeaderLayout></HeaderLayout>
+        {children}
+      </RootStoreProvider>
+    </StyledJsxRegistry>
 
-        <Script src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}`} strategy={'beforeInteractive'}></Script>
-        <Script src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}&submodules=geocoder`} strategy={'beforeInteractive'}></Script>
-      </body>
+    <Script src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}`}
+            strategy={'beforeInteractive'}></Script>
+    <Script
+      src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}&submodules=geocoder`}
+      strategy={'beforeInteractive'}></Script>
+    </body>
     </html>
   );
 }

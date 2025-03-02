@@ -3,8 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import NaverMap from '@/components/NaverMap';
 import BottomSheet from '@/components/bottomsheet/BottomSheet';
-import Board from '@/app/search/Board';
-import axios from 'axios';
 
 interface SearchPageProps {
   data: any;

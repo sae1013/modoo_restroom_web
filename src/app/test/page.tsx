@@ -1,17 +1,29 @@
 'use client';
-
-import { useModalStore } from '@/provider/root-store-provider';
+import useModal from '@/hooks/useModal';
+import BottomSheet from '@/components/bottomsheet/BottomSheet';
 
 const TestPage = () => {
-  const { openModal } = useModalStore((state) => state);
+  const [openModal, closeModal] = useModal();
   return (
     <div>
       <button
         onClick={() => {
-          openModal(<div>hello world</div>, 'modaltest');
+          openModal({
+            component: BottomSheet,
+            props: {
+              name: 'jmw93',
+            },
+            key: 'bottomsheet',
+          });
         }}
       >
         클릭
+      </button>
+      <button onClick={
+        () => {
+          closeModal('bottomsheet');
+        }
+      }>닫기
       </button>
     </div>
   );

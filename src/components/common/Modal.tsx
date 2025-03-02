@@ -6,24 +6,26 @@ const Modal = () => {
   const { modalStack } = useModalStore((state) => state);
 
   return (
-    <AnimatePresence onExitComplete={() => {
-      console.log('모달이 닫혔습니다');
-    }}>
-      <div
-        id="root-modal"
-        style={{
-          position: 'fixed',
-          zIndex: 999,
-          width: '100wh',
-          height: '100vh',
-        }}
-      >
+
+    <div
+      id="root-modal"
+      style={{
+        position: 'fixed',
+        zIndex: 999,
+        width: '100wh',
+        height: '100vh',
+      }}
+    >
+      <AnimatePresence onExitComplete={() => {
+        console.log('모달이 닫혔습니다');
+      }}>
         {modalStack.map((modalOption) => {
-          const { component: Component, props } = modalOption;
-          return <Component {...props}></Component>;
+          const { component: Component, props, key } = modalOption;
+          return <Component key={key}{...props}></Component>;
         })}
-      </div>
-    </AnimatePresence>
+      </AnimatePresence>
+    </div>
+
   );
 };
 

@@ -8,7 +8,7 @@ const Header = (props: { data: any }) => {
   useEffect(() => {
     console.log(user);
   });
-  return <div>헤더ㅗ영역 {user?.email} </div>;
+  return <div>{user?.email} </div>;
 
 
 };

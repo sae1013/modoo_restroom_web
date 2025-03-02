@@ -11,11 +11,13 @@ const Wrapper = styled(motion.div)`
     z-index: 9999;
     left: 0;
     right: 0;
+    bottom: 0;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     background-color: #fff;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
     overflow: hidden;
+
 `;
 
 const ContentWrapper = styled.div`
@@ -35,18 +37,17 @@ const BottomSheet = ({ children, onCloseCallback }: BottomSheetProps) => {
   useLayoutEffect(() => {
     // 콘텐츠 컨테이너의 높이를 측정하여 targetHeight에 저장
     if (contentRef.current) {
+      console.log('cliHeight', wrapperRef.current.clientHeight);
       const contentHeight = contentRef.current.clientHeight;
       setTargetHeight(contentHeight);
     }
   }, []);
 
   return (
-
-
     <Wrapper
       ref={wrapperRef}
-      animate={{ y: -targetHeight - 48 - 50 }}
-      exit={{ y: 0 }}
+      animate={{ y: -400 }}
+      // exit={{ y: -500 }}
       transition={{ type: 'spring', stiffness: 250, damping: 30 }}
 
     >
