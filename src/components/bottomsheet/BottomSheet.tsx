@@ -5,76 +5,78 @@ import BottomSheetHeader from './BsHeader';
 import BsFooter from './BsFooter';
 
 const Wrapper = styled(motion.div)`
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
-    overflow: hidden;
-
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  right: 0;
+  //bottom: 0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
 `;
 
-const ContentWrapper = styled.div`
-`;
+const ContentWrapper = styled.div``;
 
 interface BottomSheetProps {
   children?: React.ReactNode;
   onCloseCallback: () => void;
 }
 
+// 애니메이션을 자연스럽게 하기위한 조정값
+const SMOOTH_BOTTOM_OFFSET = 30;
+
 const BottomSheet = ({ children, onCloseCallback }: BottomSheetProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [targetHeight, setTargetHeight] = useState(0);
+  const [wrapperHeight, setWrapperHeight] = useState(0);
   const [isOpen, setIsOpen] = useState(true);
 
   useLayoutEffect(() => {
     // 콘텐츠 컨테이너의 높이를 측정하여 targetHeight에 저장
-    if (contentRef.current) {
-      console.log('cliHeight', wrapperRef.current.clientHeight);
-      const contentHeight = contentRef.current.clientHeight;
-      setTargetHeight(contentHeight);
+    if (wrapperRef.current) {
+      setWrapperHeight(wrapperRef.current.clientHeight);
     }
   }, []);
 
   return (
     <Wrapper
       ref={wrapperRef}
-      animate={{ y: -400 }}
-      // exit={{ y: -500 }}
+      initial={{ y: window.innerHeight }}
+      animate={{ y: window.innerHeight - wrapperHeight }}
+      exit={{ y: window.innerHeight + SMOOTH_BOTTOM_OFFSET }}
       transition={{ type: 'spring', stiffness: 250, damping: 30 }}
-
     >
-      <BottomSheetHeader onClose={() => {
-        setIsOpen(false);
-      }} />
+      <BottomSheetHeader
+        onClose={() => {
+          setIsOpen(false);
+        }}
+      />
       <ContentWrapper ref={contentRef}>
-        <div>
-          {children}
-        </div>
+        <div>{children}</div>
       </ContentWrapper>
       <BsFooter>
-        <button style={{
-          position: 'relative',
-          bottom: 0,
-          width: '100%',
-          height: '50px',
-          outline: 'none',
-          border: 'none',
-          fontSize: '1rem',
-          background: '#8FCACA',
-          cursor: 'pointer',
-          // background: '#55CBCD',
-          // background: '#A2E1DB',
-          borderRadius: '10px',
-          color: 'white',
-        }}>등록하기
+        <button
+          style={{
+            position: 'relative',
+            bottom: 0,
+            width: '100%',
+            height: '50px',
+            outline: 'none',
+            border: 'none',
+            fontSize: '1rem',
+            background: '#8FCACA',
+            cursor: 'pointer',
+            // background: '#55CBCD',
+            // background: '#A2E1DB',
+            borderRadius: '10px',
+            color: 'white',
+          }}
+        >
+          등록하기
         </button>
       </BsFooter>
     </Wrapper>

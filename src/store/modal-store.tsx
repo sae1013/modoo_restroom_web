@@ -30,7 +30,6 @@ export const createModalStore = () => {
             modalStack: [...state.modalStack, option],
           };
         });
-
       },
 
       closeModal: (key: string) => {
@@ -41,7 +40,7 @@ export const createModalStore = () => {
             };
           }
           // 해당 key값에 맞는 모달을 pop
-          const newModalStack = state.modalStack.filter(x => x.key !== key);
+          const newModalStack = state.modalStack.filter((x) => x.key !== key);
           return {
             modalStack: newModalStack,
           };

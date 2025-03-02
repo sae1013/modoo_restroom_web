@@ -3,7 +3,7 @@ import useModal from '@/hooks/useModal';
 import BottomSheet from '@/components/bottomsheet/BottomSheet';
 
 const TestPage = () => {
-  const [openModal, closeModal] = useModal();
+  const { openModal, closeModal } = useModal();
   return (
     <div>
       <button
@@ -19,11 +19,12 @@ const TestPage = () => {
       >
         클릭
       </button>
-      <button onClick={
-        () => {
+      <button
+        onClick={() => {
           closeModal('bottomsheet');
-        }
-      }>닫기
+        }}
+      >
+        닫기
       </button>
     </div>
   );
