@@ -1,11 +1,11 @@
 import { css } from '../../../styled-system/css';
 
-interface BsFooterProps {
+interface BsContentsProps {
   children?: React.ReactNode;
 }
 
-const BsFooter = ({ children }: BsFooterProps) => {
+const BsContents = ({ children }: BsContentsProps) => {
   return <div className={css({})}>{children}</div>;
 };
 
-export default BsFooter;
+export default BsContents;

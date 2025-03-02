@@ -1,6 +1,7 @@
 'use client';
 import { useModalStore } from '@/provider/root-store-provider';
 import { AnimatePresence } from 'framer-motion';
+import React from 'react';
 
 const Modal = () => {
   const { modalStack } = useModalStore((state) => state);
@@ -21,7 +22,17 @@ const Modal = () => {
         }}
       >
         {modalStack.map((modalOption) => {
-          const { component: Component, props, key } = modalOption;
+          const { component, props, key } = modalOption;
+          const isFunctionComponent = typeof component === 'function';
+
+          if (!isFunctionComponent) {
+            if (React.isValidElement(component)) {
+              return React.cloneElement(component, props);
+            }
+            return null;
+          }
+
+          const Component = component;
           return <Component key={key} {...props}></Component>;
         })}
       </AnimatePresence>

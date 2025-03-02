@@ -4,29 +4,26 @@ import React, { useEffect, useState } from 'react';
 import NaverMap from '@/components/NaverMap';
 import BottomSheet from '@/components/bottomsheet/BottomSheet';
 import useModal from '@/hooks/useModal';
+import EmptyBottomSheet from '@/components/search/EmptyBottomSheet';
 
 interface SearchPageProps {
   data: any;
 }
 
 const SearchPage = ({ data }: SearchPageProps) => {
-  // const [open, setOpen] = React.useState(false);
   const { openModal, closeModal } = useModal();
   const [restrooms, setRestrooms] = useState(data);
   const [newRestroom, setNewRestroom] = useState({});
   console.log(data);
-  // const onCloseCallback = () => {
-  //   setOpen(false);
-  // };
 
   const onClickMapHandler = (addrAndGeoInfo: object) => {
-    // console.log('addrAndGeoInfo', addrAndGeoInfo);
     const selectedRestroom = restrooms.find((x) => x.lat.toString() === addrAndGeoInfo.lat && x.lng.toString() === addrAndGeoInfo.lng);
-    // console.log(selectedRestroom);
+
     if (selectedRestroom) return;
+
     setNewRestroom(addrAndGeoInfo);
     openModal({
-      component: BottomSheet,
+      component: EmptyBottomSheet,
       props: {
         title: '제목1',
       },

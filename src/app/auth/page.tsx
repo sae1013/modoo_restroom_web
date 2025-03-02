@@ -1,5 +1,4 @@
 'use client';
-
 import { css } from '../../../styled-system/css';
 
 const Page = () => {
