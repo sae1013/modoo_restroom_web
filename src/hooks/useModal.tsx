@@ -1,17 +1,17 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useModalStore } from '@/provider/root-store-provider';
+import { ModalOption } from '@/store/modal-store';
 
 const useModal = () => {
-  const router = useRouter();
-  const { openModalState } = useModalStore((state) => state);
+  const modalStore = useModalStore(state => state);
 
-  const openModal = () => {
-    openModalState();
-    // 라우터 이동
-    // router.push()
+  const openModal = (option: ModalOption) => {
+    modalStore.openModal(option);
   };
-  const closeModal = () => {};
+
+  const closeModal = () => {
+    modalStore.closeModal();
+  };
   return [openModal, closeModal];
 };
+
+export default useModal;
