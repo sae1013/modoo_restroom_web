@@ -1,8 +1,9 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import BottomSheetHeader from './BsHeader';
 import BsFooter from './BsFooter';
+import useModal from '@/hooks/useModal';
 
 const Wrapper = styled(motion.div)`
   display: flex;
@@ -11,7 +12,7 @@ const Wrapper = styled(motion.div)`
   z-index: 9999;
   left: 0;
   right: 0;
-  //bottom: 0;
+
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   background-color: #fff;
@@ -33,7 +34,7 @@ const BottomSheet = ({ children, onCloseCallback }: BottomSheetProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [wrapperHeight, setWrapperHeight] = useState(0);
-  const [isOpen, setIsOpen] = useState(true);
+  const { closeModal } = useModal();
 
   useLayoutEffect(() => {
     // 콘텐츠 컨테이너의 높이를 측정하여 targetHeight에 저장
@@ -52,7 +53,7 @@ const BottomSheet = ({ children, onCloseCallback }: BottomSheetProps) => {
     >
       <BottomSheetHeader
         onClose={() => {
-          setIsOpen(false);
+          closeModal('bottomsheet1');
         }}
       />
       <ContentWrapper ref={contentRef}>

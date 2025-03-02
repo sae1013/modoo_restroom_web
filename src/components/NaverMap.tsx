@@ -1,11 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import {
-  ReverseGeocodeResponse, ServiceStatus, ReverseGeocodeAddress,
-} from '@api/naver_map';
+import { ReverseGeocodeResponse, ServiceStatus, ReverseGeocodeAddress } from '@api/naver_map';
 import { makeAddress } from '@/lib/map_utils';
-
 
 interface NaverMapProps {
   width?: string | number;
@@ -16,14 +13,7 @@ interface NaverMapProps {
   onClick?: (addresses: string[]) => void;
 }
 
-const NaverMap = ({
-                    width = '100%',
-                    height = '100vh',
-                    lat = 37.511337,
-                    lng = 127.012084,
-                    zoom = 15,
-                    onClick,
-                  }: NaverMapProps) => {
+const NaverMap = ({ width = '100%', height = '100vh', lat = 37.511337, lng = 127.012084, zoom = 15, onClick }: NaverMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   const initMap = () => {
@@ -32,7 +22,9 @@ const NaverMap = ({
       return;
     }
     const map = new naver.maps.Map(mapRef.current, {
-      center: new naver.maps.LatLng(lat, lng), zoom, mapTypeControl: true,
+      center: new naver.maps.LatLng(lat, lng),
+      zoom,
+      mapTypeControl: false,
     });
 
     let infoWindow = new naver.maps.InfoWindow({
@@ -56,7 +48,6 @@ const NaverMap = ({
     if (onClick) {
       onClick({ ...selectedAddrInfo, ...coordInfo });
     }
-
   };
   const initGeocoder = () => {
     window.map.addListener('click', onClickMapListener);
@@ -66,12 +57,15 @@ const NaverMap = ({
     const { naver } = window;
     const { jibunAddress, roadAddress } = addressInfo;
     return new Promise((resolve, reject) => {
-      naver.maps.Service.geocode({
-        query: roadAddress || jibunAddress,
-      }, (status, response) => {
-        console.log(status, response);
-        resolve({ lat: response.v2.addresses[0].x, lng: response.v2.addresses[0].y });
-      });
+      naver.maps.Service.geocode(
+        {
+          query: roadAddress || jibunAddress,
+        },
+        (status, response) => {
+          console.log(status, response);
+          resolve({ lat: response.v2.addresses[0].x, lng: response.v2.addresses[0].y });
+        },
+      );
     });
   };
 
@@ -82,26 +76,24 @@ const NaverMap = ({
     let addresses: string[] = [];
 
     return new Promise((resolve, reject) => {
-      naver.maps.Service.reverseGeocode({
-        coords: latlng,
-        orders: [
-          naver.maps.Service.OrderType.ADDR,
-          naver.maps.Service.OrderType.ROAD_ADDR,
-        ].join(','),
-      }, async function(status: 200 | 500, response: ReverseGeocodeResponse) {
-
-        if (status === naver.maps.Service.Status.ERROR) {
-          reject('존재하지 않는 주소');
-        }
-        console.log(response.v2);
-        const items = response.v2.results;
-        const selectedCoordInfo = {
-          jibunAddress: response.v2.address.jibunAddress || '',
-          roadAddress: response.v2.address.jibunAddress || '',
-        };
-        resolve(selectedCoordInfo);
-      });
-
+      naver.maps.Service.reverseGeocode(
+        {
+          coords: latlng,
+          orders: [naver.maps.Service.OrderType.ADDR, naver.maps.Service.OrderType.ROAD_ADDR].join(','),
+        },
+        async function (status: 200 | 500, response: ReverseGeocodeResponse) {
+          if (status === naver.maps.Service.Status.ERROR) {
+            reject('존재하지 않는 주소');
+          }
+          console.log(response.v2);
+          const items = response.v2.results;
+          const selectedCoordInfo = {
+            jibunAddress: response.v2.address.jibunAddress || '',
+            roadAddress: response.v2.address.jibunAddress || '',
+          };
+          resolve(selectedCoordInfo);
+        },
+      );
     });
   };
 
@@ -109,7 +101,6 @@ const NaverMap = ({
     if (window.naver && window.naver.maps) {
       initMap();
       initGeocoder();
-
     } else {
       window.addEventListener('load', initMap);
       return () => {
@@ -117,7 +108,6 @@ const NaverMap = ({
         window.map.removeListener('click');
       };
     }
-
   }, []);
 
   return (
