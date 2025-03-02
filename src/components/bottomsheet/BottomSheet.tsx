@@ -41,46 +41,42 @@ const BottomSheet = ({ children, onCloseCallback }: BottomSheetProps) => {
   }, []);
 
   return (
-    <AnimatePresence onExitComplete={() => {
-      onCloseCallback();
-    }}>
-      {isOpen &&
-        <Wrapper
-          ref={wrapperRef}
-          animate={{ y: -targetHeight - 48 - 50 }}
-          exit={{ y: 0 }}
-          transition={{ type: 'spring', stiffness: 250, damping: 30 }}
 
-        >
-          <BottomSheetHeader onClose={() => {
-            setIsOpen(false);
-          }} />
-          <ContentWrapper ref={contentRef}>
-            <div>
-              {children}
-            </div>
-          </ContentWrapper>
-          <BsFooter>
-            <button style={{
-              position: 'relative',
-              bottom: 0,
-              width: '100%',
-              height: '50px',
-              outline: 'none',
-              border: 'none',
-              fontSize: '1rem',
-              background: '#8FCACA',
-              cursor: 'pointer',
-              // background: '#55CBCD',
-              // background: '#A2E1DB',
-              borderRadius: '10px',
-              color: 'white',
-            }}>등록하기
-            </button>
-          </BsFooter>
-        </Wrapper>}
 
-    </AnimatePresence>
+    <Wrapper
+      ref={wrapperRef}
+      animate={{ y: -targetHeight - 48 - 50 }}
+      exit={{ y: 0 }}
+      transition={{ type: 'spring', stiffness: 250, damping: 30 }}
+
+    >
+      <BottomSheetHeader onClose={() => {
+        setIsOpen(false);
+      }} />
+      <ContentWrapper ref={contentRef}>
+        <div>
+          {children}
+        </div>
+      </ContentWrapper>
+      <BsFooter>
+        <button style={{
+          position: 'relative',
+          bottom: 0,
+          width: '100%',
+          height: '50px',
+          outline: 'none',
+          border: 'none',
+          fontSize: '1rem',
+          background: '#8FCACA',
+          cursor: 'pointer',
+          // background: '#55CBCD',
+          // background: '#A2E1DB',
+          borderRadius: '10px',
+          color: 'white',
+        }}>등록하기
+        </button>
+      </BsFooter>
+    </Wrapper>
   );
 };
 

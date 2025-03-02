@@ -1,9 +1,9 @@
 import Router from 'next/router';
 import { createStore } from 'zustand/vanilla';
+import { ComponentType } from 'react';
 
 export type ModalState = {
-  componentStack: any[];
-  hashStack: any[];
+  modalStack: ModalOption[];
 };
 
 export type ModalActions = {
@@ -13,36 +13,39 @@ export type ModalActions = {
 
 export type ModalStore = ModalState & ModalActions;
 
+export interface ModalOption {
+  component: ComponentType<any>;
+  props: any;
+  key: string;
+}
+
 export const createModalStore = () => {
   return createStore<ModalStore>()((set, get) => {
     return {
-      componentStack: [],
-      hashStack: [],
+      modalStack: [],
 
-      openModalState: (modal, hashName = 'modal') => {
-        set((state) => {
+      openModal: (option: ModalOption) => {
+        set((state: ModalState) => {
           return {
-            componentStack: [...state.componentStack, modal],
-            hashStack: [...state.hashStack, hashName],
+            modalStack: [...state.modalStack, option],
           };
         });
-        if (typeof window === 'undefined') return;
-        Router.push(`${Router.pathname}#${hashName}`, undefined, { shallow: true });
+
       },
 
-      closeModalState: () => {
-        const state = get();
-        if (state.hashStack.length < 1) return;
-        set({
-          componentStack: [...state.componentStack.slice(0, -1)],
-          hashStack: [...state.hashStack.slice(0, -1)],
+      closeModal: (key: string) => {
+        set((state) => {
+          if (!key) {
+            return {
+              modalStack: state.modalStack.slice(0, -1),
+            };
+          }
+          // 해당 key값에 맞는 모달을 pop
+          const newModalStack = state.modalStack.filter(x => x.key !== key);
+          return {
+            modalStack: newModalStack,
+          };
         });
-        const curHashStack = state.hashStack;
-        // 맨 마지막 팝업일 때
-        if (curHashStack.length < 2) {
-          Router.push(`${Router.pathname}`, undefined, { shallow: true });
-        }
-        Router.push(`${Router.pathname}#${curHashStack[curHashStack.length - 2]}`);
       },
     };
   });

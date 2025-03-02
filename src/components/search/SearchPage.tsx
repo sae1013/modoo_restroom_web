@@ -47,7 +47,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   return (
     <>
-      <div>heheheh</div>
       <NaverMap onClick={onClickMapHandler} />
       {open && <BottomSheet onCloseCallback={onCloseCallback}>
         <div>
@@ -55,7 +54,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
           <p>주소: <span>{newRestroom?.jibunAddress}</span></p>
 
           <p>화장실 정보를 공유해주세요</p>
-          <Board></Board>
+          {/*<Board></Board>*/}
         </div>
 
       </BottomSheet>}
