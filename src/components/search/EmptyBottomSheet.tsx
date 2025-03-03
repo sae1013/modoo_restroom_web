@@ -1,9 +1,10 @@
+import { css } from '../../../styled-system/css';
 import BottomSheet from '@/components/bottomsheet/BottomSheet';
 import useModal from '@/hooks/useModal';
 import BsHeader from '@/components/bottomsheet/BsHeader';
 import BsContents from '@/components/bottomsheet/BsContents';
 import BsFooter from '@/components/bottomsheet/BsFooter';
-import { css } from '../../../styled-system/css';
+import Image from 'next/image';
 
 const EmptyBottomSheet = () => {
   const { closeModal } = useModal();
@@ -24,22 +25,40 @@ const EmptyBottomSheet = () => {
         <div
           className={css({
             width: '100%',
-            height: '250px',
+            marginBottom: '1rem',
           })}
         >
-          이미지
+          <Image
+            src="/images/pee.png"
+            alt="호민"
+            width={160}
+            height={300}
+            className={css({
+              margin: 'auto',
+            })}
+          />
         </div>
-        <h1
-          className={css({
-            color: 'purple',
-            fontWeight: 800,
-          })}
-        >
-          끄응...
-        </h1>
+
         <div>
-          <p>아직 해당 장소에는 화장실 정보가 없어요</p>
-          <p>다른 급한 이들을 위해 소중한 정보를 공유해주세요</p>
+          <p
+            className={css({
+              fontWeight: 800,
+              textAlign: 'center',
+              color: 'rgb(0, 0,0,0.8)',
+              marginBottom: '1rem',
+            })}
+          >
+            아직 해당 장소에는 화장실 정보가 없어요
+          </p>
+          <p
+            className={css({
+              fontWeight: 800,
+              textAlign: 'center',
+              color: 'rgb(0, 0,0,0.8)',
+            })}
+          >
+            다른 급한 이들을 위해 소중한 정보를 공유해주세요
+          </p>
         </div>
       </BsContents>
 

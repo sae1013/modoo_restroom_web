@@ -13,7 +13,7 @@ const Wrapper = styled(motion.div)`
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   background-color: #fff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.6);
   overflow: hidden;
 `;
 

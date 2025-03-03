@@ -6,7 +6,7 @@ interface BsFooterProps {
 
 const Wrapper = styled('div', {
   base: {
-    paddingBottom: '.5rem',
+    paddingBottom: '.3rem',
   },
 });
 
