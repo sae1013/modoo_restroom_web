@@ -27,7 +27,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
       props: {
         title: '제목1',
       },
-      key: 'bottomsheet1',
+      key: 'unregistered',
     });
   };
 
@@ -39,9 +39,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
       });
       window.naver.maps.Event.addListener(marker, 'click', () => {
         console.log('marker', marker);
-        // 바텀시트를 모달 처럼 띄우기.
-        // 클릭한 장소에대한 모달을 띄우기.
-        // 싱글톤으로 하나의 모달만 띄우고, 이미 떠있는 경우는 닫고 띄우기
       });
     });
   }, [data]);
@@ -49,16 +46,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
   return (
     <>
       <NaverMap onClick={onClickMapHandler} />
-      {/*{open && <BottomSheet onCloseCallback={onCloseCallback}>*/}
-      {/*  <div>*/}
-      {/*    <p>아직 등록된 적이 없는 장소예요!</p>*/}
-      {/*    <p>주소: <span>{newRestroom?.jibunAddress}</span></p>*/}
-
-      {/*    <p>화장실 정보를 공유해주세요</p>*/}
-      {/*    /!*<Board></Board>*!/*/}
-      {/*  </div>*/}
-
-      {/*</BottomSheet>}*/}
     </>
   );
 };

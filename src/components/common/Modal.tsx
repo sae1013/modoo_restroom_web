@@ -2,6 +2,7 @@
 import { useModalStore } from '@/provider/root-store-provider';
 import { AnimatePresence } from 'framer-motion';
 import React from 'react';
+import { css } from '@styled-system/css';
 
 const Modal = () => {
   const { modalStack } = useModalStore((state) => state);
@@ -12,10 +13,21 @@ const Modal = () => {
       style={{
         position: 'fixed',
         zIndex: 999,
-        width: '100wh',
         height: '100vh',
       }}
     >
+      {modalStack.length > 0 && (
+        <div
+          className={css({
+            position: 'fixed',
+            width: '100%',
+            height: '100vh',
+            zIndex: 99,
+            backgroundColor: 'rgba(0,0,0,0.3)',
+          })}
+        ></div>
+      )}
+
       <AnimatePresence
         onExitComplete={() => {
           console.log('모달이 닫혔습니다');

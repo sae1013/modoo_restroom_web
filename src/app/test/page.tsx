@@ -1,33 +1,48 @@
 'use client';
-import useModal from '@/hooks/useModal';
-import BottomSheet from '@/components/bottomsheet/BottomSheet';
+import { css } from '@styled-system/css';
 
-const TestPage = () => {
-  const { openModal, closeModal } = useModal();
+const Page = () => {
   return (
     <div>
       <button
+        className={css({
+          fontSize: 40,
+          color: 'red',
+          backgroundColor: 'blue',
+          _hover: {
+            color: 'white',
+          },
+        })}
         onClick={() => {
-          openModal({
-            component: BottomSheet,
-            props: {
-              name: 'jmw93',
+          fetch('http://localhost:8000/auth/login', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
             },
-            key: 'bottomsheet',
+            body: JSON.stringify({
+              email: 'test1234@gmail.com',
+              password: '2342343',
+            }),
           });
         }}
       >
-        클릭
+        로그인
       </button>
       <button
         onClick={() => {
-          closeModal('bottomsheet');
+          fetch('http://localhost:8000/private', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
         }}
       >
-        닫기
+        API호출
       </button>
     </div>
   );
 };
-
-export default TestPage;
+export default Page;

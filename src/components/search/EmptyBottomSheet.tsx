@@ -1,13 +1,13 @@
-import { css } from '../../../styled-system/css';
+import { css } from '@styled-system/css';
 import BottomSheet from '@/components/bottomsheet/BottomSheet';
 import useModal from '@/hooks/useModal';
 import BsHeader from '@/components/bottomsheet/BsHeader';
 import BsContents from '@/components/bottomsheet/BsContents';
 import BsFooter from '@/components/bottomsheet/BsFooter';
-import Image from 'next/image';
+import RegisterBottomSheet from './RegisterBottomSheet';
 
 const EmptyBottomSheet = () => {
-  const { closeModal } = useModal();
+  const { closeModal, openModal } = useModal();
 
   return (
     <BottomSheet
@@ -17,26 +17,28 @@ const EmptyBottomSheet = () => {
     >
       <BsHeader
         onClose={() => {
-          closeModal('bottomsheet1');
+          closeModal('unregistered');
         }}
       ></BsHeader>
 
       <BsContents>
         <div
           className={css({
-            width: '100%',
-            marginBottom: '1rem',
+            width: '50%',
+            margin: 'auto',
           })}
         >
-          <Image
-            src="/images/pee.png"
-            alt="호민"
-            width={160}
-            height={300}
+          <div
             className={css({
-              margin: 'auto',
+              width: '100%',
+              paddingBottom: '133.33%',
+              marginBottom: '1rem',
+              backgroundImage: `url('/images/pee.png')`,
+              backgroundSize: 'cover', // 이미지 크기를 컨테이너에 맞춤
+              backgroundPosition: 'center', // 중앙 정렬
+              backgroundRepeat: 'no-repeat', // 반복 방지
             })}
-          />
+          ></div>
         </div>
 
         <div>
@@ -76,6 +78,16 @@ const EmptyBottomSheet = () => {
             background: '#55CBCD',
             borderRadius: '10px',
             color: 'white',
+          }}
+          onClick={() => {
+            closeModal('unregistered');
+            setTimeout(() => {
+              openModal({
+                component: RegisterBottomSheet,
+                props: {},
+                key: 'register',
+              });
+            }, 500);
           }}
         >
           리뷰남기기
