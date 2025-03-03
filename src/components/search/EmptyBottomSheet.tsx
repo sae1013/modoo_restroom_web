@@ -9,17 +9,38 @@ const EmptyBottomSheet = () => {
   const { closeModal } = useModal();
 
   return (
-    <BottomSheet onCloseCallback={() => {
-      console.log('closeCallback');
-    }}>
-
-      <BsHeader onClose={() => {
-        closeModal('bottomsheet1');
-      }}>
-      </BsHeader>
+    <BottomSheet
+      onCloseCallback={() => {
+        console.log('closeCallback');
+      }}
+    >
+      <BsHeader
+        onClose={() => {
+          closeModal('bottomsheet1');
+        }}
+      ></BsHeader>
 
       <BsContents>
-        <div>Contents 내용입니다.</div>
+        <div
+          className={css({
+            width: '100%',
+            height: '250px',
+          })}
+        >
+          이미지
+        </div>
+        <h1
+          className={css({
+            color: 'purple',
+            fontWeight: 800,
+          })}
+        >
+          끄응...
+        </h1>
+        <div>
+          <p>아직 해당 장소에는 화장실 정보가 없어요</p>
+          <p>다른 급한 이들을 위해 소중한 정보를 공유해주세요</p>
+        </div>
       </BsContents>
 
       <BsFooter>
@@ -38,10 +59,9 @@ const EmptyBottomSheet = () => {
             color: 'white',
           }}
         >
-          등록하기
+          리뷰남기기
         </button>
       </BsFooter>
-
     </BottomSheet>
   );
 };

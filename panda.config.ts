@@ -6,7 +6,6 @@ export default defineConfig({
 
   // Where to look for your css declarations
   include: ['./src/**/*.{js,jsx,ts,tsx}'],
-
   // Files to exclude
   exclude: [],
 
@@ -14,7 +13,14 @@ export default defineConfig({
   theme: {
     extend: {},
   },
+  syntax: 'object-literal',
   jsxFramework: 'react',
   // The output directory for your css system
   outdir: 'styled-system',
+  globalCss: {
+    body: {
+      margin: 0,
+      padding: 0,
+    },
+  },
 });

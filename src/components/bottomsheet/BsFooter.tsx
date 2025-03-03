@@ -1,4 +1,3 @@
-import { css } from '../../../styled-system/css';
 import { styled } from '../../../styled-system/jsx';
 
 interface BsFooterProps {
@@ -6,7 +5,9 @@ interface BsFooterProps {
 }
 
 const Wrapper = styled('div', {
-  base: {},
+  base: {
+    paddingBottom: '.5rem',
+  },
 });
 
 const BsFooter = ({ children }: BsFooterProps) => {

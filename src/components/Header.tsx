@@ -26,16 +26,15 @@ const Header = ({ data }: HeaderProps) => {
         transform: 'translateX(-50%)',
         zIndex: 99,
         display: 'flex',
-        bgColor: '#fff',
-        padding: '1rem 2rem',
+        backgroundColor: '#fff',
+        padding: '.3rem 1rem',
         borderRadius: '30px',
         boxShadow: '0 0 5px rgba(0,0,0,0.4)',
       })}
     >
       <div
         className={css({
-          // bgColor: '#f2f2f2',
-          height: '2rem',
+          height: '8px',
           color: 'white',
           display: 'flex',
           justifyContent: 'center',
@@ -47,7 +46,6 @@ const Header = ({ data }: HeaderProps) => {
           placeholder="주소를 검색해주세요."
           className={css({
             color: '#fff',
-            padding: '1rem 2rem',
           })}
         ></input>
       </div>
