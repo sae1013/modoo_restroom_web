@@ -1,11 +1,16 @@
 import { css } from '../../../styled-system/css';
+import { styled } from '../../../styled-system/jsx';
 
 interface BsContentsProps {
   children?: React.ReactNode;
 }
 
+const Wrapper = styled('div', {
+  base: {},
+});
+
 const BsContents = ({ children }: BsContentsProps) => {
-  return <div className={css({})}>{children}</div>;
+  return <Wrapper>{children}</Wrapper>;
 };
 
 export default BsContents;

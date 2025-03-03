@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useUserStore } from '@/provider/root-store-provider';
 import { css } from '../../styled-system/css';
+import { styled } from '../../styled-system/jsx';
 
 interface HeaderProps {
   data: any;

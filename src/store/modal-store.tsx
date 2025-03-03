@@ -6,8 +6,8 @@ export type ModalState = {
 };
 
 export type ModalActions = {
-  openModal: () => void;
-  closeModal: () => void;
+  openModal: (option: ModalOption) => void;
+  closeModal: (key?: string) => void;
 };
 
 export type ModalStore = ModalState & ModalActions;
@@ -19,14 +19,14 @@ export interface ModalOption {
 }
 
 export const createModalStore = () => {
-  return createStore<ModalStore>()((set, get) => {
+  return createStore<ModalStore>((set) => {
     return {
       modalStack: [],
 
       openModal: (option: ModalOption) => {
         const { key } = option;
 
-        set((state: ModalState) => {
+        set((state) => {
           const isDuplicated = state.modalStack.some((modal) => modal.key === key);
 
           if (isDuplicated) return {};
@@ -36,10 +36,10 @@ export const createModalStore = () => {
         });
       },
 
-      closeModal: (key: string) => {
+      closeModal: (key?: string) => {
         set((state) => {
-          if (state.modalStack.length < 1) return;
-          // key를 입력하지 않으면 맨 마지막 팝업 닫기
+          if (state.modalStack.length < 1) return {};
+
 
           if (!key) {
             return {

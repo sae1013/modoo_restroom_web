@@ -1,6 +1,7 @@
 import React, { ComponentType, ReactNode, useLayoutEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
+
 
 const Wrapper = styled(motion.div)`
     display: flex;
@@ -28,7 +29,7 @@ const SMOOTH_BOTTOM_OFFSET = 30;
 const BottomSheet = ({ children, onCloseCallback }: BottomSheetProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [wrapperHeight, setWrapperHeight] = useState(0);
-  console.log(children);
+
   const childrenArray = React.Children.toArray(children);
 
   const header = childrenArray.find((child) => React.isValidElement(child) && typeof child.type === 'function' && child.type.name === 'BsHeader');
