@@ -1,4 +1,6 @@
+import Login from '@/components/auth/Login';
+
 const Page = () => {
-  return <div>로그인페이지</div>;
+  return <Login></Login>;
 };
 export default Page;
