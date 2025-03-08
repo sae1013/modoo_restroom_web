@@ -1,9 +1,13 @@
 import React from 'react';
 import { css } from '@styled-system/css';
+import RadioCheckBox from '@/components/common/RadioCheckBox';
 
 function Signup() {
   return (
-    <div>
+    <div className={css({
+      height: '100%',
+      position: 'relative',
+    })}>
       <div>
         <input
           className={css({
@@ -59,38 +63,58 @@ function Signup() {
           placeholder="이름을 입력해주세요"
         ></input>
       </div>
-
+      {/* 남 여 선택*/}
       <div
         className={css({
           marginTop: '1rem',
         })}
       >
-        <fieldset className="gender-group">
-          <legend>성별 선택</legend>
-          <label>
-            <input>남성</input>
+        <fieldset className={`gender-group ${css({
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '5rem',
+          paddingBottom: '1rem',
+          borderBottom: '1.5px solid #e0e0e0',
+        })}`}>
+
+          <label className={css({})}>
+            <span className={css({
+              marginRight: '1rem',
+            })}>남</span>
+            <RadioCheckBox name="gender" value="male" />
           </label>
-          <label>
-            <input>여성</input>
+          <label className={css({})}>
+            <span className={css({
+              marginRight: '1rem',
+            })}>여</span>
+            <RadioCheckBox name="gender" value="female" />
           </label>
         </fieldset>
       </div>
+
+      <div className={css({
+        marginTop: '1rem',
+      })}>개인정보동의
+      </div>
+      <button className={css({
+        position: 'absolute',
+        bottom: 0,
+        width: '100%',
+        height: '50px',
+        outline: 'none',
+        border: 'none',
+        fontSize: '1rem',
+        cursor: 'pointer',
+        background: '#55CBCD',
+        borderRadius: '10px',
+        color: '#fff',
+        fontWeight: 600,
+      })}>
+        가입하기
+      </button>
     </div>
   );
 }
 
 export default Signup;
 
-{
-  /* <fieldset class="radio-group">
-  <legend>성별 선택</legend>
-  <label>
-    <input type="radio" name="gender" value="male">
-    남성
-  </label>
-  <label>
-    <input type="radio" name="gender" value="female">
-    여성
-  </label>
-</fieldset> */
-}

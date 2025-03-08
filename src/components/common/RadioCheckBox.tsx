@@ -1,11 +1,13 @@
 import { css } from '@styled-system/css';
 import React from 'react';
 
-function CheckBox({ children }: { children: React.ReactNode }) {
+function CheckBox(props: { name: string, value: string }) {
   return (
     <input
       type="radio"
+      {...props}
       className={css({
+        display: 'inline-block',
         WebkitAppearance: 'none',
         appearance: 'none',
         width: '13px',
@@ -21,7 +23,7 @@ function CheckBox({ children }: { children: React.ReactNode }) {
         },
       })}
     >
-      {children}
+
     </input>
   );
 }
