@@ -7,7 +7,7 @@ import axios from 'axios';
 import './globals.css';
 import { pretendard } from '@/app/font';
 
-import HeaderLayout from '@/components/HeaderLayout';
+import HeaderLayout from '@/components/common/HeaderLayout';
 import { RootStoreProvider } from '@/provider/root-store-provider';
 import Modal from '@/components/common/Modal';
 

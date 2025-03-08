@@ -65,13 +65,32 @@ function Signup() {
           marginTop: '1rem',
         })}
       >
-        {/* 하단 영역은 이모티콘으로 대체 */}
-        <label>성별 (선택사항)</label>
-        <option>남자</option>
-        <option>여자</option>
+        <fieldset className="gender-group">
+          <legend>성별 선택</legend>
+          <label>
+            <input>남성</input>
+          </label>
+          <label>
+            <input>여성</input>
+          </label>
+        </fieldset>
       </div>
     </div>
   );
 }
 
 export default Signup;
+
+{
+  /* <fieldset class="radio-group">
+  <legend>성별 선택</legend>
+  <label>
+    <input type="radio" name="gender" value="male">
+    남성
+  </label>
+  <label>
+    <input type="radio" name="gender" value="female">
+    여성
+  </label>
+</fieldset> */
+}
