@@ -27,7 +27,8 @@ const Login = () => {
     router.push('/auth/signup');
   };
 
-  const handleLogin = async () => {};
+  const handleLogin = async () => {
+  };
 
   const handleNext = async () => {
     if (!isPasswordStep) {
@@ -87,10 +88,12 @@ const Login = () => {
               _placeholder: {
                 fontSize: '1.3rem',
               },
+              position: 'relative',
               paddingTop: '1rem',
               fontSize: '1.2rem',
               width: '100%',
               borderBottom: '2px solid #55CBCD',
+
             })}
           ></input>
         ) : (
