@@ -8,7 +8,7 @@ const Page = () => {
         padding: '2rem 1.5rem',
         width: '100wh',
         height: '100vh',
-        paddingTop: '100px',
+        paddingTop: '80px',
       })}
     >
       <Signup />

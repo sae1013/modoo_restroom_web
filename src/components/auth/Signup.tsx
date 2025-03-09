@@ -1,74 +1,61 @@
+'use client';
+
 import React from 'react';
 import { css } from '@styled-system/css';
-import RadioCheckBox from '@/components/common/RadioCheckBox';
+import RadioCheckBox from '@/components/common/checkboxes/RadioCheckBox';
+import Input from '@/components/common/inputs/Input';
+import Section from '@/components/common/sections/Section';
+import { MdMale } from 'react-icons/md';
+import { MdFemale } from 'react-icons/md';
 
+
+// TODO: 인풋 공통컴포넌트로 변경, 휴대폰번호 인증로직 추가, 인증번호 클릭시 자동으로 채워지는 기능까지.
+// TODO: 약관 페이지 디자인 & 개발.
 function Signup() {
+
+  const handleAuthPhoneNum = () => {
+
+  };
+
   return (
     <div className={css({
       height: '100%',
       position: 'relative',
     })}>
-      <div>
-        <input
-          className={css({
-            width: '100%',
-            borderBottom: '1.5px solid #e0e0e0',
-            paddingBottom: '10px',
-          })}
-          placeholder="이메일을 입력해주세요"
-        ></input>
-      </div>
+      <Section>
+        <Input placeholder="이메일을 입력해주세요" type="email" />
+      </Section>
 
-      <div
-        className={css({
-          marginTop: '2rem',
-        })}
-      >
-        <input
-          className={css({
-            width: '100%',
-            borderBottom: '1.5px solid #e0e0e0',
-            paddingBottom: '16px',
-          })}
-          placeholder="비밀번호를 입력해주세요"
-        ></input>
-      </div>
+      <Section>
+        <Input placeholder="비밀번호를 입력해주세요" type="password" />
+      </Section>
+      <Section>
+        <Input placeholder="비밀번호를 입력해주세요" type="password" />
+      </Section>
 
-      <div
-        className={css({
-          marginTop: '2rem',
-        })}
-      >
-        <input
-          className={css({
-            width: '100%',
-            borderBottom: '1.5px solid #e0e0e0',
-            paddingBottom: '16px',
-          })}
-          placeholder="비밀번호를 다시 입력해주세요"
-        ></input>
-      </div>
+      <Section>
+        <Input placeholder="이름을 입력해주세요" type="text" />
+      </Section>
 
-      <div
-        className={css({
-          marginTop: '2rem',
-        })}
-      >
-        <input
-          className={css({
-            width: '100%',
-            borderBottom: '1.5px solid #e0e0e0',
-            paddingBottom: '16px',
-          })}
-          placeholder="이름을 입력해주세요"
-        ></input>
-      </div>
+      <Section position="relative">
+        <Input placeholder="휴대폰 번호를 입력해주세요" type="number" />
+        <button className={css({
+            position: 'absolute',
+            right: 0,
+            bottom: '5px',
+            backgroundColor: '#55CBCD',
+            borderRadius: '5px',
+            padding: '10px 10px',
+            color: '#fff',
+            fontWeight: '500',
+            fontSize: '15px',
+          },
+        )} onClick={handleAuthPhoneNum}>인증하기
+        </button>
+      </Section>
+
       {/* 남 여 선택*/}
-      <div
-        className={css({
-          marginTop: '1rem',
-        })}
-      >
+      <Section>
         <fieldset className={`gender-group ${css({
           display: 'flex',
           justifyContent: 'center',
@@ -77,25 +64,40 @@ function Signup() {
           borderBottom: '1.5px solid #e0e0e0',
         })}`}>
 
-          <label className={css({})}>
+          <label className={css({
+            display: 'flex',
+            alignItems: 'center',
+          })}>
+            <MdMale size={30} display="inline-block" fill="#A3D2F2" />
             <span className={css({
-              marginRight: '1rem',
+              alignSelf: 'flex-start',
+              paddingTop: '5px',
+              marginRight: '7px',
+              color: '#333',
+              fontWeight: '500',
+              fontSize: '16px',
             })}>남</span>
-            <RadioCheckBox name="gender" value="male" />
+            <RadioCheckBox name="gender" value="male" marginTop="10px" alignSelf="flex-start" />
           </label>
-          <label className={css({})}>
+
+          <label className={css({
+            display: 'flex',
+          })}>
+            <MdFemale size={30} display="inline-block" fill="#FADADD" />
             <span className={css({
-              marginRight: '1rem',
+              alignSelf: 'flex-start',
+              paddingTop: '5px',
+              marginRight: '7px',
+              color: '#333',
+              fontWeight: '500',
+              fontSize: '16px',
             })}>여</span>
-            <RadioCheckBox name="gender" value="female" />
+            <RadioCheckBox name="gender" value="female" marginTop="10px" alignSelf="flex-start" />
           </label>
         </fieldset>
-      </div>
+      </Section>
 
-      <div className={css({
-        marginTop: '1rem',
-      })}>개인정보동의
-      </div>
+      <Section>개인정보</Section>
       <button className={css({
         position: 'absolute',
         bottom: 0,
