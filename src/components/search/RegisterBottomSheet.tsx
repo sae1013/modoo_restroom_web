@@ -14,7 +14,21 @@ const RegisterBottomSheet = () => {
           closeModal('register');
         }}
       ></BsHeader>
-      <BsContents></BsContents>
+      <BsContents>
+        <div>
+          <p>화장실 리뷰는 남기고</p>
+          <p>나머지는 비우고</p>
+        </div>
+
+        <div>
+          <p>*****</p>
+        </div>
+
+        <div>
+
+        </div>
+
+      </BsContents>
       <BsFooter>
         <button>닫기</button>
       </BsFooter>

@@ -1,4 +1,4 @@
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = async ({ children }: { children: React.ReactNode }) => {
   return <div>{children}</div>;
 };
 
