@@ -36,21 +36,40 @@ const defaultFormValue = {
 
 function Signup() {
   const { openModal, closeModal } = useModal();
-  const { register, handleSubmit, watch, formState: { errors } } = useForm({
+  const { register, handleSubmit, watch, formState: { errors }, getValues } = useForm({
     mode: 'onTouched',
     reValidateMode: 'onChange',
     defaultValues: defaultFormValue,
   });
   const password = watch('password');
+  const _watchPhoneNum = watch('phoneNumber');
 
   const [isServiceAgree, setIsServiceAgree] = useState(false);
   const [isPrivacyAgree, setIsPrivacyAgree] = useState(false);
   const [isGpsAgree, setIsGpsAgree] = useState(false);
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(false);
+  const [isValidatingPhoneNumber, setIsValidatingPhoneNumber] = useState(false);
 
+  const [authErrorMsg, setAuthErrorMsg] = useState('');
   // 핸드폰 문자인증
   const handleAuthPhoneNum = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    // 인증성공시 완료처리
+    setIsValidPhoneNumber(true);
+
+    // 인증 에러 메시지
+
+  };
+
+  // 인증번호 인증하기
+  const requestAuthNum = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+
+    console.log('인증성공');
+    setIsValidatingPhoneNumber(true);
+
 
   };
 
@@ -166,8 +185,10 @@ function Signup() {
         {errors?.name?.message && <StyledInputError>{errors?.name?.message}</StyledInputError>}
       </Section>
 
-      <Section position="relative">
-        <Input placeholder="휴대폰 번호를 입력해주세요" type="number" {...register('phoneNumber', {
+      <Section position="relative" backgroundColor={isValidatingPhoneNumber ? '#F2F2F2' : '#fff'}
+               color={isValidatingPhoneNumber ? '#9E9E9E' : '#333'}>
+        <Input disabled={isValidatingPhoneNumber} placeholder="휴대폰 번호를 입력해주세요"
+               type="number" {...register('phoneNumber', {
           required: '숫자만 입력해주세요',
           pattern: {
             value: /^[0-9]+$/,
@@ -177,22 +198,49 @@ function Signup() {
         })} />
         <button className={css({
             position: 'absolute',
-            right: 0,
-            top: '-15px',
+            top: '10px',
+            right: '8px',
             backgroundColor: '#55CBCD',
-            borderRadius: '5px',
+            borderRadius: '20px',
             padding: '10px 10px',
             color: '#fff',
             fontWeight: '500',
             fontSize: '15px',
             _disabled: {
-              backgroundColor: '#AAE5E6',
+              opacity: '40%',
+
             },
           },
-        )} onClick={handleAuthPhoneNum} disabled={!!errors?.phoneNumber?.message}>인증하기
+        )} onClick={requestAuthNum}
+                disabled={!!errors?.phoneNumber?.message || isValidatingPhoneNumber || !_watchPhoneNum}>인증번호 요청
         </button>
         {errors?.phoneNumber?.message && <StyledInputError>{errors?.phoneNumber?.message}</StyledInputError>}
       </Section>
+
+      {isValidatingPhoneNumber &&
+        <Section position="relative" backgroundColor={isValidPhoneNumber ? '#F2F2F2' : '#fff'}
+                 color={isValidPhoneNumber ? '#9E9E9E' : '#333'}>
+          <Input placeholder="인증번호를 입력해주세요." type="number" disabled={isValidPhoneNumber} />
+          <button className={css({
+              position: 'absolute',
+              top: '10px',
+              right: '8px',
+              backgroundColor: '#55CBCD',
+              borderRadius: '20px',
+              padding: '10px 10px',
+              color: '#fff',
+              fontWeight: '500',
+              fontSize: '15px',
+              _disabled: {
+                opacity: '40%',
+              },
+            },
+          )} onClick={handleAuthPhoneNum} disabled={isValidPhoneNumber}>인증하기
+          </button>
+          {authErrorMsg && <StyledInputError>{authErrorMsg}</StyledInputError>}
+        </Section>
+      }
+
 
       {/* 남 여 선택*/}
       <Section>
@@ -217,7 +265,8 @@ function Signup() {
               fontWeight: '500',
               fontSize: '16px',
             })}>남</span>
-            <RadioCheckBox name="gender" value="male" marginTop="10px" alignSelf="flex-start" />
+            <RadioCheckBox value="male" marginTop="10px"
+                           alignSelf="flex-start" {...register('gender', { required: '옵션을 선택해주세요.' })} />
           </label>
 
           <label className={css({
@@ -232,7 +281,8 @@ function Signup() {
               fontWeight: '500',
               fontSize: '16px',
             })}>여</span>
-            <RadioCheckBox name="gender" value="female" marginTop="10px" alignSelf="flex-start" />
+            <RadioCheckBox {...register('gender', { required: '옵션을 선택해주세요.' })} value="female" marginTop="10px"
+                           alignSelf="flex-start" />
           </label>
         </fieldset>
         {errors?.gender?.message && <StyledInputError>{errors?.gender?.message}</StyledInputError>}

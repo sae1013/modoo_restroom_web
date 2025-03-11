@@ -14,6 +14,7 @@ const StyledInput = styled('input', {
     width: '100%',
     borderBottom: '2px solid #e0e0e0',
     paddingBottom: '10px',
+    paddingLeft: '8px',
     transition: 'all 0.3s',
     _placeholder: {
       color: '#aaa',

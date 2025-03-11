@@ -9,7 +9,8 @@ interface SectionProps extends JsxHTMLProps<InputHTMLAttributes<HTMLDivElement>>
 
 const StyledSection = styled('section', {
   base: {
-    marginTop: '24px',
+    paddingTop: '24px',
+
   },
 });
 
