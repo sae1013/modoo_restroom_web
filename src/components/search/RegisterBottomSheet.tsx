@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 import BottomSheet from '../bottomsheet/BottomSheet';
 import BsContents from '../bottomsheet/BsContents';
@@ -16,9 +16,29 @@ import ReviewTextArea from '@/components/common/textAreas/ReviewTextArea';
 const RegisterBottomSheet = () => {
   const { closeModal } = useModal();
 
+  // formData
   const [isSelectOp1, setSelectOp1] = useState(false);
   const [isSelectOp2, setSelectOp2] = useState(false);
   const [isSelectOp3, setSelectOp3] = useState(false);
+  const [isSelectOp4, setSelectOp4] = useState(false);
+  const [isSelectOp5, setSelectOp5] = useState(false);
+
+  const [rating, setRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+
+  const handleSubmit = () => {
+    const data = {
+      isSelectOp1: isSelectOp1,
+      isSelectOp2: isSelectOp2,
+      isSelectOp3: isSelectOp3,
+      isSelectOp4: isSelectOp4,
+      isSelectOp5: isSelectOp5,
+      rating,
+      reviewText,
+    };
+    console.log(data);
+    // TODO: Post Req
+  };
 
   return (
     <BottomSheet>
@@ -47,7 +67,7 @@ const RegisterBottomSheet = () => {
           marginTop: '16px',
         })}>
           <StarRatingPicker onChange={(rating: number) => {
-            console.log(rating);
+            setRating(rating);
           }}></StarRatingPicker>
         </div>
 
@@ -85,12 +105,16 @@ const RegisterBottomSheet = () => {
 
         {/* 리뷰 공간 */}
         <div className={css({ marginTop: '16px' })}>
-          <ReviewTextArea />
+          <ReviewTextArea value={reviewText} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+            console.log(e.target.value);
+            setReviewText(e.target.value);
+
+          }} />
         </div>
 
       </BsContents>
       <BsFooter>
-        <Button>리뷰 등록하기</Button>
+        <Button onClick={handleSubmit}>리뷰 등록하기</Button>
       </BsFooter>
     </BottomSheet>
   );
