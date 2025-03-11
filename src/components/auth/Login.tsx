@@ -2,16 +2,35 @@
 
 import { css } from '@styled-system/css';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import Input from '@/components/common/inputs/Input';
+import InputError from '@/components/common/inputs/InputError';
 
 const Login = () => {
-  const [email, setEmail] = useState('sae1013');
-  const [password, setPassword] = useState('');
   const [isPasswordStep, setIsPasswordStep] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // const isPasswordStep = decodeURIComponent(searchParams.get('email') || '');
+  const { register, handleSubmit, watch, formState, getValues } = useForm({
+    mode: 'onTouched',
+    reValidateMode: 'onChange',
+  });
+
+  const _watchEmail = watch('email');
+  const _watchPassword = watch('password');
+
+  let disableBtn = false;
+  if (isPasswordStep) {
+    if (!_watchPassword) {
+      disableBtn = true;
+    }
+  } else {
+    if (formState?.errors?.email?.message || !_watchEmail) {
+      disableBtn = true;
+    }
+  }
+
   useEffect(() => {
     const email = decodeURIComponent(searchParams.get('email') || '');
     console.log('rerender');
@@ -27,16 +46,17 @@ const Login = () => {
     router.push('/auth/signup');
   };
 
-  const handleLogin = async () => {
+  const handleLogin = async (email, password) => {
+    console.log(email, password);
   };
 
   const handleNext = async () => {
     if (!isPasswordStep) {
-      const encodedEmail = encodeURIComponent(email);
+      const encodedEmail = encodeURIComponent(_watchEmail);
       router.push(`login?email=${encodedEmail}`);
     } else {
       // 로그인 처리
-      await handleLogin();
+      await handleLogin(_watchEmail, _watchPassword);
     }
   };
 
@@ -49,14 +69,10 @@ const Login = () => {
         padding: '2rem',
       })}
     >
-      <div
-        className={css({
-          marginBottom: '3rem',
-        })}
-      >
-        X
-      </div>
-      <div>
+
+      <div className={css({
+        marginTop: '3rem',
+      })}>
         <p
           className={css({
             fontWeight: 600,
@@ -81,7 +97,13 @@ const Login = () => {
         </p>
 
         {!isPasswordStep ? (
-          <input
+          <Input
+            {...register('email', {
+              pattern: {
+                value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+                message: '올바른 이메일 형식이 아닙니다.',
+              },
+            })}
             key="email"
             placeholder={'이메일 주소를 입력해주세요'}
             className={css({
@@ -95,10 +117,12 @@ const Login = () => {
               borderBottom: '2px solid #55CBCD',
 
             })}
-          ></input>
+          ></Input>
         ) : (
-          <input
-            key="password"
+          <Input
+            {...register('password', {
+              required: '비밀번호를 입력해주세요.',
+            })}
             type="password"
             placeholder={'비밀번호를 입력해주세요'}
             className={css({
@@ -110,10 +134,13 @@ const Login = () => {
               width: '100%',
               borderBottom: '2px solid #55CBCD',
             })}
-          ></input>
+          ></Input>
         )}
       </div>
+      {formState?.errors?.email?.message &&
+        <InputError>{formState?.errors?.email?.message}</InputError>}
       <button
+        disabled={disableBtn || false}
         onClick={() => {
           handleNext();
         }}
@@ -128,10 +155,14 @@ const Login = () => {
           letterSpacing: '0.0625rem',
           fontWeight: 600,
           color: '#fff',
+          _disabled: {
+            opacity: '40%',
+          },
         })}
       >
         {isPasswordStep ? '로그인' : '다음 >'}
       </button>
+
 
       {/* 이메일 주소 입력 하단 영역 */}
       <div>

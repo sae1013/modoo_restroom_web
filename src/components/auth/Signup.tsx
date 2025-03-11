@@ -10,7 +10,7 @@ import { MdMale } from 'react-icons/md';
 import { MdFemale } from 'react-icons/md';
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { FaCheck } from 'react-icons/fa';
-import StyledInputError from '@/components/common/inputs/inputError';
+import InputError from '@/components/common/inputs/InputError';
 import useModal from '@/hooks/useModal';
 import ServiceTerm from '@/components/auth/terms/ServiceTerm';
 import PrivacyTerm from '@/components/auth/terms/PrivacyTerm';
@@ -151,7 +151,7 @@ function Signup() {
           },
         })}
                placeholder="이메일을 입력해주세요" type="email" />
-        {errors?.email?.message && <StyledInputError>{errors?.email?.message}</StyledInputError>}
+        {errors?.email?.message && <InputError>{errors?.email?.message}</InputError>}
       </Section>
 
       <Section>
@@ -166,7 +166,7 @@ function Signup() {
             message: '영어 대문자, 소문자, 숫자, 특수문자 중 최소 2종류 이상을 포함해야 합니다.',
           },
         })} placeholder="비밀번호를 입력해주세요" type="password" />
-        {errors?.password?.message && <StyledInputError>{errors?.password?.message}</StyledInputError>}
+        {errors?.password?.message && <InputError>{errors?.password?.message}</InputError>}
       </Section>
 
       <Section>
@@ -174,14 +174,14 @@ function Signup() {
           required: '비밀번호 확인은 필수입니다.',
           validate: value => value === password || '비밀번호가 일치하지 않습니다.',
         })} type="password" />
-        {errors?.passwordConfirm?.message && <StyledInputError>{errors?.passwordConfirm?.message}</StyledInputError>}
+        {errors?.passwordConfirm?.message && <InputError>{errors?.passwordConfirm?.message}</InputError>}
       </Section>
 
       <Section>
         <Input placeholder="이름을 입력해주세요" {...register('name', {
           required: '이름을 입력해주세요',
         })} type="text" />
-        {errors?.name?.message && <StyledInputError>{errors?.name?.message}</StyledInputError>}
+        {errors?.name?.message && <InputError>{errors?.name?.message}</InputError>}
       </Section>
 
       <Section position="relative" backgroundColor={isValidatingPhoneNumber ? '#F2F2F2' : '#fff'}>
@@ -212,7 +212,7 @@ function Signup() {
         )} onClick={requestAuthNum}
                 disabled={!!errors?.phoneNumber?.message || isValidatingPhoneNumber || !_watchPhoneNum}>인증번호 요청
         </button>
-        {errors?.phoneNumber?.message && <StyledInputError>{errors?.phoneNumber?.message}</StyledInputError>}
+        {errors?.phoneNumber?.message && <InputError>{errors?.phoneNumber?.message}</InputError>}
       </Section>
 
       {isValidatingPhoneNumber &&
@@ -236,7 +236,7 @@ function Signup() {
             },
           )} onClick={handleAuthPhoneNum} disabled={isValidPhoneNumber}>인증하기
           </button>
-          {authErrorMsg && <StyledInputError>{authErrorMsg}</StyledInputError>}
+          {authErrorMsg && <InputError>{authErrorMsg}</InputError>}
         </Section>
       }
 
@@ -284,7 +284,7 @@ function Signup() {
                            alignSelf="flex-start" />
           </label>
         </fieldset>
-        {errors?.gender?.message && <StyledInputError>{errors?.gender?.message}</StyledInputError>}
+        {errors?.gender?.message && <InputError>{errors?.gender?.message}</InputError>}
       </Section>
 
       <Section marginTop="16px">
