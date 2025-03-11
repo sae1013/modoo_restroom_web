@@ -9,6 +9,7 @@ const Page = () => {
         width: '100wh',
         height: '100vh',
         paddingTop: '80px',
+        position: 'relative',
       })}
     >
       <Signup />

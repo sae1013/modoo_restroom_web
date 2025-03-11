@@ -2,7 +2,7 @@ import { styled } from '@styled-system/jsx';
 
 import { SystemProperties } from '@styled-system/types';
 import { JsxHTMLProps } from '@pandacss/types';
-import { InputHTMLAttributes } from 'react';
+import React, { InputHTMLAttributes } from 'react';
 
 
 interface InputProps extends JsxHTMLProps<InputHTMLAttributes<HTMLInputElement>>, SystemProperties {
@@ -28,8 +28,8 @@ const StyledInput = styled('input', {
 
 });
 
-const Input = (props: InputProps) => {
-  return <StyledInput {...props} />;
-};
+const Input = React.forwardRef((props: InputProps, ref) => {
+  return <StyledInput ref={ref} {...props} />;
+});
 
 export default Input;

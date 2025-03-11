@@ -4,8 +4,8 @@ import { useEffect } from 'react';
 import { useUserStore } from '@/provider/root-store-provider';
 import { css } from '@styled-system/css';
 import { styled } from '@styled-system/jsx';
+import { GrPrevious } from 'react-icons/gr';
 
-// import {}
 interface HeaderProps {
   data?: any;
 }
@@ -18,25 +18,33 @@ const Header = ({ data }: HeaderProps) => {
         width: '100%',
         height: '70px',
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
       })}
     >
       {/* < 아이콘  */}
-      <div></div>
+      <div className={css({
+        paddingLeft: '16px',
+        position: 'absolute',
+      })}>
+        <GrPrevious size={22} />
+      </div>
 
       {/* 가운데 텍스트 */}
       {/* // TODO: 경로를 읽어서 동적 이름변경. */}
       <div
         className={css({
-          fontWeight: 700,
-
+          fontWeight: 600,
+          fontSize: '18px',
+          textAlign: 'center',
+          flex: 1,
         })}
       >
         회원가입
       </div>
 
       {/* 우측영역 */}
+      <div className={css({})}></div>
     </div>
   );
 };
