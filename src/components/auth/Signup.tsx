@@ -59,7 +59,6 @@ function Signup() {
     setIsValidPhoneNumber(true);
 
     // 인증 에러 메시지
-
   };
 
   // 인증번호 인증하기
@@ -185,8 +184,7 @@ function Signup() {
         {errors?.name?.message && <StyledInputError>{errors?.name?.message}</StyledInputError>}
       </Section>
 
-      <Section position="relative" backgroundColor={isValidatingPhoneNumber ? '#F2F2F2' : '#fff'}
-               color={isValidatingPhoneNumber ? '#9E9E9E' : '#333'}>
+      <Section position="relative" backgroundColor={isValidatingPhoneNumber ? '#F2F2F2' : '#fff'}>
         <Input disabled={isValidatingPhoneNumber} placeholder="휴대폰 번호를 입력해주세요"
                type="number" {...register('phoneNumber', {
           required: '숫자만 입력해주세요',
@@ -194,8 +192,8 @@ function Signup() {
             value: /^[0-9]+$/,
             message: '숫자만 입력해주세요',
           },
-
-        })} />
+        })} color={isValidatingPhoneNumber ? '#9E9E9E' : '#333'}
+        />
         <button className={css({
             position: 'absolute',
             top: '10px',
@@ -220,7 +218,8 @@ function Signup() {
       {isValidatingPhoneNumber &&
         <Section position="relative" backgroundColor={isValidPhoneNumber ? '#F2F2F2' : '#fff'}
                  color={isValidPhoneNumber ? '#9E9E9E' : '#333'}>
-          <Input placeholder="인증번호를 입력해주세요." type="number" disabled={isValidPhoneNumber} />
+          <Input placeholder="인증번호를 입력해주세요." type="number" disabled={isValidPhoneNumber}
+                 color={isValidPhoneNumber ? '#9E9E9E' : '#333'} />
           <button className={css({
               position: 'absolute',
               top: '10px',
