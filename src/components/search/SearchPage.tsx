@@ -5,6 +5,7 @@ import NaverMap from '@/components/NaverMap';
 import BottomSheet from '@/components/bottomsheet/BottomSheet';
 import useModal from '@/hooks/useModal';
 import EmptyBottomSheet from '@/components/search/EmptyBottomSheet';
+import ReviewBottomSheet from '@/components/search/ReviewBottomSheet';
 
 interface SearchPageProps {
   data: any;
@@ -23,12 +24,18 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
     setNewRestroom(addrAndGeoInfo);
     openModal({
-      component: EmptyBottomSheet,
-      props: {
-        title: '제목1',
-      },
-      key: 'unregistered',
+      component: ReviewBottomSheet,
+      props: {},
+      key: 'reviewBottomSheet',
     });
+    // TODO: 리뷰 개발 후 주석 해제
+    // openModal({
+    //   component: EmptyBottomSheet,
+    //   props: {
+    //     title: '제목1',
+    //   },
+    //   key: 'unregistered',
+    // });
   };
 
   useEffect(() => {
@@ -46,6 +53,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
   return (
     <>
       <NaverMap onClick={onClickMapHandler} />
+
     </>
   );
 };
