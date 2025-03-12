@@ -40,7 +40,7 @@ const BottomNav = () => {
         <li data-path="/search" onClick={movePage}>
           <FaMapMarkedAlt size={24} />
         </li>
-        <li data-path="/place/like" onClick={movePage}>
+        <li data-path="/my/like" onClick={movePage}>
           <FaHeart size={24} />
         </li>
         <li data-path="/profile" onClick={movePage}><FaUserCircle size={24} /></li>

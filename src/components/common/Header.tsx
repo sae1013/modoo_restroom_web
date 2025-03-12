@@ -13,15 +13,38 @@ const Header = ({ data }: HeaderProps) => {
 
   const router = useRouter();
   const pathname = usePathname();
+
   // 경로에 따른 displayName 설정
   let displayName = '';
-  if (pathname === '/auth/login') {
-    displayName = '로그인';
-  } else if (pathname === '/auth/signup') {
-    displayName = '회원가입';
-  } else {
-    displayName = '기본 제목'; // 그 외 다른 경로일 경우 기본 제목
+  switch (pathname) {
+    case '/auth/login':
+      displayName = '로그인';
+      break;
+
+    case '/auth/signup':
+      displayName = '회원가입';
+      break;
+
+    case '/my/like' :
+      displayName = '찜한 장소';
+      break;
+
+    case '/my/review':
+      displayName = '내가 쓴 리뷰';
+      break;
+    case '/profile' :
+      displayName = '내 정보';
+      break;
+    default:
+      break;
   }
+  // if (pathname === '/auth/login') {
+  //   displayName = '로그인';
+  // } else if (pathname === '/auth/signup') {
+  //   displayName = '회원가입';
+  // } else {
+  //   displayName = '기본 제목'; // 그 외 다른 경로일 경우 기본 제목
+  // }
 
 
   const goPrev = () => {

@@ -70,86 +70,55 @@ const ReviewBottomSheet = () => {
             overflowY: 'auto',
           },
         )}>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() => {
-            return (<div>
-              {/* 게시글 헤더 */}
-              <div className={css({
-                // display: 'flex',
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((idx) => {
+            return (
+              <div key={idx} className={css({
+                borderBottom: '2px solid #f2f2f2',
+                '& > div': {
+                  marginTop: '14px',
+                },
               })}>
-                {/*<div>*/}
-                {/*  <image src=""></image>*/}
-                {/*</div>*/}
+                {/* 게시글 헤더 */}
+                <div className={css({
+                  // display: 'flex',
+                })}>
+                  {/*<div>*/}
+                  {/*  <image src=""></image>*/}
+                  {/*</div>*/}
+                  <div>
+                    <p>Silver ha</p>
+                    <p className={css({
+                      color: '#757575',
+
+                      fontSize: '13px',
+                    })}>리뷰 22개</p>
+                  </div>
+                </div>
+                {/*  게시글 바디*/}
+                <div className={css({
+                  marginTop: '8px',
+                  fontSize: '15px',
+                  fontWeight: '400',
+                })}>화장실 비밀번호 5633 여자 3322 입니다. 개좋았어요 휴지없음. 화장실 개추움. 비번자주바뀜.
+                </div>
+
+                {/*게시글 푸터(필터버튼)*/}
                 <div>
-                  <p>Silver ha</p>
+
+                </div>
+                {/* 날짜 표시*/}
+                <div>
                   <p className={css({
                     color: '#757575',
-
-                    fontSize: '13px',
-                  })}>리뷰 22개</p>
+                    fontSize: '14px',
+                    textAlign: 'right',
+                    paddingRight: '8px',
+                  })}>2025.01.22</p>
                 </div>
-              </div>
-              {/*  게시글 바디*/}
-              <div className={css({
-                marginTop: '8px',
-                fontSize: '15px',
-                fontWeight: '400',
-              })}>화장실 비밀번호 5633 여자 3322 입니다. 개좋았어요 휴지없음. 화장실 개추움. 비번자주바뀜.
-              </div>
 
-              {/*게시글 푸터(필터버튼)*/}
-              <div>
-
-              </div>
-              {/* 날짜 표시*/}
-              <div>
-                <p className={css({
-                  color: '#757575',
-                  fontSize: '14px',
-                  textAlign: 'right',
-                  paddingRight: '8px',
-                })}>2025.01.22</p>
-              </div>
-            </div>);
+              </div>);
           })}
-          {/*<div>*/}
-          {/*  /!* 게시글 헤더 *!/*/}
-          {/*  <div className={css({*/}
-          {/*    // display: 'flex',*/}
-          {/*  })}>*/}
-          {/*    /!*<div>*!/*/}
-          {/*    /!*  <image src=""></image>*!/*/}
-          {/*    /!*</div>*!/*/}
-          {/*    <div>*/}
-          {/*      <p>Silver ha</p>*/}
-          {/*      <p className={css({*/}
-          {/*        color: '#757575',*/}
 
-          {/*        fontSize: '13px',*/}
-          {/*      })}>리뷰 22개</p>*/}
-          {/*    </div>*/}
-          {/*  </div>*/}
-          {/*  /!*  게시글 바디*!/*/}
-          {/*  <div className={css({*/}
-          {/*    marginTop: '8px',*/}
-          {/*    fontSize: '15px',*/}
-          {/*    fontWeight: '400',*/}
-          {/*  })}>화장실 비밀번호 5633 여자 3322 입니다. 개좋았어요 휴지없음. 화장실 개추움. 비번자주바뀜.*/}
-          {/*  </div>*/}
-
-          {/*  /!*게시글 푸터(필터버튼)*!/*/}
-          {/*  <div>*/}
-
-          {/*  </div>*/}
-          {/*  /!* 날짜 표시*!/*/}
-          {/*  <div>*/}
-          {/*    <p className={css({*/}
-          {/*      color: '#757575',*/}
-          {/*      fontSize: '14px',*/}
-          {/*      textAlign: 'right',*/}
-          {/*      paddingRight: '8px',*/}
-          {/*    })}>2025.01.22</p>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
         </div>
       </BsContents>
       <BsFooter>
