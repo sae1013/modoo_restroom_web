@@ -1,6 +1,10 @@
+import MyProfile from '@/components/my/Profile';
+
 const Page = () => {
   return (
-    <div></div>
+    <div>
+      <MyProfile />
+    </div>
   );
 };
 

@@ -1,6 +1,10 @@
+import MyLike from '@/components/my/Like';
+
 const Page = () => {
   return (
-    <div></div>
+    <div>
+      <MyLike></MyLike>
+    </div>
   );
 };
 
