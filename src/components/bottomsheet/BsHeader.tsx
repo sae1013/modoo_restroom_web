@@ -3,7 +3,7 @@ import { styled } from '../../../styled-system/jsx';
 
 const Wrapper = styled('div', {
   base: {
-    height: '48px',
+    minHeight: '48px',
     borderTopLeftRadius: '8px',
     borderTopRightRadius: '8px',
     position: 'relative',
@@ -24,12 +24,14 @@ const Handle = styled('div', {
 
 interface BsHeaderProps {
   onClose: () => void;
+  children?: React.ReactNode;
 }
 
-const BsHeader = ({ onClose }: BsHeaderProps) => {
+const BsHeader = ({ onClose, children }: BsHeaderProps) => {
   return (
     <Wrapper>
       <Handle onClick={onClose} />
+      {children}
     </Wrapper>
   );
 };

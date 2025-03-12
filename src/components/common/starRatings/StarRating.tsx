@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { FaStar } from 'react-icons/fa';
+import { css } from '@styled-system/css';
 
 // 단일 별 컴포넌트: filledPercentage는 0 ~ 100 사이의 값
 const Star = ({ filledPercentage }: { filledPercentage: number }) => {
@@ -23,7 +24,11 @@ const Star = ({ filledPercentage }: { filledPercentage: number }) => {
   );
 };
 
-const StarRating = ({ rating, max = 5 }: { rating: number, max?: number }) => {
+const StarRating = ({ rating, max = 5, containerSx = {} }: {
+  rating: number,
+  max?: number,
+  containerSx?: CSSProperties
+}) => {
   const stars = [];
   for (let i = 0; i < max; i++) {
     let fill = 0;
@@ -34,7 +39,7 @@ const StarRating = ({ rating, max = 5 }: { rating: number, max?: number }) => {
     }
     stars.push(<Star key={i} filledPercentage={fill} />);
   }
-  return <div>{stars}</div>;
+  return <div className={css({ ...containerSx })}>{stars}</div>;
 };
 
 export default StarRating;

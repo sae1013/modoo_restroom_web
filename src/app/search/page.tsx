@@ -2,6 +2,7 @@ import SearchPage from '@/components/search/SearchPage';
 import axios from 'axios';
 import { css } from '@styled-system/css';
 import SearchHeader from '@/components/search/SearchHeader';
+import BottomNav from '@/components/navigations/BottomNav';
 
 const Page = async () => {
   try {
@@ -12,7 +13,8 @@ const Page = async () => {
     return (
       <>
         <SearchHeader></SearchHeader>
-        <SearchPage data={restrooms}></SearchPage>;
+        <SearchPage data={restrooms}></SearchPage>
+        <BottomNav></BottomNav>
       </>
     );
   } catch (err) {

@@ -17,6 +17,7 @@ const StyledSelectButton = styled('button', {
     borderRadius: '20px',
     outline: 'none',
     transition: 'all .2s',
+
   },
   variants: {
     variant: {
