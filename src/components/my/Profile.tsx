@@ -27,7 +27,6 @@ const MyProfile = () => {
       <Button>프로필 수정</Button>
       <Horizontal marginTop={'16px'}></Horizontal>
 
-      {/* 게시글 영역*/}
       <section className={css({})}>
         {/* 헤더영역*/}
         <div className={css({
@@ -38,25 +37,44 @@ const MyProfile = () => {
           <button className={css({
             color: '#aaa',
             borderBottom: '2px solid #55BCBD',
+            fontWeight: '500',
           })}>내가 작성한 리뷰
           </button>
         </div>
 
         {/* 컨텐츠영역*/}
         <ul className={css({
+          marginTop: '20px',
           '& > li': {
-            marginTop: '16px',
+            marginBottom: '16px',
           },
         })}>
           {/*컨텐츠 영역*/}
           {[1, 2, 3].map((item, i) => {
             return (
-              <li key={i} className={css({})}>
-                <div className={css({
-                  fontSize: '16px',
-                  fontWeight: '600',
+              <li key={i}
+                  className={css({ borderBottom: '2px solid #f2f2f2' })}>
+                <div
+                  className={css({
+                    fontSize: '16px',
+                    fontWeight: '600',
+                    display: 'flex',
 
-                })}>장소: 연화로 99
+                  })}>
+                  <p>장소: 연화로 99</p>
+                  <div
+                    className={css({
+                      marginLeft: 'auto',
+                      color: '#757575',
+                      fontSize: '14px',
+                    })}>
+                    <button
+                      className={css({
+                        marginRight: '10px',
+                      })}>편집
+                    </button>
+                    <button>삭제</button>
+                  </div>
                 </div>
                 <ReviewCardBody>
                   화장실 비밀번호 5633 여자 3322 입니다. 개좋았어요 휴지없음. 화장실 개추움. 비번자주바뀜.

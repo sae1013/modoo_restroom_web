@@ -23,12 +23,14 @@ const SearchPage = ({ data }: SearchPageProps) => {
     if (selectedRestroom) return;
 
     setNewRestroom(addrAndGeoInfo);
+    // TODO: 핀을 클릭 시에 아래 모달을 띄움.
     openModal({
       component: ReviewBottomSheet,
       props: {},
       key: 'reviewBottomSheet',
     });
     // TODO: 리뷰 개발 후 주석 해제
+    // TODO: 리뷰 카운팅. 보여주기
     // openModal({
     //   component: EmptyBottomSheet,
     //   props: {
