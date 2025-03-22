@@ -6,14 +6,13 @@ import BottomNav from '@/components/common/navigations/BottomNav';
 
 const Page = async () => {
   try {
-    // const res = await axios.get('http://localhost:8000/restrooms');
+    // const res = await axios.get('http://localhost:8000/places');
     // const restrooms = res.data;
-    const restrooms = [];
 
     return (
       <>
         <SearchHeader></SearchHeader>
-        <SearchPage data={restrooms}></SearchPage>
+        <SearchPage data={[]}></SearchPage>
         <BottomNav></BottomNav>
       </>
     );

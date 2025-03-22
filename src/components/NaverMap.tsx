@@ -10,10 +10,19 @@ interface NaverMapProps {
   lat?: number;
   lng?: number;
   zoom?: number;
+  minZoom?: number;
   onClick?: (addresses: string[]) => void;
 }
 
-const NaverMap = ({ width = '100%', height = '100vh', lat = 37.511337, lng = 127.012084, zoom = 15, onClick }: NaverMapProps) => {
+const NaverMap = ({
+                    width = '100%',
+                    height = '100vh',
+                    lat = 37.4806169,
+                    lng = 127.1236753,
+                    zoom = 17,
+                    minZoom = 14,
+                    onClick,
+                  }: NaverMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
 
   const initMap = () => {
@@ -24,7 +33,13 @@ const NaverMap = ({ width = '100%', height = '100vh', lat = 37.511337, lng = 127
     const map = new naver.maps.Map(mapRef.current, {
       center: new naver.maps.LatLng(lat, lng),
       zoom,
+      // minZoom,
       mapTypeControl: false,
+      scaleControl: false,
+      logoControl: false,
+      mapDataControl: false,
+      zoomControl: false,
+
     });
 
     let infoWindow = new naver.maps.InfoWindow({
@@ -81,7 +96,7 @@ const NaverMap = ({ width = '100%', height = '100vh', lat = 37.511337, lng = 127
           coords: latlng,
           orders: [naver.maps.Service.OrderType.ADDR, naver.maps.Service.OrderType.ROAD_ADDR].join(','),
         },
-        async function (status: 200 | 500, response: ReverseGeocodeResponse) {
+        async function(status: 200 | 500, response: ReverseGeocodeResponse) {
           if (status === naver.maps.Service.Status.ERROR) {
             reject('존재하지 않는 주소');
           }
