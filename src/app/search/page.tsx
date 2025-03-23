@@ -13,6 +13,7 @@ const Page = async () => {
       <>
         <SearchHeader></SearchHeader>
         <SearchPage data={[]}></SearchPage>
+
         <BottomNav></BottomNav>
       </>
     );

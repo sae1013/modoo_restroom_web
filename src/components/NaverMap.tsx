@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import { ReverseGeocodeResponse, ServiceStatus, ReverseGeocodeAddress } from '@api/naver_map';
-import { makeAddress } from '@/lib/map_utils';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { ReverseGeocodeResponse } from '@api/naver_map';
 
 interface NaverMapProps {
   width?: string | number;
@@ -11,7 +10,7 @@ interface NaverMapProps {
   lng?: number;
   zoom?: number;
   minZoom?: number;
-  onClick?: (addresses: string[]) => void;
+  onClick?: (addresses: object) => void;
 }
 
 const NaverMap = ({
@@ -24,84 +23,70 @@ const NaverMap = ({
                     onClick,
                   }: NaverMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const [hasInitialize, setHasInitialize] = useState<boolean>(false);
 
+  // Map 초기화 함수
   const initMap = () => {
     const { naver } = window;
     if (!naver || !mapRef.current) {
       return;
     }
+
     const map = new naver.maps.Map(mapRef.current, {
       center: new naver.maps.LatLng(lat, lng),
       zoom,
-      // minZoom,
+      minZoom: 14,
       mapTypeControl: false,
       scaleControl: false,
       logoControl: false,
       mapDataControl: false,
       zoomControl: false,
-
     });
 
-    let infoWindow = new naver.maps.InfoWindow({
+    const infoWindow = new naver.maps.InfoWindow({
       anchorSkew: true,
     });
 
+    // 전역 변수에 저장
     window.map = map;
     window.infoWindow = infoWindow;
+    setHasInitialize(true);
 
-    let marker = new naver.maps.Marker({
+    const marker = new naver.maps.Marker({
       position: new naver.maps.LatLng(lat, lng),
       map,
     });
     map.setCursor('pointer');
   };
 
-  const onClickMapListener = async (e: { coord: object }) => {
+  // 지도 클릭 핸들러 (최신 onClick을 사용하기 위해 useCallback 사용)
+  const onClickMapListener = useCallback(async (e: { coord: any }) => {
     const selectedAddrInfo: object = await searchCoordinateToAddress(e.coord);
     const coordInfo = await searchAddressToCoord(selectedAddrInfo);
     console.log(coordInfo);
     if (onClick) {
       onClick({ ...selectedAddrInfo, ...coordInfo });
     }
-  };
-  const initGeocoder = () => {
-    window.map.addListener('click', onClickMapListener);
-  };
+  }, [onClick]);
 
-  const searchAddressToCoord = async (addressInfo) => {
-    const { naver } = window;
-    const { jibunAddress, roadAddress } = addressInfo;
-    return new Promise((resolve, reject) => {
-      naver.maps.Service.geocode(
-        {
-          query: roadAddress || jibunAddress,
-        },
-        (status, response) => {
-          console.log(status, response);
-          resolve({ lat: response.v2.addresses[0].x, lng: response.v2.addresses[0].y });
-        },
-      );
-    });
-  };
-
-  // 클릭한 위치좌표를 기반으로 주소 획득
+  // 좌표를 기반으로 주소 검색
   const searchCoordinateToAddress = async (latlng: object): Promise<object> => {
-    const { infoWindow, map, naver } = window;
+    const { infoWindow, naver } = window;
     infoWindow.close();
-    let addresses: string[] = [];
 
     return new Promise((resolve, reject) => {
       naver.maps.Service.reverseGeocode(
         {
           coords: latlng,
-          orders: [naver.maps.Service.OrderType.ADDR, naver.maps.Service.OrderType.ROAD_ADDR].join(','),
+          orders: [
+            naver.maps.Service.OrderType.ADDR,
+            naver.maps.Service.OrderType.ROAD_ADDR,
+          ].join(','),
         },
-        async function(status: 200 | 500, response: ReverseGeocodeResponse) {
+        function(status: any, response: ReverseGeocodeResponse) {
           if (status === naver.maps.Service.Status.ERROR) {
             reject('존재하지 않는 주소');
           }
-          console.log(response.v2);
-          const items = response.v2.results;
           const selectedCoordInfo = {
             jibunAddress: response.v2.address.jibunAddress || '',
             roadAddress: response.v2.address.jibunAddress || '',
@@ -112,23 +97,55 @@ const NaverMap = ({
     });
   };
 
+  // 주소를 기반으로 좌표 검색
+  const searchAddressToCoord = async (addressInfo: any) => {
+    const { naver } = window;
+    const { jibunAddress, roadAddress } = addressInfo;
+    return new Promise((resolve, reject) => {
+      naver.maps.Service.geocode(
+        {
+          query: roadAddress || jibunAddress,
+        },
+        (status, response) => {
+          console.log(status, response);
+          resolve({
+            lat: response.v2.addresses[0].y,
+            lng: response.v2.addresses[0].x,
+          });
+        },
+      );
+    });
+  };
+
+  // Map 로드 시 initMap 실행
   useEffect(() => {
     if (window.naver && window.naver.maps) {
       initMap();
-      initGeocoder();
     } else {
       window.addEventListener('load', initMap);
       return () => {
         window.removeEventListener('load', initMap);
-        window.map.removeListener('click');
       };
     }
   }, []);
 
+  // initMap 완료 후 이벤트 리스너 등록
+  useEffect(() => {
+    let listener: any;
+    if (hasInitialize && window.map) {
+      // NaverMap API의 addListener를 사용하여 이벤트 핸들러 등록
+      listener = window.naver.maps.Event.addListener(window.map, 'click', onClickMapListener);
+    }
+    return () => {
+      // 등록된 리스너가 있으면 제거
+      if (listener) {
+        window.naver.maps.Event.removeListener(listener);
+      }
+    };
+  }, [hasInitialize, onClick]);
+
   return (
-    <>
-      <div ref={mapRef} style={{ width, height }}></div>
-    </>
+    <div ref={mapRef} style={{ width, height }}></div>
   );
 };
 

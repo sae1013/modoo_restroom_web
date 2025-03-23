@@ -33,7 +33,7 @@ const EmptyBottomSheet = () => {
               width: '100%',
               paddingBottom: '133.33%',
               marginBottom: '1rem',
-              backgroundImage: `url('/images/pee.png')`,
+              backgroundImage: `url('/images/empty_place.png')`,
               backgroundSize: 'cover', // 이미지 크기를 컨테이너에 맞춤
               backgroundPosition: 'center', // 중앙 정렬
               backgroundRepeat: 'no-repeat', // 반복 방지
