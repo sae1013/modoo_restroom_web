@@ -16,13 +16,14 @@ interface SearchPageProps {
   data: any;
 }
 
+
 const SearchPage = ({ data }: SearchPageProps) => {
   const { openModal, closeModal } = useModal();
   const [places, setPlaces] = useState([]);
   const [currentLocation, setCurrentLocation] = useState(null);
-  const markerRef = useRef<any>(null);
-  const watchIdRef = useRef<number | null>(null);
-  const [isFirstFetched, setIsFirstFetched] = useState(false);
+  const [initialLocation, setInitialLocation] = useState(null);
+  const myMarkerRef = useRef<any>(null);
+
 
   const onClickMapHandler = useCallback((addrAndGeoInfo: any) => {
     const existPlace = places.find((place: any) => place.location.coordinates[1] === Number(addrAndGeoInfo.lat) && place.location.coordinates[0] === Number(addrAndGeoInfo.lng));
@@ -46,33 +47,69 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   }, [places.length]);
 
+  // 웹뷰 개발모드에서만 사용
+  useEffect(() => {
+    if (!window.ReactNativeWebView) {
+      const initialStaticLocation = {
+        lat: 36.78662503200313,
+        lng: 127.1005800034602,
+      };
+      setCurrentLocation(initialStaticLocation);
+      setInitialLocation(initialStaticLocation);
+    }
 
-  const moveMapToCurrentLocation = (lat, lng) => {
+  }, []);
+
+  const moveMapToTargetLocation = (lat: number, lng: number) => {
     const newCenter = new window.naver.maps.LatLng(lat, lng);
-    window.map.setCenter(newCenter);
+    window.map.panTo(newCenter);
+  };
+
+  const markCurrentPosition = (lat: number, lng: number) => {
+    // 현재위치가 없다면 새로 생성
+    if (!myMarkerRef.current) {
+      let myMarker = new window.naver.maps.Marker({
+        position: new window.naver.maps.LatLng(lat, lng),
+        map: window.map,
+        icon: {
+          content: `<div style="
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background-color: #FF5722;
+          border: 2px solid white;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        "></div>`,
+          // 마커의 중심을 맞추기 위해 width, height 1/2 크기를 anchor로 지정
+          anchor: new window.naver.maps.Point(10, 10),
+        },
+      });
+      myMarkerRef.current = myMarker;
+      return;
+    }
+    // 위치 업데이트
+    myMarkerRef.current.setPosition(new window.naver.maps.LatLng(lat, lng));
+
   };
 
   const handleClickMyLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lat = position.coords.latitude;
-          const lng = position.coords.longitude;
-          console.log('현재 위치:', lat, lng);
-          // 여기서 네이버맵 이동 함수를 호출합니다.
-          moveMapToCurrentLocation(lat, lng);
-        },
-        (error) => {
-          console.error('위치 정보를 가져오는데 실패:', error);
-        },
-        {
-          enableHighAccuracy: true, // 높은 정확도 요청 (옵션)
-          timeout: 5000,
-          maximumAge: 0,
-        },
-      );
-    }
+    if (!currentLocation) return;
+    const { lat, lng } = currentLocation;
+    moveMapToTargetLocation(lat, lng);
   };
+
+  // 나의 위치 추적
+  useEffect(() => {
+    if (!currentLocation) return;
+    const { lat, lng } = currentLocation;
+    markCurrentPosition(lat, lng);
+  }, [currentLocation]);
+
+  // 초기 카메라 이동(내위치)
+  useEffect(() => {
+    if (!initialLocation) return;
+    moveMapToTargetLocation(initialLocation);
+  }, [initialLocation]);
 
   useEffect(() => {
     window.updateCurrentLocation = (lat, lng) => {
@@ -82,9 +119,12 @@ const SearchPage = ({ data }: SearchPageProps) => {
     };
   }, []);
 
-  // useEffect(() => {
-  //   moveMapToCurrentLocation(37.4934876, 127.1115075);
-  // }, []);
+  // 초기위치 지정
+  useEffect(() => {
+    if (!initialLocation || !currentLocation) {
+      setInitialLocation(currentLocation);
+    }
+  }, [currentLocation]);
 
   const getViewportBounds = () => {
     const { _ne, _sw } = window.map.getBounds();
@@ -93,22 +133,19 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // TODO: 네이티브 브릿지로 현재위치 받아오고, 현재위치기준으로 fetch.
-      // TODO: 현재 좌표를 기준으로 center 지정. 그이후에는 marker를 업데이트.
-      if (isFirstFetched || !currentLocation) {
+      if (!currentLocation) {
         return;
       }
       const { lat, lng } = currentLocation;
-      moveMapToCurrentLocation(lat, lng);
+
       // const { swLat, swLng, neLat, neLng } = getViewportBounds();
       const radius = 3000;
       const res = await axios.get(`http://192.168.219.118:8000/places/nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
       setPlaces(res.data);
-      setIsFirstFetched(true);
     };
 
     fetchData();
-  }, [currentLocation, isFirstFetched]);
+  }, [currentLocation]);
 
 
   useEffect(() => {
@@ -156,7 +193,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
         borderRadius: '50%',
         boxShadow: '0px 0px 5px rgba(0,0,0,0.4)',
       })} onClick={handleClickMyLocation}>
-        <MdOutlineMyLocation size={20} color="#55CBCD"></MdOutlineMyLocation>
+        <MdOutlineMyLocation size={25} color="#55CBCD"></MdOutlineMyLocation>
       </div>
     </>
   );
