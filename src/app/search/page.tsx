@@ -11,7 +11,7 @@ const Page = async () => {
 
     return (
       <>
-        <SearchHeader></SearchHeader>
+        {/*<SearchHeader></SearchHeader>*/}
         <SearchPage data={[]}></SearchPage>
 
         <BottomNav></BottomNav>

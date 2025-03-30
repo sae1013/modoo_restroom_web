@@ -1,15 +1,20 @@
+'use client';
+
 import { css } from '@styled-system/css';
 import Horizontal from '@/components/common/Horizontal';
 import Button from '@/components/common/buttons/Button';
 import ReviewCardBody from '@/components/common/cards/ReviewCardBody';
 import ReviewCardFooter from '@/components/common/cards/ReviewCardFooter';
+import { useRouter } from 'next/navigation';
 
 const MyProfile = () => {
+  const router = useRouter();
+  const handleEditProfile = () => {
+    router.push('/profile/my');
+  };
+
   return (
-    <div className={css({
-      paddingTop: '80px',
-      padding: '80px 24px',
-    })}>
+    <div className={css({})}>
       {/*유저 아이디, 작성리뷰갯수*/}
       <div className={css({
         marginBottom: '16px',
@@ -24,7 +29,7 @@ const MyProfile = () => {
           fontSize: '14px',
         })}>나의 리뷰: 3곳</p>
       </div>
-      <Button>프로필 수정</Button>
+      <Button onClick={handleEditProfile}>프로필 보기</Button>
       <Horizontal marginTop={'16px'}></Horizontal>
 
       <section className={css({})}>

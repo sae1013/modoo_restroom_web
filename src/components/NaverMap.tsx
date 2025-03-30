@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { ReverseGeocodeResponse } from '@api/naver_map';
+import './marker.scss';
 
 interface NaverMapProps {
   width?: string | number;
@@ -51,11 +52,6 @@ const NaverMap = ({
     window.map = map;
     window.infoWindow = infoWindow;
     setHasInitialize(true);
-
-    const marker = new naver.maps.Marker({
-      position: new naver.maps.LatLng(lat, lng),
-      map,
-    });
     map.setCursor('pointer');
   };
 

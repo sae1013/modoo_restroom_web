@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { css } from '@styled-system/css';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   // const router = useRouter();
@@ -14,8 +15,15 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -50 }}
         transition={{ duration: 0.1 }}
+
       >
-        {children}
+        <div className={css({
+          padding: '30px 24px',
+          paddingTop: '80px',
+          height: '100vh',
+        })}>
+          {children}
+        </div>
       </motion.div>
     </AnimatePresence>
   );

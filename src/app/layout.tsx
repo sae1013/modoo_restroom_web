@@ -11,6 +11,8 @@ import { pretendard } from '@/app/font';
 import HeaderLayout from '@/components/common/HeaderLayout';
 import { RootStoreProvider } from '@/provider/root-store-provider';
 import Modal from '@/components/common/Modal';
+import { ToastContainer } from 'react-toastify';
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -44,6 +46,7 @@ export default async function RootLayout({
         <div id="modal-root"></div>
         <Modal></Modal>
         <HeaderLayout></HeaderLayout>
+        <Toaster></Toaster>
         {children}
       </RootStoreProvider>
     </StyledJsxRegistry>

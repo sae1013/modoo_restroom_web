@@ -1,3 +1,4 @@
+'use client';
 import { styled } from '@styled-system/jsx';
 import { JsxHTMLProps } from '@pandacss/types';
 import { ButtonHTMLAttributes } from 'react';

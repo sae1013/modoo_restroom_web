@@ -34,6 +34,8 @@ const Header = ({ data }: HeaderProps) => {
       break;
     case '/profile' :
       displayName = '내 정보';
+    case '/profile/my':
+      displayName = '프로필 보기';
       break;
     default:
       break;
