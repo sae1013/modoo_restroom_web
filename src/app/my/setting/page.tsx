@@ -1,13 +1,21 @@
 'use client';
 import { css } from '@styled-system/css';
+import apiClient from '@/lib/apis/apiClient';
+import { LOGOUT_API, SIGNOUT_API } from '@/lib/apis/command';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
-  const handleLogout = () => {
 
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const res = await apiClient.request(LOGOUT_API);
+    router.push('/auth/login');
   };
 
-  const handleSignout = () => {
-
+  const handleSignout = async () => {
+    const res = await apiClient.request(SIGNOUT_API);
+    router.push('/auth/login');
   };
 
   return (

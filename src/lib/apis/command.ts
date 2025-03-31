@@ -1,9 +1,11 @@
-export const SIGNOUT_API = {
+import { Command } from '@/lib/apis/apiClient';
+
+export const SIGNOUT_API: Command = {
   path: '/auth/signout',
   method: 'DELETE',
 };
 
-export const LOGOUT_API = {
+export const LOGOUT_API: Command = {
   path: '/user/logout',
   method: 'POST',
 };

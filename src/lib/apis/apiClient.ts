@@ -16,7 +16,7 @@ class ApiClient {
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: 'http://localhost:8080',
+      baseURL: 'http://localhost:8000',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ class ApiClient {
     if (option.body && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
       config.data = option.body;
     }
-    const data = await axios.request(config);
+    const data = await this.axiosInstance.request(config);
     console.log('data', data);
   }
 }
