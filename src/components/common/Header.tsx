@@ -4,6 +4,7 @@ import { css } from '@styled-system/css';
 import { useRouter } from 'next/navigation';
 import { GrPrevious } from 'react-icons/gr';
 import { usePathname } from 'next/navigation';
+import { IoMdSettings } from 'react-icons/io';
 
 interface HeaderProps {
   data?: any;
@@ -32,27 +33,26 @@ const Header = ({ data }: HeaderProps) => {
     case '/my/review':
       displayName = '내가 쓴 리뷰';
       break;
-    case '/profile' :
+    case '/my/profile' :
       displayName = '내 정보';
-    case '/profile/my':
+      break;
+    case '/my/profile/my':
       displayName = '프로필 보기';
       break;
+    case '/my/setting':
+      displayName = '설정';
+      break;
+
     default:
       break;
   }
-  // if (pathname === '/auth/login') {
-  //   displayName = '로그인';
-  // } else if (pathname === '/auth/signup') {
-  //   displayName = '회원가입';
-  // } else {
-  //   displayName = '기본 제목'; // 그 외 다른 경로일 경우 기본 제목
-  // }
-
-
   const goPrev = () => {
     router.back();
   };
 
+  const goSetting = () => {
+    router.push('/my/setting');
+  };
   return (
     <div
       className={css({
@@ -60,23 +60,20 @@ const Header = ({ data }: HeaderProps) => {
         width: '100%',
         height: '70px',
         display: 'flex',
-        justifyContent: 'space-between',
         alignItems: 'center',
+        paddingLeft: '16px',
+        paddingRight: '16px',
       })}
     >
       {/* < 아이콘  */}
-      <div className={css({
-        paddingLeft: '16px',
-        position: 'absolute',
-      })} onClick={() => {
+      <div onClick={() => {
         goPrev();
       }}>
         <GrPrevious size={22} />
       </div>
 
       {/* 가운데 텍스트 */}
-      {/* // TODO: 경로를 읽어서 동적 이름변경. */}
-      <div
+      <p
         className={css({
           fontWeight: 600,
           fontSize: '18px',
@@ -85,10 +82,15 @@ const Header = ({ data }: HeaderProps) => {
         })}
       >
         {displayName}
-      </div>
+      </p>
 
       {/* 우측영역 */}
-      <div className={css({})}></div>
+      {pathname === '/my/profile' &&
+        (<div onClick={goSetting}>
+          <IoMdSettings size={25} fill={'#737373'} />
+        </div>)
+      }
+
     </div>
   );
 };

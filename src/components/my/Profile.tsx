@@ -22,14 +22,14 @@ const MyProfile = () => {
         <p className={css({
           fontSize: '20px',
           fontWeight: '600',
-          // textAlign:'center'
+
         })}>아주빠른 호랑이</p>
         <p className={css({
           color: '#757575',
           fontSize: '14px',
         })}>나의 리뷰: 3곳</p>
       </div>
-      <Button onClick={handleEditProfile}>프로필 보기</Button>
+      {/*<Button onClick={handleEditProfile}>프로필 보기</Button>*/}
       <Horizontal marginTop={'16px'}></Horizontal>
 
       <section className={css({})}>
