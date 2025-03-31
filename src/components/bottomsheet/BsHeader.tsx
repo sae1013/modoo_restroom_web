@@ -2,6 +2,7 @@ import React from 'react';
 import { styled } from '../../../styled-system/jsx';
 import { IoClose } from 'react-icons/io5';
 import { css } from '@styled-system/css';
+import HapticWrapper from '@/components/HapticWrapper';
 
 const Wrapper = styled('div', {
   base: {
@@ -34,15 +35,17 @@ const BsHeader = ({ onClose, children }: BsHeaderProps) => {
   return (
     <Wrapper>
       {/*<Handle onClick={onClose} />*/}
-      <div className={css({
-        width: '35px',
-        height: '35px',
-        marginLeft: 'auto',
-        marginRight: '10px',
+      <HapticWrapper>
+        <div className={css({
+          width: '35px',
+          height: '35px',
+          marginLeft: 'auto',
+          marginRight: '10px',
 
-      })} onClick={onClose}>
-        <IoClose size={25} />
-      </div>
+        })} onClick={onClose}>
+          <IoClose size={25} />
+        </div>
+      </HapticWrapper>
 
       {children}
     </Wrapper>

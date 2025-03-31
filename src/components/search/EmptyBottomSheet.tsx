@@ -5,6 +5,7 @@ import BsHeader from '@/components/bottomsheet/BsHeader';
 import BsContents from '@/components/bottomsheet/BsContents';
 import BsFooter from '@/components/bottomsheet/BsFooter';
 import RegisterBottomSheet from './RegisterBottomSheet';
+import Button from '@/components/common/buttons/Button';
 
 const EmptyBottomSheet = () => {
   const { closeModal, openModal } = useModal();
@@ -65,20 +66,8 @@ const EmptyBottomSheet = () => {
       </BsContents>
 
       <BsFooter>
-        <button
-          style={{
-            position: 'relative',
-            bottom: 0,
-            width: '100%',
-            height: '50px',
-            outline: 'none',
-            border: 'none',
-            fontSize: '1rem',
-            cursor: 'pointer',
-            background: '#55CBCD',
-            borderRadius: '10px',
-            color: 'white',
-          }}
+        <Button
+          mode="haptic"
           onClick={() => {
             closeModal('unregistered');
             setTimeout(() => {
@@ -90,8 +79,8 @@ const EmptyBottomSheet = () => {
             }, 500);
           }}
         >
-          리뷰남기기
-        </button>
+          리뷰 남기기
+        </Button>
       </BsFooter>
     </BottomSheet>
   );

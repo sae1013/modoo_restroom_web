@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { GrPrevious } from 'react-icons/gr';
 import { usePathname } from 'next/navigation';
 import { IoMdSettings } from 'react-icons/io';
+import HapticWrapper from '@/components/HapticWrapper';
 
 interface HeaderProps {
   data?: any;
@@ -66,11 +67,13 @@ const Header = ({ data }: HeaderProps) => {
       })}
     >
       {/* < 아이콘  */}
-      <div onClick={() => {
-        goPrev();
-      }}>
-        <GrPrevious size={22} />
-      </div>
+      <HapticWrapper>
+        <div onClick={() => {
+          goPrev();
+        }}>
+          <GrPrevious size={22} />
+        </div>
+      </HapticWrapper>
 
       {/* 가운데 텍스트 */}
       <p
@@ -86,9 +89,13 @@ const Header = ({ data }: HeaderProps) => {
 
       {/* 우측영역 */}
       {pathname === '/my/profile' &&
-        (<div onClick={goSetting}>
-          <IoMdSettings size={25} fill={'#737373'} />
-        </div>)
+        (
+          <HapticWrapper>
+            <div onClick={goSetting}>
+              <IoMdSettings size={25} fill={'#737373'} />
+            </div>
+          </HapticWrapper>
+        )
       }
 
     </div>

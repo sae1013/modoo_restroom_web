@@ -14,6 +14,8 @@ import axios from 'axios';
 import { css } from '@styled-system/css';
 import Marker from '@/components/Marker';
 import toast from 'react-hot-toast';
+import { triggerHaptic } from '@/utils/nativeBridge';
+import HapticWrapper from '@/components/HapticWrapper';
 
 interface SearchPageProps {
   data: any;
@@ -28,7 +30,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
   const [isFirstFetched, setIsFirstFetched] = useState(false);
   const myMarkerRef = useRef<any>(null); // 현재 내위치의 마커
   const markersRef = useRef<any[]>([]);
-  // const notify = () => toast('반경 2km 내 검색된 장소가 없어요');
 
   const onClickMapHandler = useCallback((addrAndGeoInfo: any) => {
     const existPlace = places.find((place: any) => place.location.coordinates[1] === Number(addrAndGeoInfo.lat) && place.location.coordinates[0] === Number(addrAndGeoInfo.lng));
@@ -101,6 +102,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
   };
 
   const handleSearchTargetPlaces = async () => {
+    triggerHaptic();
     const { lat, lng } = getCurrentViewCenter();
 
     const places = await fetchPlaces(lat, lng, 2000);
@@ -114,8 +116,13 @@ const SearchPage = ({ data }: SearchPageProps) => {
   };
 
   const drawMarkers = (places: any) => {
-    // 기존의 마커들을 삭제.
     popToastMessage(`반경에 ${places.length}개의 화장실이 있어요`);
+    console.log('drawMarkers()');
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage('drawMarkers()');
+    }
+
+    // 기존의 마커들을 삭제.
     markersRef.current.forEach(marker => {
       marker.setMap(null);
     });
@@ -127,16 +134,23 @@ const SearchPage = ({ data }: SearchPageProps) => {
         position,
         map: window.map,
         title: place.id,
-        icon: {
-          content: createStaticHTML(<Marker />),
-          anchor: new window.naver.maps.Point(15, 15),
-        },
+        // 지도 이동시 마커사라짐 버그로 비활성화
+        // icon: {
+        //   content: createStaticHTML(<Marker />),
+        //   // anchor: new window.naver.maps.Point(15, 15),
+        // },
       });
+      // 이벤트리스너 등록
+      window.naver.maps.Event.addListener(marker, 'click', function(e) {
+        triggerHaptic();
+        openModal({
+          component: ReviewBottomSheet,
+          props: {},
+          key: 'reviewBottomSheet',
+        });
+      });
+
       markersRef.current.push(marker);
-      // 이벤트 리스너 등록
-      window.naver.maps.Event.addListener(marker, 'click', () => {
-        console.log('marker', marker);
-      });
     });
 
   };
@@ -205,7 +219,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!currentLocation) {
+      if (!currentLocation || isFirstFetched) {
         return;
       }
       const { lat, lng } = currentLocation;
@@ -221,37 +235,41 @@ const SearchPage = ({ data }: SearchPageProps) => {
   return (
     <>
       <NaverMap onClick={onClickMapHandler} />
-      <button onClick={handleSearchTargetPlaces}
-              className={css({
-                zIndex: 99,
-                position: 'fixed',
-                bottom: '90px',
-                left: '50%',
-                transform: 'translateX(-50%)',
-                display: 'flex',
-                alignItems: 'center',
-                backgroundColor: 'white',
-                borderRadius: '30px',
-                fontSize: '13px',
-                gap: '5px',
-                padding: '5px 10px',
-                boxShadow: '0px 0px 5px rgba(0,0,0,0.4)',
-              })}>
-        <GrRefresh size={18}></GrRefresh>
-        <p>이지역 재검색</p>
-      </button>
-      <div className={css({
-        zIndex: 99,
-        position: 'fixed',
-        bottom: '30px',
-        right: '20px',
-        padding: '8px',
-        backgroundColor: '#fff',
-        borderRadius: '50%',
-        boxShadow: '0px 0px 5px rgba(0,0,0,0.4)',
-      })} onClick={handleClickMyLocation}>
-        <MdOutlineMyLocation size={25} color="#55CBCD"></MdOutlineMyLocation>
-      </div>
+      <HapticWrapper>
+        <button onClick={handleSearchTargetPlaces}
+                className={css({
+                  zIndex: 99,
+                  position: 'fixed',
+                  bottom: '90px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  backgroundColor: 'white',
+                  borderRadius: '30px',
+                  fontSize: '13px',
+                  gap: '5px',
+                  padding: '5px 10px',
+                  boxShadow: '0px 0px 5px rgba(0,0,0,0.4)',
+                })}>
+          <GrRefresh size={18}></GrRefresh>
+          <p>이지역 재검색</p>
+        </button>
+      </HapticWrapper>
+      <HapticWrapper>
+        <div className={css({
+          zIndex: 99,
+          position: 'fixed',
+          bottom: '30px',
+          right: '20px',
+          padding: '8px',
+          backgroundColor: '#fff',
+          borderRadius: '50%',
+          boxShadow: '0px 0px 5px rgba(0,0,0,0.4)',
+        })} onClick={handleClickMyLocation}>
+          <MdOutlineMyLocation size={25} color="#55CBCD"></MdOutlineMyLocation>
+        </div>
+      </HapticWrapper>
     </>
   );
 };

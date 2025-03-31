@@ -36,7 +36,7 @@ const NaverMap = ({
     const map = new naver.maps.Map(mapRef.current, {
       center: new naver.maps.LatLng(lat, lng),
       zoom,
-      minZoom: 14,
+      // minZoom: 14,
       mapTypeControl: false,
       scaleControl: false,
       logoControl: false,

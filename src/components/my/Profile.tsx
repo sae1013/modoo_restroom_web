@@ -6,11 +6,25 @@ import Button from '@/components/common/buttons/Button';
 import ReviewCardBody from '@/components/common/cards/ReviewCardBody';
 import ReviewCardFooter from '@/components/common/cards/ReviewCardFooter';
 import { useRouter } from 'next/navigation';
+import HapticWrapper from '@/components/HapticWrapper';
+import apiClient from '@/lib/apis/apiClient';
+import { DELETE_REVIEW } from '@/lib/apis/command';
 
 const MyProfile = () => {
   const router = useRouter();
-  const handleEditProfile = () => {
-    router.push('/profile/my');
+
+
+  const handleDeleteReview = async (placeId: number, reviewId: number) => {
+    await apiClient.request(DELETE_REVIEW, {
+      body: {
+        placeId,
+        reviewId,
+      },
+    });
+  };
+
+  const handlePopupEditReview = (placeId, reviewId) => {
+    // 수정 바텀시트 띄우기
   };
 
   return (
@@ -73,12 +87,22 @@ const MyProfile = () => {
                       color: '#757575',
                       fontSize: '14px',
                     })}>
-                    <button
+
+                    <Button
+                      variant="default"
+                      onClick={() => {
+                        handlePopupEditReview(item.placeId, item.id);
+                      }}
                       className={css({
                         marginRight: '10px',
                       })}>편집
-                    </button>
-                    <button>삭제</button>
+                    </Button>
+
+                    <Button variant="default" onClick={() => {
+                      handleDeleteReview(item.placeId, item.id);
+                    }}>삭제
+                    </Button>
+
                   </div>
                 </div>
                 <ReviewCardBody>

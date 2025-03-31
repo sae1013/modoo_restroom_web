@@ -3,6 +3,7 @@ import { css } from '@styled-system/css';
 import apiClient from '@/lib/apis/apiClient';
 import { LOGOUT_API, SIGNOUT_API } from '@/lib/apis/command';
 import { useRouter } from 'next/navigation';
+import HapticWrapper from '@/components/HapticWrapper';
 
 const Page = () => {
 
@@ -39,7 +40,14 @@ const Page = () => {
             padding: '16px',
           },
         })}>
-          <li className={css({})}>비밀번호 찾기</li>
+
+          <li className={css({})}>
+            <button onClick={() => {
+            }}>
+              비밀번호 찾기
+            </button>
+          </li>
+
           <li className={css({})}></li>
         </ul>
       </section>
@@ -63,8 +71,12 @@ const Page = () => {
           },
         })}>
           <li className={css({})}>버전 정보</li>
-          <li className={css({})} onClick={handleLogout}>로그아웃</li>
-          <li className={css({})} onClick={handleSignout}>회원탈퇴</li>
+          <HapticWrapper>
+            <li className={css({})} onClick={handleLogout}>로그아웃</li>
+          </HapticWrapper>
+          <HapticWrapper>
+            <li className={css({})} onClick={handleSignout}>회원탈퇴</li>
+          </HapticWrapper>
         </ul>
       </section>
     </div>

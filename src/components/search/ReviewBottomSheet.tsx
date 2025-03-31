@@ -19,6 +19,7 @@ import ReviewCardBody from '@/components/common/cards/ReviewCardBody';
 import FilterBadge from '@/components/common/badges/FilterBadge';
 import ReviewCardFooter from '@/components/common/cards/ReviewCardFooter';
 import ReviewCardHeader from '@/components/common/cards/ReviewCardHeader';
+import HapticWrapper from '@/components/HapticWrapper';
 
 const ReviewBottomSheet = () => {
   const { openModal, closeModal } = useModal();
@@ -94,7 +95,9 @@ const ReviewBottomSheet = () => {
         </div>
       </BsContents>
       <BsFooter>
-        <Button>리뷰 남기기</Button>
+        <Button variant="wide" mode="haptic" onClick={() => {
+
+        }}>리뷰 남기기</Button>
       </BsFooter>
     </BottomSheet>
   );

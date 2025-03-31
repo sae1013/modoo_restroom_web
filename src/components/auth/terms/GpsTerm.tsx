@@ -17,7 +17,7 @@ const GpsTerm = () => {
       </BsContents>
 
       <BsFooter>
-        <Button onClick={() => {
+        <Button variant="wide" onClick={() => {
           closeModal('gpsTerm');
         }}>닫기</Button>
       </BsFooter>

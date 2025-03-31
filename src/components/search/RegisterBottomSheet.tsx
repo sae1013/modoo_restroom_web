@@ -12,6 +12,7 @@ import { css } from '@styled-system/css';
 import StarRatingPicker from '@/components/common/starRatings/StarRatingPicker';
 import Button from '@/components/common/buttons/Button';
 import ReviewTextArea from '@/components/common/textAreas/ReviewTextArea';
+import HapticWrapper from '@/components/HapticWrapper';
 
 const RegisterBottomSheet = () => {
   const { closeModal } = useModal();
@@ -66,9 +67,11 @@ const RegisterBottomSheet = () => {
         <div className={css({
           marginTop: '16px',
         })}>
-          <StarRatingPicker onChange={(rating: number) => {
-            setRating(rating);
-          }}></StarRatingPicker>
+          <HapticWrapper>
+            <StarRatingPicker onChange={(rating: number) => {
+              setRating(rating);
+            }}></StarRatingPicker>
+          </HapticWrapper>
         </div>
 
         {/* 필터옵션 선택*/}
@@ -105,16 +108,17 @@ const RegisterBottomSheet = () => {
 
         {/* 리뷰 공간 */}
         <div className={css({ marginTop: '16px' })}>
-          <ReviewTextArea value={reviewText} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-            console.log(e.target.value);
-            setReviewText(e.target.value);
-
-          }} />
+          <HapticWrapper>
+            <ReviewTextArea value={reviewText} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+              console.log(e.target.value);
+              setReviewText(e.target.value);
+            }} />
+          </HapticWrapper>
         </div>
 
       </BsContents>
       <BsFooter>
-        <Button onClick={handleSubmit}>리뷰 등록하기</Button>
+        <Button variant="wide" mode="haptic" onClick={handleSubmit}>리뷰 등록하기</Button>
       </BsFooter>
     </BottomSheet>
   );

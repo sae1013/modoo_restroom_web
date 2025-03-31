@@ -3,18 +3,18 @@ import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 
 const Wrapper = styled(motion.div)`
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  z-index: 9999;
-  left: 0;
-  right: 0;
-
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    right: 0;
+    //max-height: 80vh;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
 `;
 
 interface BottomSheetProps {
@@ -37,8 +37,10 @@ const BottomSheet = ({ children, onCloseCallback }: BottomSheetProps) => {
 
   useLayoutEffect(() => {
     // 콘텐츠 컨테이너의 높이를 측정하여 targetHeight에 저장
+    const maxHeight = window.visualViewport.height - 10;
     if (wrapperRef.current) {
-      setWrapperHeight(wrapperRef.current.clientHeight);
+      setWrapperHeight(Math.min(wrapperRef.current.clientHeight, maxHeight));
+
     }
   }, []);
 

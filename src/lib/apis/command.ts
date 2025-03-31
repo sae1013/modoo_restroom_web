@@ -10,3 +10,9 @@ export const LOGOUT_API: Command = {
   method: 'POST',
 };
 
+export const DELETE_REVIEW: Command = {
+  path: '/reviews',
+  method: 'DELETE',
+};
+
+export const EDIT_REVIEW

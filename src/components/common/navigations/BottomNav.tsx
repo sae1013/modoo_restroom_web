@@ -6,6 +6,7 @@ import { FaHeart } from 'react-icons/fa';
 import { FaUserCircle } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { MouseEvent } from 'react';
+import HapticWrapper from '@/components/HapticWrapper';
 
 const BottomNav = () => {
   const router = useRouter();
@@ -37,13 +38,19 @@ const BottomNav = () => {
         alignItems: 'center',
         justifyContent: 'center',
       })}>
-        <li data-path="/search" onClick={movePage}>
-          <FaMapMarkedAlt size={24} />
-        </li>
-        <li data-path="/my/like" onClick={movePage}>
-          <FaHeart size={24} />
-        </li>
-        <li data-path="/profile" onClick={movePage}><FaUserCircle size={24} /></li>
+        <HapticWrapper>
+          <li data-path="/search" onClick={movePage}>
+            <FaMapMarkedAlt size={24} />
+          </li>
+        </HapticWrapper>
+        <HapticWrapper>
+          <li data-path="/my/like" onClick={movePage}>
+            <FaHeart size={24} />
+          </li>
+        </HapticWrapper>
+        <HapticWrapper>
+          <li data-path="/my/profile" onClick={movePage}><FaUserCircle size={24} /></li>
+        </HapticWrapper>
       </ul>
     </div>
   );
