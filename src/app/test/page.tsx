@@ -1,47 +1,18 @@
 'use client';
 import { css } from '@styled-system/css';
+import { usePlaces } from '@/lib/apis/place';
 
 const Page = () => {
+  const { data, isError, isLoading, error } = usePlaces();
+  console.log('query', data);
+  if (isLoading) return <div>Loading...</div>;
+  if (isError) return <div>{error.toString()}</div>;
+
   return (
-    <div>
-      <button
-        className={css({
-          fontSize: 40,
-          color: 'red',
-          backgroundColor: 'blue',
-          _hover: {
-            color: 'white',
-          },
-        })}
-        onClick={() => {
-          fetch('http://localhost:8000/auth/login', {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: 'test1234@gmail.com',
-              password: '2342343',
-            }),
-          });
-        }}
-      >
-        로그인
-      </button>
-      <button
-        onClick={() => {
-          fetch('http://localhost:8000/private', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          });
-        }}
-      >
-        API호출
-      </button>
+    <div>테스트페이지
+      {data.map((place) => {
+        return (<div>{place.name}</div>);
+      })}
     </div>
   );
 };

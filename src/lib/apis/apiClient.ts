@@ -46,7 +46,6 @@ class ApiClient {
     command: Command,
     option: RequestOption = {},
   ): Promise<T> {
-    console.log('커맨드,옵션', command, option);
     const { path, method, baseUrl } = command;
 
     const config: AxiosRequestConfig = {
@@ -67,8 +66,8 @@ class ApiClient {
     if (option.body && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
       config.data = option.body;
     }
-    const data = await this.axiosInstance.request(config);
-    console.log('data', data);
+    const response = await this.axiosInstance.request(config);
+    return response.data;
   }
 }
 

@@ -13,6 +13,7 @@ import { RootStoreProvider } from '@/provider/root-store-provider';
 import Modal from '@/components/common/Modal';
 import { ToastContainer } from 'react-toastify';
 import { Toaster } from 'react-hot-toast';
+import ReactQueryProviders from '@/provider/queryProvider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -42,13 +43,15 @@ export default async function RootLayout({
     <html lang="ko" className={pretendard.className}>
     <body>
     <StyledJsxRegistry>
-      <RootStoreProvider userData={initUser}>
-        <div id="modal-root"></div>
-        <Modal></Modal>
-        <HeaderLayout></HeaderLayout>
-        <Toaster></Toaster>
-        {children}
-      </RootStoreProvider>
+      <ReactQueryProviders>
+        <RootStoreProvider userData={initUser}>
+          <div id="modal-root"></div>
+          <Modal></Modal>
+          <HeaderLayout></HeaderLayout>
+          <Toaster></Toaster>
+          {children}
+        </RootStoreProvider>
+      </ReactQueryProviders>
     </StyledJsxRegistry>
 
     <Script src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}`}

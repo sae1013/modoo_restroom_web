@@ -60,12 +60,12 @@ const ReviewBottomSheet = () => {
           },
 
         })}>
-          <Link href={'#grgr'} scroll={false} shape="round">개방</Link>
-          <Link href={'#grgr'} scroll={false} shape="round">비밀번호 필요</Link>
-          <Link href={'#grgr'} scroll={false} shape="round">휴지있음</Link>
-          <Link href={'#grgr'} scroll={false} shape="round">남녀혼용</Link>
-          <Link href={'#grgr'} scroll={false} shape="round">장애인 화장실</Link>
-          <Link href={'#grgr'} scroll={false} shape="round">추가 </Link>
+          <Link href={'#'} scroll={false} shape="round">개방</Link>
+          <Link href={'#'} scroll={false} shape="round">비밀번호 필요</Link>
+          <Link href={'#'} scroll={false} shape="round">휴지있음</Link>
+          <Link href={'#'} scroll={false} shape="round">남녀혼용</Link>
+          <Link href={'#'} scroll={false} shape="round">장애인 화장실</Link>
+          <Link href={'#'} scroll={false} shape="round">추가 </Link>
         </div>
         <Horizontal />
 
