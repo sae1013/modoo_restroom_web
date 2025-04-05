@@ -16,6 +16,8 @@ import Marker from '@/components/Marker';
 import toast from 'react-hot-toast';
 import { triggerHaptic } from '@/utils/nativeBridge';
 import HapticWrapper from '@/components/HapticWrapper';
+import { NATIVE_MSG } from '@/lib/natives/message';
+import NativeMsgService from '@/lib/natives/NativeMsgService';
 
 interface SearchPageProps {
   data: any;
@@ -53,17 +55,17 @@ const SearchPage = ({ data }: SearchPageProps) => {
   }, [places.length]);
 
   // 웹뷰 개발모드에서만 사용
-  useEffect(() => {
-    if (!window.ReactNativeWebView) {
-      const initialStaticLocation = {
-        lat: 36.78662503200313,
-        lng: 127.1005800034602,
-      };
-      setCurrentLocation(initialStaticLocation);
-      setInitialLocation(initialStaticLocation);
-    }
-
-  }, []);
+  // useEffect(() => {
+  //   if (!window.ReactNativeWebView) {
+  //     const initialStaticLocation = {
+  //       lat: 36.78662503200313,
+  //       lng: 127.1005800034602,
+  //     };
+  //     setCurrentLocation(initialStaticLocation);
+  //     setInitialLocation(initialStaticLocation);
+  //   }
+  //
+  // }, []);
 
   const popToastMessage = (message) => {
     toast.success(<div className={css({
@@ -158,6 +160,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   const markCurrentPosition = (lat: number, lng: number) => {
     // 현재위치가 없다면 새로 생성
+    if (!window.naver?.maps) return;
     if (!myMarkerRef.current) {
       let myMarker = new window.naver.maps.Marker({
         position: new window.naver.maps.LatLng(lat, lng),
@@ -203,12 +206,29 @@ const SearchPage = ({ data }: SearchPageProps) => {
   }, [initialLocation]);
 
   useEffect(() => {
+    // 위치추적 리스너 등록
     window.updateCurrentLocation = (lat, lng) => {
+      // NativeMsgService.sendMessage('RECEIVE_LOCATION');
+      setCurrentLocation({
+        lat, lng,
+      });
+    };
+
+    window.getCurrentLocation = (lat, lng) => {
+      // NativeMsgService.sendMessage('[WEB]: RECEIVE CURRENT LOCATION!');
       setCurrentLocation({
         lat, lng,
       });
     };
   }, []);
+
+  // 만약 현재 위치가 비어있으면 명시적으로 받아온다.
+  // useEffect(() => {
+  //   // !TODO: 네이티브에서 위치동의 켰을때만. 조건추가하기
+  //   if (!initialLocation) {
+  //     NativeMsgService.sendMessage(NATIVE_MSG.GET_CURRENT_LOCATION);
+  //   }
+  // }, [initialLocation]);
 
   // 초기위치 지정
   useEffect(() => {

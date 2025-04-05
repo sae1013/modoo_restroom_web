@@ -6,5 +6,10 @@ declare global {
     naver: any;
     map: any;
     infoWindow: any;
+    ReactNativeWebView: any;
+
+    // Native Bridges
+    updateCurrentLocation: any;
+    getCurrentLocation: any;
   }
 }

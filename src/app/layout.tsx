@@ -54,8 +54,6 @@ export default async function RootLayout({
       </ReactQueryProviders>
     </StyledJsxRegistry>
 
-    <Script src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}`}
-            strategy={'beforeInteractive'}></Script>
     <Script
       src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}&submodules=geocoder`}
       strategy={'beforeInteractive'}></Script>
