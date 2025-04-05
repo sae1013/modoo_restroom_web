@@ -5,6 +5,7 @@ import { createRootStore, type RootStores } from '@/store/root-store';
 import { useStore } from 'zustand';
 import { type UserState, UserStore } from '@/store/user-store';
 import { ModalStore } from '@/store/modal-store';
+import { MapStore } from '@/store/map-store';
 
 export interface RootStoreProviderProps {
   children: ReactNode;
@@ -33,12 +34,17 @@ export const useRootStore = (): RootStores => {
 };
 
 // 하위 컴포넌트에서 userStore에 접근할 수 있도록 헬퍼 훅도 제공합니다.
-export const useUserStore = <T,>(selector: (store: UserStore) => T): T => {
+export const useUserStore = <T, >(selector: (store: UserStore) => T): T => {
   const { userStore } = useRootStore();
   return useStore(userStore, selector);
 };
 
-export const useModalStore = <T,>(selector: (store: ModalStore) => T): T => {
+export const useModalStore = <T, >(selector: (store: ModalStore) => T): T => {
   const { modalStore } = useRootStore();
   return useStore(modalStore, selector);
+};
+
+export const useMapStore = <T, >(selector: (store: MapStore) => T): T => {
+  const { mapStore } = useRootStore();
+  return useStore(mapStore, selector);
 };

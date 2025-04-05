@@ -51,7 +51,7 @@ class ApiClient {
     const config: AxiosRequestConfig = {
       url: path,
       method,
-      // ...option, // timeout, header 등 기타 옵션
+      ...option, // timeout, header 등 기타 옵션
     };
 
     // baseUrl이 있는경우 오버라이딩

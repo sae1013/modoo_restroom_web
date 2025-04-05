@@ -96,7 +96,7 @@ const ReviewBottomSheet = () => {
       </BsContents>
       <BsFooter>
         <Button variant="wide" mode="haptic" onClick={() => {
-
+          
         }}>리뷰 남기기</Button>
       </BsFooter>
     </BottomSheet>

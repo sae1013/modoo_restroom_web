@@ -6,6 +6,8 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import React, { useEffect, useState } from 'react';
 import Input from '@/components/common/inputs/Input';
 import InputError from '@/components/common/inputs/InputError';
+import apiClient from '@/lib/apis/apiClient';
+import { SIGNIN_API } from '@/lib/apis/command';
 
 const Login = () => {
   const [isPasswordStep, setIsPasswordStep] = useState(false);
@@ -47,7 +49,17 @@ const Login = () => {
   };
 
   const handleLogin = async (email, password) => {
-    console.log(email, password);
+    try {
+      await apiClient.request(SIGNIN_API, {
+        body: {
+          email, password,
+        },
+        withCredentials: true,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+    router.push('/search');
   };
 
   const handleNext = async () => {

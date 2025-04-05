@@ -3,6 +3,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { ReverseGeocodeResponse } from '@api/naver_map';
 import './marker.scss';
+import { useStore } from 'zustand';
+import { useMapStore } from '@/provider/root-store-provider';
 
 interface NaverMapProps {
   width?: string | number;
@@ -24,34 +26,35 @@ const NaverMap = ({
                     onClick,
                   }: NaverMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstance = useRef<any>(null);
   const [hasInitialize, setHasInitialize] = useState<boolean>(false);
-
+  const { setMapLoaded } = useMapStore(state => state);
   // Map 초기화 함수
   const initMap = () => {
+    if (window.ReactNativeWebView) {
+      window.ReactNativeWebView.postMessage('[WEB]:: INITMAP');
+    }
     const { naver } = window;
     if (!naver || !mapRef.current) {
       return;
     }
-
+    if (mapInstance.current) return;
     const map = new naver.maps.Map(mapRef.current, {
       center: new naver.maps.LatLng(lat, lng),
       zoom,
-      // minZoom: 14,
+      minZoom: 14,
       mapTypeControl: false,
       scaleControl: false,
       logoControl: false,
       mapDataControl: false,
       zoomControl: false,
     });
-
-    const infoWindow = new naver.maps.InfoWindow({
-      anchorSkew: true,
-    });
+    mapInstance.current = map;
 
     // 전역 변수에 저장
     window.map = map;
-    window.infoWindow = infoWindow;
     setHasInitialize(true);
+    setMapLoaded(true);
     map.setCursor('pointer');
   };
 
@@ -67,8 +70,7 @@ const NaverMap = ({
 
   // 좌표를 기반으로 주소 검색
   const searchCoordinateToAddress = async (latlng: object): Promise<object> => {
-    const { infoWindow, naver } = window;
-    infoWindow.close();
+    const { naver } = window;
 
     return new Promise((resolve, reject) => {
       naver.maps.Service.reverseGeocode(

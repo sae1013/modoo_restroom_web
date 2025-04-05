@@ -3,6 +3,11 @@ import { Command } from '@/lib/apis/apiClient';
 /**
  * Auth (회원가입, 로그아웃, 로그인) API
  */
+export const SIGNIN_API: Command = {
+  path: '/auth/login',
+  method: 'POST',
+};
+
 export const SIGNOUT_API: Command = {
   path: '/auth/signout',
   method: 'DELETE',

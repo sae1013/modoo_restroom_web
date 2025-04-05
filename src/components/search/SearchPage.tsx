@@ -18,6 +18,7 @@ import { triggerHaptic } from '@/utils/nativeBridge';
 import HapticWrapper from '@/components/HapticWrapper';
 import { NATIVE_MSG } from '@/lib/natives/message';
 import NativeMsgService from '@/lib/natives/NativeMsgService';
+import { useMapStore } from '@/provider/root-store-provider';
 
 interface SearchPageProps {
   data: any;
@@ -30,8 +31,11 @@ const SearchPage = ({ data }: SearchPageProps) => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [initialLocation, setInitialLocation] = useState(null);
   const [isFirstFetched, setIsFirstFetched] = useState(false);
+  const [permission, setPermission] = useState(false);
+
   const myMarkerRef = useRef<any>(null); // 현재 내위치의 마커
   const markersRef = useRef<any[]>([]);
+  const { hasMapLoaded } = useMapStore(state => state);
 
   const onClickMapHandler = useCallback((addrAndGeoInfo: any) => {
     const existPlace = places.find((place: any) => place.location.coordinates[1] === Number(addrAndGeoInfo.lat) && place.location.coordinates[0] === Number(addrAndGeoInfo.lng));
@@ -55,17 +59,17 @@ const SearchPage = ({ data }: SearchPageProps) => {
   }, [places.length]);
 
   // 웹뷰 개발모드에서만 사용
-  // useEffect(() => {
-  //   if (!window.ReactNativeWebView) {
-  //     const initialStaticLocation = {
-  //       lat: 36.78662503200313,
-  //       lng: 127.1005800034602,
-  //     };
-  //     setCurrentLocation(initialStaticLocation);
-  //     setInitialLocation(initialStaticLocation);
-  //   }
-  //
-  // }, []);
+  useEffect(() => {
+    if (!window.ReactNativeWebView) {
+      const initialStaticLocation = {
+        lat: 36.78662503200313,
+        lng: 127.1005800034602,
+      };
+      setCurrentLocation(initialStaticLocation);
+      setInitialLocation(initialStaticLocation);
+    }
+
+  }, []);
 
   const popToastMessage = (message) => {
     toast.success(<div className={css({
@@ -207,28 +211,45 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   useEffect(() => {
     // 위치추적 리스너 등록
-    window.updateCurrentLocation = (lat, lng) => {
-      // NativeMsgService.sendMessage('RECEIVE_LOCATION');
+    window.updateCurrentLocation = (lat: number, lng: number) => {
+      if (!lat || !lng) return;
       setCurrentLocation({
         lat, lng,
       });
     };
 
-    window.getCurrentLocation = (lat, lng) => {
-      // NativeMsgService.sendMessage('[WEB]: RECEIVE CURRENT LOCATION!');
+    window.getCurrentLocation = (lat: number, lng: number) => {
+
+      if (!lat || !lng) return;
       setCurrentLocation({
         lat, lng,
       });
+    };
+
+    window.getLocPermission = (locPermission) => {
+      window.ReactNativeWebView.postMessage('[WEB] RECEIVE PERMISSION');
+      setPermission(locPermission);
     };
   }, []);
 
+
+  /**
+   * NOTE: 아래 코드는, 이벤트 브릿지의 동기성에 의해서 보안한 추가코드.
+   * 가장 좋은 방법은, 웹뷰 로드 이후에 네이티브에서 이벤트리스너를 호출하는 방식이다.
+   * 하지만 앱에서는 타겟 url로 직접 접근할 수 있는 방법이 없어서 실제로는 발생하지않음.
+   * 따라서 아래코드는 주석처리해도 동작에는 무관함.
+   */
+
   // 만약 현재 위치가 비어있으면 명시적으로 받아온다.
   // useEffect(() => {
-  //   // !TODO: 네이티브에서 위치동의 켰을때만. 조건추가하기
+  //   if (!window.ReactNativeWebView) return;
+  //   window.ReactNativeWebView.postMessage(NATIVE_MSG.CHECK_LOCATION_PERMISSION);
+  //   if (!hasMapLoaded) return;
+  //   // if (!permission) return;
   //   if (!initialLocation) {
-  //     NativeMsgService.sendMessage(NATIVE_MSG.GET_CURRENT_LOCATION);
+  //     window.ReactNativeWebView.postMessage(NATIVE_MSG.GET_CURRENT_LOCATION);
   //   }
-  // }, [initialLocation]);
+  // }, [initialLocation, hasMapLoaded, permission]);
 
   // 초기위치 지정
   useEffect(() => {
