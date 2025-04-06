@@ -12,6 +12,7 @@ const EmptyBottomSheet = (props) => {
   const { name, roadAddress, jibunAddress, lat, lng } = props;
   return (
     <BottomSheet
+      {...props}
       onCloseCallback={() => {
         console.log('closeCallback');
       }}

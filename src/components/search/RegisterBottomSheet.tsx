@@ -21,7 +21,7 @@ import useToast from '@/hooks/useToast';
 const RegisterBottomSheet = (props) => {
   const { closeModal } = useModal();
   const { popToastMessage } = useToast();
-  const { name = '', roadAddress = '', jibunAddress = '', lat = 0, lng = 0, placeId = -1 } = props;
+  const { name = '', roadAddress = '', jibunAddress = '', lat = 0, lng = 0, placeId = -1, ...otherProps } = props;
 
   // formData
   const [isSelectOp1, setSelectOp1] = useState(false);
@@ -68,7 +68,7 @@ const RegisterBottomSheet = (props) => {
 
 
   return (
-    <BottomSheet>
+    <BottomSheet {...otherProps}>
       <BsHeader
         onClose={() => {
           closeModal('register');

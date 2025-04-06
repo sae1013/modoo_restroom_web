@@ -6,7 +6,7 @@ const Wrapper = styled(motion.div)`
     display: flex;
     flex-direction: column;
     position: fixed;
-    z-index: 9999;
+    //z-index: 999;
     left: 0;
     right: 0;
     //max-height: 80vh;
@@ -25,7 +25,7 @@ interface BottomSheetProps {
 // 애니메이션을 자연스럽게 하기위한 조정값
 const SMOOTH_BOTTOM_OFFSET = 30;
 
-const BottomSheet = ({ children, onCloseCallback }: BottomSheetProps) => {
+const BottomSheet = ({ children, onCloseCallback, ...props }: BottomSheetProps) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [wrapperHeight, setWrapperHeight] = useState(0);
 
@@ -46,6 +46,7 @@ const BottomSheet = ({ children, onCloseCallback }: BottomSheetProps) => {
 
   return (
     <Wrapper
+      {...props}
       ref={wrapperRef}
       initial={{ y: window.innerHeight }}
       animate={{ y: window.innerHeight - wrapperHeight }}

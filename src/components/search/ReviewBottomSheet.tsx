@@ -27,7 +27,7 @@ const ReviewBottomSheet = (props) => {
 
   const { openModal, closeModal } = useModal();
   return (
-    <BottomSheet>
+    <BottomSheet {...props}>
       <BsHeader onClose={() => {
         closeModal('reviewBottomSheet');
       }}>

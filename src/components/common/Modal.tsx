@@ -16,24 +16,30 @@ const Modal = () => {
         height: '100vh',
       }}
     >
-      {modalStack.length > 0 && (
-        <div
-          className={css({
-            position: 'fixed',
-            width: '100%',
-            height: '100vh',
-            zIndex: 99,
-            backgroundColor: 'rgba(0,0,0,0.3)',
-          })}
-        ></div>
-      )}
+      {modalStack.map((_, i) => {
+        return (
+          <div
+            key={i}
+            style={{
+              zIndex: 2 * (i + 1),
+            }}
+            className={css({
+              position: 'fixed',
+              width: '100%',
+              height: '100vh',
+
+              backgroundColor: 'rgba(0,0,0,0.3)',
+            })}
+          ></div>
+        );
+      })}
 
       <AnimatePresence
         onExitComplete={() => {
           console.log('모달이 닫혔습니다');
         }}
       >
-        {modalStack.map((modalOption) => {
+        {modalStack.map((modalOption, i) => {
           const { component, props, key } = modalOption;
           const isFunctionComponent = typeof component === 'function';
 
@@ -43,9 +49,13 @@ const Modal = () => {
             }
             return null;
           }
-
+          console.log('component', typeof component);
           const Component = component;
-          return <Component key={key} {...props}></Component>;
+          return (
+            <Component key={key} {...props} style={{
+              zIndex: 2 * (i + 1) + 1,
+            }}></Component>
+          );
         })}
       </AnimatePresence>
     </div>
