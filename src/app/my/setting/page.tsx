@@ -4,13 +4,20 @@ import apiClient from '@/lib/apis/apiClient';
 import { LOGOUT_API, SIGNOUT_API } from '@/lib/apis/command';
 import { useRouter } from 'next/navigation';
 import HapticWrapper from '@/components/HapticWrapper';
+import Cookies from 'js-cookie';
 
 const Page = () => {
 
   const router = useRouter();
 
   const handleLogout = async () => {
-    const res = await apiClient.request(LOGOUT_API);
+    try {
+      await apiClient.request(LOGOUT_API);
+      // 쿠키에서 삭제.
+      Cookies.remove('access_token');
+    } catch (error) {
+      console.log(error);
+    }
     router.push('/auth/login');
   };
 

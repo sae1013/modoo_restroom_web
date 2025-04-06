@@ -99,13 +99,11 @@ const ReviewBottomSheet = (props) => {
       </BsContents>
       <BsFooter>
         <Button variant="wide" mode="haptic" onClick={() => {
-          setTimeout(() => {
-            openModal({
-              component: RegisterBottomSheet,
-              props: props,
-              key: 'register',
-            });
-          }, 500);
+          openModal({
+            component: RegisterBottomSheet,
+            props: props,
+            key: 'register',
+          });
         }}>리뷰 남기기</Button>
       </BsFooter>
     </BottomSheet>
