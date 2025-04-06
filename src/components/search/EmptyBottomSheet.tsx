@@ -7,9 +7,9 @@ import BsFooter from '@/components/bottomsheet/BsFooter';
 import RegisterBottomSheet from './RegisterBottomSheet';
 import Button from '@/components/common/buttons/Button';
 
-const EmptyBottomSheet = () => {
+const EmptyBottomSheet = (props) => {
   const { closeModal, openModal } = useModal();
-
+  const { name, roadAddress, jibunAddress, lat, lng } = props;
   return (
     <BottomSheet
       onCloseCallback={() => {
@@ -73,7 +73,9 @@ const EmptyBottomSheet = () => {
             setTimeout(() => {
               openModal({
                 component: RegisterBottomSheet,
-                props: {},
+                props: {
+                  name, roadAddress, jibunAddress, lat, lng,
+                },
                 key: 'register',
               });
             }, 500);

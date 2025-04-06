@@ -27,6 +27,10 @@ export const GET_PLACE_API: Command = {
   method: 'GET',
 };
 
+export const CREATE_PLACE_API: Command = {
+  path: '/places',
+  method: 'POST',
+};
 export const DELETE_PALCE_API: Command = {
   path: '/places',
   method: 'DELETE',
@@ -35,6 +39,11 @@ export const DELETE_PALCE_API: Command = {
 /**
  * Review(리뷰) API
  */
+export const CREATE_REVIEW: Command = {
+  path: '/reviews',
+  method: 'POST',
+};
+
 export const DELETE_REVIEW: Command = {
   path: '/reviews',
   method: 'DELETE',

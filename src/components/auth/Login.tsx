@@ -77,7 +77,6 @@ const Login = () => {
       className={css({
         width: '100vw',
         height: '100vh',
-        backgroundColor: '#f9f9f9',
         padding: '2rem',
       })}
     >

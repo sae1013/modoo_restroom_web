@@ -19,6 +19,7 @@ import HapticWrapper from '@/components/HapticWrapper';
 import { NATIVE_MSG } from '@/lib/natives/message';
 import NativeMsgService from '@/lib/natives/NativeMsgService';
 import { useMapStore } from '@/provider/root-store-provider';
+import useToast from '@/hooks/useToast';
 
 interface SearchPageProps {
   data: any;
@@ -32,26 +33,29 @@ const SearchPage = ({ data }: SearchPageProps) => {
   const [initialLocation, setInitialLocation] = useState(null);
   const [isFirstFetched, setIsFirstFetched] = useState(false);
   const [permission, setPermission] = useState(false);
+  const { popToastMessage } = useToast();
 
   const myMarkerRef = useRef<any>(null); // 현재 내위치의 마커
   const markersRef = useRef<any[]>([]);
   const { hasMapLoaded } = useMapStore(state => state);
 
   const onClickMapHandler = useCallback((addrAndGeoInfo: any) => {
+    // console.log('asdfasdf', addrAndGeoInfo);
+    const { roadAddress, jibunAddress, lat, lng } = addrAndGeoInfo;
+    let name = roadAddress || jibunAddress;
+
     const existPlace = places.find((place: any) => place.location.coordinates[1] === Number(addrAndGeoInfo.lat) && place.location.coordinates[0] === Number(addrAndGeoInfo.lng));
     if (existPlace) {
       openModal({
         component: ReviewBottomSheet,
-        props: {},
+        props: { name, roadAddress, jibunAddress, lat, lng },
         key: 'reviewBottomSheet',
       });
       return;
     }
     openModal({
       component: EmptyBottomSheet,
-      props: {
-        title: '제목1',
-      },
+      props: { name, roadAddress, jibunAddress, lat, lng },
       key: 'unregistered',
     });
     return;
@@ -70,16 +74,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
     }
 
   }, []);
-
-  const popToastMessage = (message) => {
-    toast.success(<div className={css({
-      fontWeight: 600,
-      fontSize: '14px',
-      color: '#404040',
-    })}>{message}</div>, {
-      removeDelay: 400,
-    });
-  };
 
   const moveMapToTargetLocation = (lat: number, lng: number) => {
     const newCenter = new window.naver.maps.LatLng(lat, lng);
@@ -114,7 +108,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
     const places = await fetchPlaces(lat, lng, 2000);
     setPlaces(places);
     drawMarkers(places);
-    // 받아온 장소를 마크.
+
   };
 
   const createStaticHTML = (jsxElement) => {
@@ -122,7 +116,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
   };
 
   const drawMarkers = (places: any) => {
-    popToastMessage(`반경에 ${places.length}개의 화장실이 있어요`);
+    popToastMessage('success', `반경에 ${places.length}개의 화장실이 있어요`);
     console.log('drawMarkers()');
     if (window.ReactNativeWebView) {
       window.ReactNativeWebView.postMessage('drawMarkers()');
@@ -140,11 +134,10 @@ const SearchPage = ({ data }: SearchPageProps) => {
         position,
         map: window.map,
         title: place.id,
-        // 지도 이동시 마커사라짐 버그로 비활성화
-        // icon: {
-        //   content: createStaticHTML(<Marker />),
-        //   // anchor: new window.naver.maps.Point(15, 15),
-        // },
+        icon: {
+          content: createStaticHTML(<Marker />),
+          anchor: new window.naver.maps.Point(15, 15),
+        },
       });
       // 이벤트리스너 등록
       window.naver.maps.Event.addListener(marker, 'click', function(e) {
@@ -171,6 +164,8 @@ const SearchPage = ({ data }: SearchPageProps) => {
         map: window.map,
         icon: {
           content: `<div style="
+          position: relative;
+          z-index:150;
           width: 20px;
           height: 20px;
           border-radius: 50%;
@@ -281,7 +276,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
                 className={css({
                   zIndex: 99,
                   position: 'fixed',
-                  bottom: '90px',
+                  bottom: '70px',
                   left: '50%',
                   transform: 'translateX(-50%)',
                   display: 'flex',

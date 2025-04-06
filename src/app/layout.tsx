@@ -14,6 +14,7 @@ import Modal from '@/components/common/Modal';
 import { ToastContainer } from 'react-toastify';
 import { Toaster } from 'react-hot-toast';
 import ReactQueryProviders from '@/provider/queryProvider';
+import AnimationPageRoute from '@/components/AnimationPageRoute';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -35,10 +36,6 @@ export default async function RootLayout({
 
   // const initUser = null;
 
-  // if (!initUser) {
-  //   return redirect('/login');
-  // }
-
   return (
     <html lang="ko" className={pretendard.className}>
     <body>
@@ -49,7 +46,9 @@ export default async function RootLayout({
           <Modal></Modal>
           <HeaderLayout></HeaderLayout>
           <Toaster></Toaster>
-          {children}
+          <AnimationPageRoute>
+            {children}
+          </AnimationPageRoute>
         </RootStoreProvider>
       </ReactQueryProviders>
     </StyledJsxRegistry>

@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
 import BottomSheet from '../bottomsheet/BottomSheet';
 import BsContents from '../bottomsheet/BsContents';
@@ -6,6 +6,7 @@ import BsHeader from '../bottomsheet/BsHeader';
 import BsFooter from '../bottomsheet/BsFooter';
 import useModal from '@/hooks/useModal';
 import SelectButton from '@/components/common/buttons/SelectButton';
+import toast from 'react-hot-toast';
 
 import { css } from '@styled-system/css';
 
@@ -13,9 +14,14 @@ import StarRatingPicker from '@/components/common/starRatings/StarRatingPicker';
 import Button from '@/components/common/buttons/Button';
 import ReviewTextArea from '@/components/common/textAreas/ReviewTextArea';
 import HapticWrapper from '@/components/HapticWrapper';
+import apiClient from '@/lib/apis/apiClient';
+import { CREATE_PLACE_API, CREATE_REVIEW, GET_PLACE_API } from '@/lib/apis/command';
+import useToast from '@/hooks/useToast';
 
-const RegisterBottomSheet = () => {
+const RegisterBottomSheet = (props) => {
   const { closeModal } = useModal();
+  const { popToastMessage } = useToast();
+  const { name = '', roadAddress = '', jibunAddress = '', lat = 0, lng = 0, placeId = -1 } = props;
 
   // formData
   const [isSelectOp1, setSelectOp1] = useState(false);
@@ -23,23 +29,43 @@ const RegisterBottomSheet = () => {
   const [isSelectOp3, setSelectOp3] = useState(false);
   const [isSelectOp4, setSelectOp4] = useState(false);
   const [isSelectOp5, setSelectOp5] = useState(false);
+  const [isSelectOp6, setSelectOp6] = useState(false);
 
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!rating || !reviewText) {
+      return;
+    }
+    // name, lat, lng, roadAddr, type 를 넘겨야함.
     const data = {
-      isSelectOp1: isSelectOp1,
-      isSelectOp2: isSelectOp2,
-      isSelectOp3: isSelectOp3,
-      isSelectOp4: isSelectOp4,
-      isSelectOp5: isSelectOp5,
+      name,
+      roadAddress,
+      jibunAddress,
+      lat,
+      lng,
+      placeId,
+      option1: isSelectOp1,
+      option2: isSelectOp2,
+      option3: isSelectOp3,
+      option4: isSelectOp4,
+      option5: isSelectOp5,
+      option6: isSelectOp6,
       rating,
-      reviewText,
+      content: reviewText,
     };
-    console.log(data);
-    // TODO: Post Req
+    try {
+      const resp = await apiClient.request(CREATE_REVIEW, {
+        body: data,
+      });
+      console.log(resp);
+      popToastMessage('success', '리뷰를 성공적으로 남겼습니다.');
+    } catch (err) {
+
+    }
   };
+
 
   return (
     <BottomSheet>
@@ -88,21 +114,24 @@ const RegisterBottomSheet = () => {
             gap: '.6rem',
             flexWrap: 'wrap',
           })}>
-            <SelectButton variant={isSelectOp3 && 'selected'} width={'3.5rem'} onClick={() => {
-              setSelectOp3(prev => !prev);
-            }}>개방</SelectButton>
-            <SelectButton variant={isSelectOp1 && 'selected'} onClick={() => {
+            <SelectButton variant={isSelectOp1 ? 'selected' : ''} onClick={() => {
               setSelectOp1(prev => !prev);
-            }}>비밀번호 필요</SelectButton>
-            <SelectButton variant={isSelectOp2 && 'selected'} onClick={() => {
+            }}>비밀번호 O</SelectButton>
+            <SelectButton variant={isSelectOp2 ? 'selected' : ''} onClick={() => {
               setSelectOp2(prev => !prev);
-            }}>휴지있음</SelectButton>
-            <SelectButton variant={isSelectOp3 && 'selected'} onClick={() => {
+            }}>비밀번호 X</SelectButton>
+            <SelectButton variant={isSelectOp3 ? 'selected' : ''} onClick={() => {
               setSelectOp3(prev => !prev);
-            }}>남녀혼용</SelectButton>
-            <SelectButton variant={isSelectOp3 && 'selected'} onClick={() => {
-              setSelectOp3(prev => !prev);
-            }}>장애인 화장실</SelectButton>
+            }}>휴지 O</SelectButton>
+            <SelectButton variant={isSelectOp4 ? 'selected' : ''} onClick={() => {
+              setSelectOp4(prev => !prev);
+            }}>휴지 X</SelectButton>
+            <SelectButton variant={isSelectOp5 ? 'selected' : ''} onClick={() => {
+              setSelectOp5(prev => !prev);
+            }}>남녀 구분</SelectButton>
+            <SelectButton variant={isSelectOp6 ? 'selected' : ''} onClick={() => {
+              setSelectOp6(prev => !prev);
+            }}>장애인 화장실 O</SelectButton>
           </div>
         </div>
 

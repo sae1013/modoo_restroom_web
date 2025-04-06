@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import Cookies from 'js-cookie';
 
 export interface Command {
   path?: string;
@@ -26,10 +27,12 @@ class ApiClient {
     // 요청 인터셉터: 인증 토큰을 헤더에 추가할 수 있습니다.
     this.axiosInstance.interceptors.request.use(
       config => {
-        // const token = localStorage.getItem('token');
-        // if (token) {
-        //   config.headers.Authorization = `Bearer ${token}`;
-        // }
+        const accessToken = Cookies.get('access_token');
+
+        if (accessToken) {
+          config.headers.Authorization = `Bearer ${accessToken}`;
+        }
+        console.log(config);
         return config;
       },
       error => Promise.reject(error),

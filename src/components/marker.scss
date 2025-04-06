@@ -13,7 +13,9 @@
 }
 
 .custom-marker {
-  animation: customDrop 0.8s ease-out;
+  animation: customDrop 0.8s ease-out 1;
+  animation-fill-mode: forwards;
+
   position: relative;
-  z-index: -1;
+  z-index: 100;
 }

@@ -61,10 +61,11 @@ const NaverMap = ({
   // 지도 클릭 핸들러 (최신 onClick을 사용하기 위해 useCallback 사용)
   const onClickMapListener = useCallback(async (e: { coord: any }) => {
     const selectedAddrInfo: object = await searchCoordinateToAddress(e.coord);
+    console.log('selectedAddrInfo', selectedAddrInfo);
     const coordInfo = await searchAddressToCoord(selectedAddrInfo);
-    console.log(coordInfo);
+
     if (onClick) {
-      onClick({ ...selectedAddrInfo, ...coordInfo });
+      onClick({ ...selectedAddrInfo, lat: Number(coordInfo.lat || 0), lng: Number(coordInfo.lng || 0) });
     }
   }, [onClick]);
 
@@ -85,9 +86,10 @@ const NaverMap = ({
           if (status === naver.maps.Service.Status.ERROR) {
             reject('존재하지 않는 주소');
           }
+
           const selectedCoordInfo = {
             jibunAddress: response.v2.address.jibunAddress || '',
-            roadAddress: response.v2.address.jibunAddress || '',
+            roadAddress: response.v2.address.roadAddress || '',
           };
           resolve(selectedCoordInfo);
         },
@@ -105,7 +107,6 @@ const NaverMap = ({
           query: roadAddress || jibunAddress,
         },
         (status, response) => {
-          console.log(status, response);
           resolve({
             lat: response.v2.addresses[0].y,
             lng: response.v2.addresses[0].x,
