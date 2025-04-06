@@ -20,8 +20,11 @@ import FilterBadge from '@/components/common/badges/FilterBadge';
 import ReviewCardFooter from '@/components/common/cards/ReviewCardFooter';
 import ReviewCardHeader from '@/components/common/cards/ReviewCardHeader';
 import HapticWrapper from '@/components/HapticWrapper';
+import RegisterBottomSheet from '@/components/search/RegisterBottomSheet';
 
-const ReviewBottomSheet = () => {
+const ReviewBottomSheet = (props) => {
+  // const { name = '', roadAddress = '', jibunAddress = '', lat = 0, lng = 0, placeId = -1 } = props;
+
   const { openModal, closeModal } = useModal();
   return (
     <BottomSheet>
@@ -96,7 +99,13 @@ const ReviewBottomSheet = () => {
       </BsContents>
       <BsFooter>
         <Button variant="wide" mode="haptic" onClick={() => {
-          
+          setTimeout(() => {
+            openModal({
+              component: RegisterBottomSheet,
+              props: props,
+              key: 'register',
+            });
+          }, 500);
         }}>리뷰 남기기</Button>
       </BsFooter>
     </BottomSheet>

@@ -45,10 +45,12 @@ const SearchPage = ({ data }: SearchPageProps) => {
     let name = roadAddress || jibunAddress;
 
     const existPlace = places.find((place: any) => place.location.coordinates[1] === Number(addrAndGeoInfo.lat) && place.location.coordinates[0] === Number(addrAndGeoInfo.lng));
+    console.log('existPlace', existPlace);
+    // 이미 존재하는 장소를 찍은경우
     if (existPlace) {
       openModal({
         component: ReviewBottomSheet,
-        props: { name, roadAddress, jibunAddress, lat, lng },
+        props: { placeId: existPlace.id, name, roadAddress, jibunAddress, lat, lng },
         key: 'reviewBottomSheet',
       });
       return;
@@ -144,7 +146,14 @@ const SearchPage = ({ data }: SearchPageProps) => {
         triggerHaptic();
         openModal({
           component: ReviewBottomSheet,
-          props: {},
+          props: {
+            placeId: place.id,
+            name: place.name,
+            roadAddress: place.roadAddr,
+            jibunAddress: place.jibunAddr,
+            lat: place.lat,
+            lng: place.lng,
+          },
           key: 'reviewBottomSheet',
         });
       });
