@@ -1,4 +1,4 @@
-import React, { ComponentType, ReactNode, useLayoutEffect, useRef, useState } from 'react';
+import React, { ComponentType, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 
@@ -7,7 +7,8 @@ const Wrapper = styled(motion.div)`
     flex-direction: column;
     position: fixed;
     left: 0;
-    right: 0;
+    width: 100%;
+    bottom: 0;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     background-color: #fff;
@@ -38,17 +39,16 @@ const BottomSheet = ({ children, onCloseCallback, ...props }: BottomSheetProps) 
     const maxHeight = window.visualViewport.height - 10;
     if (wrapperRef.current) {
       setWrapperHeight(Math.min(wrapperRef.current.clientHeight, maxHeight));
-
     }
   }, []);
-
+  // console.log('wrapperHeight', wrapperHeight);
   return (
     <Wrapper
       {...props}
       ref={wrapperRef}
-      initial={{ y: window.innerHeight }}
-      animate={{ y: window.innerHeight - wrapperHeight }}
-      exit={{ y: window.innerHeight + SMOOTH_BOTTOM_OFFSET }}
+      initial={{ bottom: -wrapperHeight }}
+      animate={{ bottom: 0 }}
+      // exit={{ y: window.innerHeight + SMOOTH_BOTTOM_OFFSET }}
       transition={{ type: 'spring', stiffness: 250, damping: 30 }}
     >
       {header}
