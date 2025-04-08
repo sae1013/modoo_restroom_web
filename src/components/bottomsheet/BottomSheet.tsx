@@ -9,7 +9,6 @@ const Wrapper = styled(motion.div)`
     //z-index: 999;
     left: 0;
     right: 0;
-    //max-height: 80vh;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     background-color: #fff;

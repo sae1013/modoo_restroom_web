@@ -6,8 +6,8 @@ import { SystemProperties } from '@styled-system/types';
 
 const StyledLink = styled(NextLink, {
   base: {
-    backgroundColor: '#999',
-    color: '#fff',
+    backgroundColor: 'gray.100',
+    color: 'neutral.800',
     fontWeight: '700',
     padding: '.5rem',
     fontSize: '0.8rem',
@@ -16,12 +16,14 @@ const StyledLink = styled(NextLink, {
     display: 'inline-block',
   },
   variants: {
-    active: {
-      backgroundColor: 'black',
+    selected: {
+      backgroundColor: '#eee',
+      color:'#fff'
+
     },
     shape: {
       round: {
-        borderRadius: '20px',
+        borderRadius: '30px',
       },
     },
   },
@@ -30,7 +32,7 @@ const StyledLink = styled(NextLink, {
 interface ILinkProps extends LinkProps, SystemProperties {
   children?: React.ReactNode;
   shape?: 'round';
-  active?: boolean;
+  selected?: boolean;
 
 }
 

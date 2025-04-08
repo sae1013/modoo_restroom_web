@@ -17,6 +17,7 @@ import HapticWrapper from '@/components/HapticWrapper';
 import apiClient from '@/lib/apis/apiClient';
 import { CREATE_PLACE_API, CREATE_REVIEW, GET_PLACE_API } from '@/lib/apis/command';
 import useToast from '@/hooks/useToast';
+import { placeStatusOp } from '@/utils/mapper';
 
 const RegisterBottomSheet = (props) => {
   const { closeModal } = useModal();
@@ -116,22 +117,35 @@ const RegisterBottomSheet = (props) => {
           })}>
             <SelectButton variant={isSelectOp1 ? 'selected' : ''} onClick={() => {
               setSelectOp1(prev => !prev);
-            }}>비밀번호 O</SelectButton>
+              if (isSelectOp2) {
+                setSelectOp2(prev => !prev);
+              }
+            }}>{placeStatusOp.option1}</SelectButton>
             <SelectButton variant={isSelectOp2 ? 'selected' : ''} onClick={() => {
               setSelectOp2(prev => !prev);
-            }}>비밀번호 X</SelectButton>
+              if (isSelectOp1) {
+                setSelectOp1(prev => !prev);
+              }
+
+            }}>{placeStatusOp.option2}</SelectButton>
             <SelectButton variant={isSelectOp3 ? 'selected' : ''} onClick={() => {
               setSelectOp3(prev => !prev);
-            }}>휴지 O</SelectButton>
+              if (isSelectOp4) {
+                setSelectOp4(prev => !prev);
+              }
+            }}>{placeStatusOp.option3}</SelectButton>
             <SelectButton variant={isSelectOp4 ? 'selected' : ''} onClick={() => {
               setSelectOp4(prev => !prev);
-            }}>휴지 X</SelectButton>
+              if (isSelectOp3) {
+                setSelectOp3(prev => !prev);
+              }
+            }}>{placeStatusOp.option4}</SelectButton>
             <SelectButton variant={isSelectOp5 ? 'selected' : ''} onClick={() => {
               setSelectOp5(prev => !prev);
-            }}>남녀 구분</SelectButton>
+            }}>{placeStatusOp.option5}</SelectButton>
             <SelectButton variant={isSelectOp6 ? 'selected' : ''} onClick={() => {
               setSelectOp6(prev => !prev);
-            }}>장애인 화장실 O</SelectButton>
+            }}>{placeStatusOp.option6}</SelectButton>
           </div>
         </div>
 

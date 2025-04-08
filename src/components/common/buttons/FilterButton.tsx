@@ -7,17 +7,16 @@ interface ButtonProps extends JsxHTMLProps<ButtonHTMLAttributes<HTMLButtonElemen
   variant?: string;
 }
 
-const StyledSelectButton = styled('button', {
+const StyledFilterButton = styled('button', {
   base: {
-    // backgroundColor: '#999',
-    // color: '#fff',
     fontWeight: '700',
-    padding: '.5rem',
+    padding: '6px 8px',
     fontSize: '13px',
     borderRadius: '20px',
-    borderWidth: '2px',
-    borderColor: 'slate.500',
-    borderStyle: 'dotted',
+    backgroundColor: 'gray.100',
+    // borderWidth: '2px',
+    // borderColor: 'slate.500',
+    // borderStyle: 'dotted',
     transition: 'all .2s',
 
   },
@@ -27,16 +26,12 @@ const StyledSelectButton = styled('button', {
         backgroundColor: 'gray.900',
         color: '#fff',
       },
-      filter: {
-        border: 'none',
-
-      },
     },
   },
 });
 
-const SelectButton = (props: ButtonProps) => {
+const FilterButton = (props: ButtonProps) => {
 
-  return <StyledSelectButton {...props} />;
+  return <StyledFilterButton {...props} />;
 };
-export default SelectButton;
+export default FilterButton;
