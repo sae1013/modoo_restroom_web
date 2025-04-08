@@ -15,15 +15,14 @@ import Button from '@/components/common/buttons/Button';
 import ReviewTextArea from '@/components/common/textAreas/ReviewTextArea';
 import HapticWrapper from '@/components/HapticWrapper';
 import apiClient from '@/lib/apis/apiClient';
-import { CREATE_PLACE_API, CREATE_REVIEW, GET_PLACE_API } from '@/lib/apis/command';
 import useToast from '@/hooks/useToast';
 import { placeStatusOp } from '@/utils/mapper';
+import { useCreateReview } from '@/lib/apis/review';
 
 const RegisterBottomSheet = (props) => {
   const { closeModal } = useModal();
   const { popToastMessage } = useToast();
   const { name = '', roadAddress = '', jibunAddress = '', lat = 0, lng = 0, placeId = -1, ...otherProps } = props;
-
   // formData
   const [isSelectOp1, setSelectOp1] = useState(false);
   const [isSelectOp2, setSelectOp2] = useState(false);
@@ -35,12 +34,14 @@ const RegisterBottomSheet = (props) => {
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
 
+  const createReviewMutation = useCreateReview();
+
   const handleSubmit = async () => {
     if (!rating || !reviewText) {
       return;
     }
     // name, lat, lng, roadAddr, type 를 넘겨야함.
-    const data = {
+    const body = {
       name,
       roadAddress,
       jibunAddress,
@@ -56,15 +57,13 @@ const RegisterBottomSheet = (props) => {
       rating,
       content: reviewText,
     };
-    try {
-      const resp = await apiClient.request(CREATE_REVIEW, {
-        body: data,
-      });
-      console.log(resp);
-      popToastMessage('success', '리뷰를 성공적으로 남겼습니다.');
-    } catch (err) {
+    createReviewMutation.mutate(body, {
+      onSuccess: (data, variables, context) => {
+        console.log('callback:', data, variables, context);
+        closeModal('register');
 
-    }
+      },
+    });
   };
 
 
@@ -161,7 +160,8 @@ const RegisterBottomSheet = (props) => {
 
       </BsContents>
       <BsFooter>
-        <Button variant="wide" mode="haptic" onClick={handleSubmit}>리뷰 등록하기</Button>
+        <Button variant="wide" mode="haptic"
+                onClick={handleSubmit}>{createReviewMutation.isPending ? '소중한 리뷰 작성중...' : '리뷰 등록하기'}</Button>
       </BsFooter>
     </BottomSheet>
   );

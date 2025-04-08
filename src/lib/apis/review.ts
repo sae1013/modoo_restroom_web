@@ -1,5 +1,11 @@
 import apiClient from '@/lib/apis/apiClient';
-import { DELETE_REVIEW, GET_REVIEW_API, GET_REVIEW_BY_ID_API } from '@/lib/apis/command';
+import {
+  CREATE_REVIEW,
+  CREATE_REVIEW_API,
+  DELETE_REVIEW,
+  GET_REVIEW_API,
+  GET_REVIEW_BY_ID_API,
+} from '@/lib/apis/command';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface ReviewsResult {
@@ -12,6 +18,7 @@ interface ReviewsResponse {
   result: ReviewsResult;
 }
 
+// 조회
 export const fetchReviews = async (placeId: number): Promise<ReviewsResponse> => {
   const result = await apiClient.request(GET_REVIEW_BY_ID_API, {
     pathParams: { placeId },
@@ -19,6 +26,7 @@ export const fetchReviews = async (placeId: number): Promise<ReviewsResponse> =>
   return result as ReviewsResponse;
 };
 
+// 조회
 export const useReviews = (placeId: number) => {
   return useQuery<ReviewsResponse>({
     queryKey: ['reviews', placeId],
@@ -26,6 +34,7 @@ export const useReviews = (placeId: number) => {
   });
 };
 
+// 삭제
 export const deleteReview = async (id: number) => {
   const data = await apiClient.request(DELETE_REVIEW, {
     body: {
@@ -35,6 +44,7 @@ export const deleteReview = async (id: number) => {
   return data;
 };
 
+// 삭제
 export const useDeleteReview = (id: number) => {
   const queryClient = useQueryClient();
 
@@ -50,3 +60,30 @@ export const useDeleteReview = (id: number) => {
     },
   });
 };
+
+// 생성
+export const createReview = async (body: any): Promise<any> => {
+  const response = await apiClient.request(CREATE_REVIEW_API, {
+    body,
+  });
+  return response;
+};
+
+
+export const useCreateReview = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createReview,
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['reviews', variables?.placeId] });
+      console.log('리뷰 작성성공!');
+    },
+    onError: (error) => {
+      console.error('리뷰 작성 실패', error);
+    },
+
+  });
+};
+
+

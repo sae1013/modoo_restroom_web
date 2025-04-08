@@ -39,7 +39,7 @@ export const DELETE_PALCE_API: Command = {
 /**
  * Review(리뷰) API
  */
-export const CREATE_REVIEW: Command = {
+export const CREATE_REVIEW_API: Command = {
   path: '/reviews',
   method: 'POST',
 };
