@@ -6,7 +6,6 @@ const Wrapper = styled(motion.div)`
     display: flex;
     flex-direction: column;
     position: fixed;
-    //z-index: 999;
     left: 0;
     right: 0;
     border-top-left-radius: 8px;

@@ -77,7 +77,6 @@ export const useCreateReview = () => {
     mutationFn: createReview,
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['reviews', variables?.placeId] });
-      console.log('리뷰 작성성공!');
     },
     onError: (error) => {
       console.error('리뷰 작성 실패', error);

@@ -18,6 +18,7 @@ import apiClient from '@/lib/apis/apiClient';
 import useToast from '@/hooks/useToast';
 import { placeStatusOp } from '@/utils/mapper';
 import { useCreateReview } from '@/lib/apis/review';
+import AlertPopup from '@/components/popup/AlertPopup';
 
 const RegisterBottomSheet = (props) => {
   const { closeModal } = useModal();
@@ -35,12 +36,12 @@ const RegisterBottomSheet = (props) => {
   const [reviewText, setReviewText] = useState('');
 
   const createReviewMutation = useCreateReview();
-
+  const { openModal } = useModal();
   const handleSubmit = async () => {
     if (!rating || !reviewText) {
       return;
     }
-    // name, lat, lng, roadAddr, type 를 넘겨야함.
+
     const body = {
       name,
       roadAddress,
@@ -59,8 +60,14 @@ const RegisterBottomSheet = (props) => {
     };
     createReviewMutation.mutate(body, {
       onSuccess: (data, variables, context) => {
-        console.log('callback:', data, variables, context);
         closeModal('register');
+        setTimeout(() => {
+          openModal({
+            component: AlertPopup,
+            props: {},
+            key: 'success_popup',
+          });
+        }, 400);
 
       },
     });
@@ -152,7 +159,6 @@ const RegisterBottomSheet = (props) => {
         <div className={css({ marginTop: '16px' })}>
           <HapticWrapper>
             <ReviewTextArea value={reviewText} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-              console.log(e.target.value);
               setReviewText(e.target.value);
             }} />
           </HapticWrapper>

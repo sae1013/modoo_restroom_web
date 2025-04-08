@@ -20,6 +20,7 @@ import { NATIVE_MSG } from '@/lib/natives/message';
 import NativeMsgService from '@/lib/natives/NativeMsgService';
 import { useMapStore } from '@/provider/root-store-provider';
 import useToast from '@/hooks/useToast';
+import AlertPopup from '@/components/popup/AlertPopup';
 
 interface SearchPageProps {
   data: any;
@@ -40,7 +41,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
   const { hasMapLoaded } = useMapStore(state => state);
 
   const onClickMapHandler = useCallback((addrAndGeoInfo: any) => {
-    // console.log('asdfasdf', addrAndGeoInfo);
     const { roadAddress, jibunAddress, lat, lng } = addrAndGeoInfo;
     let name = roadAddress || jibunAddress;
 
@@ -50,7 +50,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
     if (existPlace) {
       openModal({
         component: ReviewBottomSheet,
-        props: { placeId: existPlace.id, name, roadAddress, jibunAddress, lat, lng },
+        props: { placeId: existPlace?.id, name, roadAddress, jibunAddress, lat, lng },
         key: 'reviewBottomSheet',
       });
       return;
