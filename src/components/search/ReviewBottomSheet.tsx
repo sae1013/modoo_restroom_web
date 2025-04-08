@@ -5,28 +5,22 @@ import BsContents from '../bottomsheet/BsContents';
 import BsHeader from '../bottomsheet/BsHeader';
 import BsFooter from '../bottomsheet/BsFooter';
 import useModal from '@/hooks/useModal';
-import SelectButton from '@/components/common/buttons/SelectButton';
-
 import { css } from '@styled-system/css';
-
-import StarRatingPicker from '@/components/common/starRatings/StarRatingPicker';
 import Button from '@/components/common/buttons/Button';
-import ReviewTextArea from '@/components/common/textAreas/ReviewTextArea';
 import StarRating from '@/components/common/starRatings/StarRating';
 import Horizontal from '@/components/common/Horizontal';
-import Link from '@/components/common/links/Link';
 import ReviewCardBody from '@/components/common/cards/ReviewCardBody';
-import FilterBadge from '@/components/common/badges/FilterBadge';
 import ReviewCardFooter from '@/components/common/cards/ReviewCardFooter';
 import ReviewCardHeader from '@/components/common/cards/ReviewCardHeader';
-import HapticWrapper from '@/components/HapticWrapper';
 import RegisterBottomSheet from '@/components/search/RegisterBottomSheet';
 import { placeStatusOp } from '@/utils/mapper';
 import React, { useState } from 'react';
 import FilterButton from '@/components/common/buttons/FilterButton';
+import { useReviews } from '@/lib/apis/review';
+import { formatDate } from '@/utils/DateUtil';
 
 const ReviewBottomSheet = (props) => {
-  // const { name = '', roadAddress = '', jibunAddress = '', lat = 0, lng = 0, placeId = -1 } = props;
+  const { name = '', roadAddress = '', jibunAddress = '', lat = 0, lng = 0, placeId = -1 } = props;
   const [isSelectOp1, setSelectOp1] = useState(false);
   const [isSelectOp2, setSelectOp2] = useState(false);
   const [isSelectOp3, setSelectOp3] = useState(false);
@@ -34,7 +28,12 @@ const ReviewBottomSheet = (props) => {
   const [isSelectOp5, setSelectOp5] = useState(false);
   const [isSelectOp6, setSelectOp6] = useState(false);
 
+  const { data, isLoading, isError } = useReviews(placeId);
+
   const { openModal, closeModal } = useModal();
+  if (isLoading) {
+    return null;
+  }
   return (
     <BottomSheet {...props}>
       <BsHeader onClose={() => {
@@ -46,14 +45,14 @@ const ReviewBottomSheet = (props) => {
           fontSize: '18px',
           padding: '16px 16px 0',
         })}>
-          <p>서초로 25길 35</p>
+          <p>{name}</p>
           <StarRating rating={5} containerSx={{ display: 'inline-block' }}></StarRating>
           <span className={css({
             fontSize: '14px',
             display: 'inline-block',
             marginLeft: '5px',
             color: '#757575',
-          })}>(리뷰 25개)</span>
+          })}>{`(후기 ${data?.result?.reviewCount || 0}개)`}</span>
           <Horizontal />
         </div>
       </BsHeader>
@@ -110,16 +109,23 @@ const ReviewBottomSheet = (props) => {
             },
           },
         )}>
-          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((idx) => {
+          {data?.result?.reviews?.map((review, idx) => {
+            const filterTags = Object.entries(placeStatusOp).reduce((tags, [key, val]) => {
+              if (review[key]) {
+                tags.push(val);
+              }
+              return tags;
+            }, [] as string[]);
+
             return (
-              <div key={idx} className={css({
+              <div key={review.id} className={css({
                 borderBottom: '2px solid #f2f2f2',
               })}>
-                <ReviewCardHeader />
+                <ReviewCardHeader user={review.user} />
                 <ReviewCardBody>
-                  화장실 비밀번호 5633 여자 3322 입니다. 개좋았어요 휴지없음. 화장실 개추움. 비번자주바뀜.
+                  {review.content}
                 </ReviewCardBody>
-                <ReviewCardFooter tags={['장애인 화장실', '남녀혼용']} date={'2025.03.21'} />
+                <ReviewCardFooter tags={filterTags} date={formatDate(review.createAt)} rating={review.rating} />
 
               </div>);
           })}

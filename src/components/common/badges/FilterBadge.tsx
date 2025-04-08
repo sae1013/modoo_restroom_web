@@ -18,6 +18,7 @@ const StyledBadge = styled('span', {
     outline: 'none',
     transition: 'all .2s',
     display: 'inline-block',
+    lineHeight: 1.2,
   },
   variants: {
     shape: {

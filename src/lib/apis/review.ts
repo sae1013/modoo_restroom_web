@@ -1,16 +1,28 @@
 import apiClient from '@/lib/apis/apiClient';
-import { DELETE_REVIEW, GET_PLACE_API } from '@/lib/apis/command';
+import { DELETE_REVIEW, GET_REVIEW_API, GET_REVIEW_BY_ID_API } from '@/lib/apis/command';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const fetchReviews = async () => {
-  const data = await apiClient.request(GET_PLACE_API);
-  return data;
+interface ReviewsResult {
+  reviews: any[];
+  reviewCount: number;
+  ratingAvg: number;
+}
+
+interface ReviewsResponse {
+  result: ReviewsResult;
+}
+
+export const fetchReviews = async (placeId: number): Promise<ReviewsResponse> => {
+  const result = await apiClient.request(GET_REVIEW_BY_ID_API, {
+    pathParams: { placeId },
+  });
+  return result as ReviewsResponse;
 };
 
-export const useReviews = () => {
-  return useQuery({
-    queryKey: ['places'],
-    queryFn: fetchReviews,
+export const useReviews = (placeId: number) => {
+  return useQuery<ReviewsResponse>({
+    queryKey: ['reviews', placeId],
+    queryFn: () => fetchReviews(placeId),
   });
 };
 

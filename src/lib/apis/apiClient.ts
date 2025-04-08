@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import Cookies from 'js-cookie';
 
 export interface Command {
-  path?: string;
+  path: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   baseUrl?: string;
 }
@@ -10,6 +10,7 @@ export interface Command {
 export interface RequestOption extends AxiosRequestConfig {
   queryParams?: unknown;
   body?: unknown;
+  pathParams?: Record<string, string | number>;
 }
 
 class ApiClient {
@@ -49,7 +50,13 @@ class ApiClient {
     command: Command,
     option: RequestOption = {},
   ): Promise<T> {
-    const { path, method, baseUrl } = command;
+    let { path, method, baseUrl } = command;
+    const { pathParams } = option;
+    if (pathParams) {
+      Object.entries(pathParams).forEach(([key, value]) => {
+        path = path.replace(`:${key}`, String(value));
+      });
+    }
 
     const config: AxiosRequestConfig = {
       url: path,
