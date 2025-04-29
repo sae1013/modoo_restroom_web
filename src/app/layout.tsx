@@ -44,6 +44,7 @@ export default async function RootLayout({
         <RootStoreProvider userData={initUser}>
           <div id="modal-root"></div>
           <Modal></Modal>
+          {/*<InitWebviewCallback></InitWebviewCallback>*/}
           <HeaderLayout></HeaderLayout>
           <Toaster></Toaster>
           <AnimationPageRoute>

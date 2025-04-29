@@ -31,9 +31,7 @@ const NaverMap = ({
   const { setMapLoaded } = useMapStore(state => state);
   // Map 초기화 함수
   const initMap = () => {
-    if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage('[WEB]:: INITMAP');
-    }
+
     const { naver } = window;
     if (!naver || !mapRef.current) {
       return;
