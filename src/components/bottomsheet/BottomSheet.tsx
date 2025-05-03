@@ -2,7 +2,7 @@ import React, { ComponentType, ReactNode, useEffect, useLayoutEffect, useRef, us
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 
-const Wrapper = styled(motion.div)`
+const Wrapper = styled(motion.div)<{ maxHeight: number }>`
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -10,7 +10,7 @@ const Wrapper = styled(motion.div)`
     bottom: 0;
     width: 100%;
 
-    /* bottom: 0; */
+    max-height: ${({ maxHeight }) => `${maxHeight}px`}; /* ← 동적 max-height */
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     background-color: #fff;
@@ -38,7 +38,8 @@ const BottomSheet = ({ children, onCloseCallback, ...props }: BottomSheetProps) 
 
   useLayoutEffect(() => {
     // 콘텐츠 컨테이너의 높이를 측정하여 targetHeight에 저장
-    const maxHeight = window?.visualViewport?.height || 0 - 10;
+    const maxHeight = window?.visualViewport?.height || 0;
+
     if (wrapperRef.current) {
       setWrapperHeight(Math.min(wrapperRef.current.clientHeight, maxHeight));
     }
@@ -59,10 +60,12 @@ const BottomSheet = ({ children, onCloseCallback, ...props }: BottomSheetProps) 
   return (
     <Wrapper
       {...props}
+      maxHeight={wrapperHeight}
       ref={wrapperRef}
       variants={variantOption}
       initial="hidden" // 초기 상태 지정
       animate="visible" // 나타날 때 상태 지정
+
       exit="exit"
       transition={{ type: 'spring', stiffness: 250, damping: 30 }}
     >

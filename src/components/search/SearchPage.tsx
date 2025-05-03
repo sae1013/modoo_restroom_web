@@ -37,8 +37,8 @@ const SearchPage = ({ data }: SearchPageProps) => {
   const { openModal, closeModal } = useModal();
   const [places, setPlaces] = useState([]);
   const [currentLocation, setCurrentLocation] = useState<ICurrentLocation>({
-    // lat: 37.48145437352808,
-    // lng: 127.12379119155949,
+    lat: 37.48145437352808,
+    lng: 127.12379119155949,
   });
   const [hasInitLocation, setHasInitLocation] = useState(false);
   const [isGranted, setIsGranted] = useState(false);
@@ -92,7 +92,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   const fetchPlaces = async (lat: number, lng: number, radius: number) => {
     try {
-      const res = await axios.get(`http://192.168.219.118:8000/places/nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
+      const res = await axios.get(`http://192.168.219.125:8000/places/nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
       return res.data;
     } catch (err) {
       console.log(err);

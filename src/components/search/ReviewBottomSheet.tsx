@@ -43,7 +43,7 @@ const ReviewBottomSheet = (props) => {
         <div className={css({
           fontWeight: '600',
           fontSize: '18px',
-          padding: '16px 16px 0',
+          padding: '4px 16px 0',
         })}>
           <p>{name}</p>
           <StarRating rating={5} containerSx={{ display: 'inline-block' }}></StarRating>
@@ -59,10 +59,12 @@ const ReviewBottomSheet = (props) => {
 
       <BsContents>
         <div className={css({
-          height: 'auto',
           display: 'flex',
           gap: '10px',
+          transform: 'translateX(-16px)',
           flexWrap: 'wrap',
+          width: 'max-content',
+          overflowX: 'auto',
           marginBottom: '20px',
         })}>
           <FilterButton variant={isSelectOp1 ? 'selected' : ''} onClick={() => {

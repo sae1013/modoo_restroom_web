@@ -6,7 +6,6 @@ import HapticWrapper from '@/components/HapticWrapper';
 
 const Wrapper = styled('div', {
   base: {
-    minHeight: '48px',
     borderTopLeftRadius: '8px',
     borderTopRightRadius: '8px',
     position: 'relative',

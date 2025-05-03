@@ -6,8 +6,9 @@ interface BsContentsProps {
 
 const Wrapper = styled('div', {
   base: {
-    maxHeight: '637px',
     padding: '1rem 1.5rem',
+    position: 'relative',
+    paddingBottom: '80px',
   },
 });
 
