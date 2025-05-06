@@ -4,7 +4,7 @@ import {
   CREATE_REVIEW_API,
   DELETE_REVIEW,
   GET_REVIEW_API,
-  GET_REVIEW_BY_ID_API,
+  GET_REVIEW_BY_QUERY,
 } from '@/lib/apis/command';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -20,7 +20,7 @@ interface ReviewsResponse {
 
 // 조회
 export const fetchReviews = async (placeId: number): Promise<ReviewsResponse> => {
-  const result = await apiClient.request(GET_REVIEW_BY_ID_API, {
+  const result = await apiClient.request(GET_REVIEW_BY_QUERY, {
     pathParams: { placeId },
   });
   return result as ReviewsResponse;

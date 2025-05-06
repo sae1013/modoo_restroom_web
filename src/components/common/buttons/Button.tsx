@@ -31,6 +31,10 @@ const StyledButton = styled('button', {
         borderRadius: '10px',
         color: 'white',
         fontWeight: '600',
+        _disabled: {
+          opacity: 0.5,               // 80%
+          cursor: 'not-allowed',      // 클릭 막힌 커서
+        },
       },
     },
   },

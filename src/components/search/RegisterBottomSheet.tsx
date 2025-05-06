@@ -166,7 +166,7 @@ const RegisterBottomSheet = (props) => {
 
       </BsContents>
       <BsFooter>
-        <Button variant="wide" mode="haptic"
+        <Button variant="wide" mode="haptic" disabled={!rating || !reviewText}
                 onClick={handleSubmit}>{createReviewMutation.isPending ? '소중한 리뷰 작성중...' : '리뷰 등록하기'}</Button>
       </BsFooter>
     </BottomSheet>

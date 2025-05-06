@@ -54,7 +54,7 @@ export const GET_REVIEW_API: Command = {
   method: 'GET',
 };
 
-export const GET_REVIEW_BY_ID_API: Command = {
+export const GET_REVIEW_BY_QUERY: Command = {
   path: '/reviews/:placeId',
   method: 'GET',
 };

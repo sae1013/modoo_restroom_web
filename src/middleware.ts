@@ -7,22 +7,26 @@ export async function middleware(req: NextRequest) {
   if (req.nextUrl.pathname.startsWith('/_next')) {
     return NextResponse.next();
   }
-  // const { cookies, nextUrl } = req;
-  // const path = nextUrl.pathname;
-  // const accessToken = cookies.get('access_token')?.value;
-  // const authUrls = ['/auth/login', '/auth/signup'];
-  // if (authUrls.includes(path)) {
-  //   // 이미 로그인된 경우 메인으로 이동
-  //   if (accessToken) {
-  //     return NextResponse.redirect(new URL('/search', req.url));
-  //   } else {
-  //     return NextResponse.next();
-  //   }
-  // }
-  // if (!accessToken) {
-  //   return NextResponse.redirect(new URL('/auth/login', req.url));
-  // }
 
+  const { cookies, nextUrl } = req;
+  const path = nextUrl.pathname;
+  const accessToken = cookies.get('access_token')?.value;
+  const authUrls = ['/auth/login', '/auth/signup'];
+
+  // 이미 로그인된 경우 메인으로 이동
+  if (authUrls.includes(path)) {
+    if (accessToken) {
+      return NextResponse.redirect(new URL('/search', req.url));
+    } else {
+      return NextResponse.next();
+    }
+  }
+
+  // 로그인이 필요한 페이지에 진입했을 때.
+  if (!accessToken) {
+    return NextResponse.redirect(new URL('/auth/login', req.url));
+  }
+  console.log('redirect');
 
   return NextResponse.next();
 
@@ -30,5 +34,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  // matcher: ['/search/:path*', '/my/:page*', '/auth/login', '/auth/signup'],
+  matcher: ['/search/:path*', '/my/:page*', '/auth/login', '/auth/signup'],
 };
