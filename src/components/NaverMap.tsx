@@ -19,8 +19,8 @@ interface NaverMapProps {
 const NaverMap = ({
                     width = '100%',
                     height = '100vh',
-                    lat = 37.4806169,
-                    lng = 127.1236753,
+                    lat = 36.78658467350526,
+                    lng = 127.100353085028,
                     zoom = 17,
                     minZoom = 14,
                     onClick,
@@ -31,9 +31,7 @@ const NaverMap = ({
   const { setMapLoaded } = useMapStore(state => state);
   // Map 초기화 함수
   const initMap = () => {
-    if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage('[WEB]:: INITMAP');
-    }
+
     const { naver } = window;
     if (!naver || !mapRef.current) {
       return;

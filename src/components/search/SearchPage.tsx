@@ -21,6 +21,12 @@ import NativeMsgService from '@/lib/natives/NativeMsgService';
 import { useMapStore } from '@/provider/root-store-provider';
 import useToast from '@/hooks/useToast';
 import AlertPopup from '@/components/popup/AlertPopup';
+import { useLocation } from '@/hooks/useLocation';
+
+type ICurrentLocation = {
+  lat: number;
+  lng: number;
+}
 
 interface SearchPageProps {
   data: any;
@@ -30,15 +36,19 @@ interface SearchPageProps {
 const SearchPage = ({ data }: SearchPageProps) => {
   const { openModal, closeModal } = useModal();
   const [places, setPlaces] = useState([]);
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [initialLocation, setInitialLocation] = useState(null);
-  const [isFirstFetched, setIsFirstFetched] = useState(false);
+  const [currentLocation, setCurrentLocation] = useState<ICurrentLocation>({
+    lat: 37.48145437352808,
+    lng: 127.12379119155949,
+  });
+  const [hasInitLocation, setHasInitLocation] = useState(false);
+  const [isGranted, setIsGranted] = useState(false);
   const [permission, setPermission] = useState(false);
+  const isLoadedCallback = useLocation(setCurrentLocation, setIsGranted, setHasInitLocation);
+
   const { popToastMessage } = useToast();
 
   const myMarkerRef = useRef<any>(null); // 현재 내위치의 마커
   const markersRef = useRef<any[]>([]);
-  const { hasMapLoaded } = useMapStore(state => state);
 
   const onClickMapHandler = useCallback((addrAndGeoInfo: any) => {
     const { roadAddress, jibunAddress, lat, lng } = addrAndGeoInfo;
@@ -55,6 +65,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
       });
       return;
     }
+
     openModal({
       component: EmptyBottomSheet,
       props: { name, roadAddress, jibunAddress, lat, lng },
@@ -63,19 +74,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
     return;
 
   }, [places.length]);
-
-  // 웹뷰 개발모드에서만 사용
-  useEffect(() => {
-    if (!window.ReactNativeWebView) {
-      const initialStaticLocation = {
-        lat: 36.78662503200313,
-        lng: 127.1005800034602,
-      };
-      setCurrentLocation(initialStaticLocation);
-      setInitialLocation(initialStaticLocation);
-    }
-
-  }, []);
 
   const moveMapToTargetLocation = (lat: number, lng: number) => {
     const newCenter = new window.naver.maps.LatLng(lat, lng);
@@ -94,7 +92,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   const fetchPlaces = async (lat: number, lng: number, radius: number) => {
     try {
-      const res = await axios.get(`http://192.168.219.118:8000/places/nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
+      const res = await axios.get(`http://192.168.219.125:8000/places/nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
       return res.data;
     } catch (err) {
       console.log(err);
@@ -121,7 +119,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
     popToastMessage('success', `반경에 ${places.length}개의 화장실이 있어요`);
     console.log('drawMarkers()');
     if (window.ReactNativeWebView) {
-      window.ReactNativeWebView.postMessage('drawMarkers()');
+      // window.ReactNativeWebView.postMessage('drawMarkers()');
     }
 
     // 기존의 마커들을 삭제.
@@ -165,8 +163,9 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
 
   const markCurrentPosition = (lat: number, lng: number) => {
-    // 현재위치가 없다면 새로 생성
     if (!window.naver?.maps) return;
+
+    // 현재위치가 없다면 새로 생성
     if (!myMarkerRef.current) {
       let myMarker = new window.naver.maps.Marker({
         position: new window.naver.maps.LatLng(lat, lng),
@@ -189,7 +188,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
       myMarkerRef.current = myMarker;
       return;
     }
-    // 위치 업데이트
+    // 기존 위치 업데이트
     myMarkerRef.current.setPosition(new window.naver.maps.LatLng(lat, lng));
 
   };
@@ -200,82 +199,53 @@ const SearchPage = ({ data }: SearchPageProps) => {
     moveMapToTargetLocation(lat, lng);
   };
 
-  // 나의 위치 추적
   useEffect(() => {
     if (!currentLocation) return;
     const { lat, lng } = currentLocation;
     markCurrentPosition(lat, lng);
   }, [currentLocation]);
 
-  // 초기 카메라 이동(내위치)
-  useEffect(() => {
-    if (!initialLocation) return;
-    moveMapToTargetLocation(initialLocation);
-  }, [initialLocation]);
-
-  useEffect(() => {
-    // 위치추적 리스너 등록
-    window.updateCurrentLocation = (lat: number, lng: number) => {
-      if (!lat || !lng) return;
-      setCurrentLocation({
-        lat, lng,
-      });
-    };
-
-    window.getCurrentLocation = (lat: number, lng: number) => {
-
-      if (!lat || !lng) return;
-      setCurrentLocation({
-        lat, lng,
-      });
-    };
-
-    window.getLocPermission = (locPermission) => {
-      window.ReactNativeWebView.postMessage('[WEB] RECEIVE PERMISSION');
-      setPermission(locPermission);
-    };
-  }, []);
-
-
   /**
-   * NOTE: 아래 코드는, 이벤트 브릿지의 동기성에 의해서 보안한 추가코드.
-   * 가장 좋은 방법은, 웹뷰 로드 이후에 네이티브에서 이벤트리스너를 호출하는 방식이다.
-   * 하지만 앱에서는 타겟 url로 직접 접근할 수 있는 방법이 없어서 실제로는 발생하지않음.
-   * 따라서 아래코드는 주석처리해도 동작에는 무관함.
+   * ----------------위치 추적 hooks 등록----------------------
    */
-
-  // 만약 현재 위치가 비어있으면 명시적으로 받아온다.
-  // useEffect(() => {
-  //   if (!window.ReactNativeWebView) return;
-  //   window.ReactNativeWebView.postMessage(NATIVE_MSG.CHECK_LOCATION_PERMISSION);
-  //   if (!hasMapLoaded) return;
-  //   // if (!permission) return;
-  //   if (!initialLocation) {
-  //     window.ReactNativeWebView.postMessage(NATIVE_MSG.GET_CURRENT_LOCATION);
-  //   }
-  // }, [initialLocation, hasMapLoaded, permission]);
-
-  // 초기위치 지정
   useEffect(() => {
-    if (!initialLocation || !currentLocation) {
-      setInitialLocation(currentLocation);
-    }
-  }, [currentLocation]);
+    // 첫 렌더링시 위치 받아오고, 실시간 리스너등록.
+    if (!window.ReactNativeWebView || !isLoadedCallback) return;
+    // 현재 위치 받아오기
+    window.ReactNativeWebView.postMessage(JSON.stringify({
+      command: 'GET_CURRENT_LOCATION',
+      param: {
+        callback: 'getCurrentLocation',
+      },
+    }));
+
+    // 실시간 이벤트 리스너 등록.
+    window.ReactNativeWebView.postMessage(JSON.stringify({
+      command: 'ADD_LISTENER_WATCH_LOCATION',
+      param: {
+        callback: 'watchLocationListener',
+      },
+    }));
+
+  }, [isLoadedCallback]);
+  // // 초기 카메라 이동(내위치)
+  useEffect(() => {
+    if (!hasInitLocation) return;
+
+    moveMapToTargetLocation(currentLocation.lat, currentLocation.lng);
+  }, [hasInitLocation]);
+
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!currentLocation || isFirstFetched) {
-        return;
-      }
+      if (!hasInitLocation) return;
       const { lat, lng } = currentLocation;
       const places = await fetchPlaces(lat, lng, 2000);
       setPlaces(places);
       drawMarkers(places);
-      setIsFirstFetched(true);
     };
-    if (isFirstFetched) return;
     fetchData();
-  }, [currentLocation, isFirstFetched]);
+  }, [hasInitLocation]);
 
   return (
     <>

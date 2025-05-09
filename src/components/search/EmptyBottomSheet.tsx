@@ -28,6 +28,7 @@ const EmptyBottomSheet = (props) => {
           className={css({
             width: '50%',
             margin: 'auto',
+
           })}
         >
           <div
