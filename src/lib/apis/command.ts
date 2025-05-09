@@ -18,7 +18,6 @@ export const LOGOUT_API: Command = {
   method: 'POST',
 };
 
-
 /**
  * Place(장소) API
  */
@@ -54,7 +53,7 @@ export const GET_REVIEW_API: Command = {
   method: 'GET',
 };
 
-export const GET_REVIEW_BY_ID_API: Command = {
-  path: '/reviews/:placeId',
-  method: 'GET',
-};
+// export const GET_REVIEW_BY_ID_API: Command = {
+//   path: '/reviews/:placeId',
+//   method: 'GET',
+// };

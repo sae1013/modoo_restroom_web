@@ -126,7 +126,6 @@ const ReviewBottomSheet = (props) => {
                   {review.content}
                 </ReviewCardBody>
                 <ReviewCardFooter tags={filterTags} date={formatDate(review.createAt)} rating={review.rating} />
-
               </div>);
           })}
 

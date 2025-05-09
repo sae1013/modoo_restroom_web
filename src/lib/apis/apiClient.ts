@@ -27,7 +27,7 @@ class ApiClient {
 
     // 요청 인터셉터: 인증 토큰을 헤더에 추가할 수 있습니다.
     this.axiosInstance.interceptors.request.use(
-      config => {
+      (config) => {
         const accessToken = Cookies.get('access_token');
 
         if (accessToken) {
@@ -36,28 +36,35 @@ class ApiClient {
         console.log(config);
         return config;
       },
-      error => Promise.reject(error),
+      (error) => Promise.reject(error),
     );
 
     // 응답 인터셉터: 에러 처리 등을 추가할 수 있습니다.
     this.axiosInstance.interceptors.response.use(
       (response: AxiosResponse) => response,
-      error => Promise.reject(error),
+      (error) => Promise.reject(error),
     );
   }
 
-  public async request<T>(
-    command: Command,
-    option: RequestOption = {},
-  ): Promise<T> {
+  public async request<T>(command: Command, option: RequestOption = {}): Promise<T> {
     let { path, method, baseUrl } = command;
-    const { pathParams } = option;
+    const { pathParams, queryParams } = option;
+
+    // 1) pathParam
     if (pathParams) {
       Object.entries(pathParams).forEach(([key, value]) => {
         path = path.replace(`:${key}`, String(value));
       });
     }
 
+    // 2) queryParams 를 인코딩 없이 그대로 조립
+    if (queryParams && Object.keys(queryParams).length > 0) {
+      const qs = Object.entries(queryParams)
+        .map(([key, val]) => `${key}=${val}`) // 인코딩 없이 key=val 형태로
+        .join('&');
+
+      path += (path.includes('?') ? '&' : '?') + qs;
+    }
     const config: AxiosRequestConfig = {
       url: path,
       method,
