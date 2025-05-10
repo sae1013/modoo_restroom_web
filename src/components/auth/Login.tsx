@@ -59,6 +59,7 @@ const Login = () => {
     } catch (err) {
       console.log(err);
     }
+    console.log('login 성공???');
     router.push('/search');
   };
 
