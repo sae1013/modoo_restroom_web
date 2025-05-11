@@ -15,7 +15,7 @@ export const SIGNOUT_API: Command = {
 
 export const LOGOUT_API: Command = {
   path: '/auth/logout',
-  method: 'POST',
+  method: 'GET',
 };
 
 /**

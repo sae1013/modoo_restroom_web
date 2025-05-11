@@ -5,14 +5,18 @@ import { LOGOUT_API, SIGNOUT_API } from '@/lib/apis/command';
 import { useRouter } from 'next/navigation';
 import HapticWrapper from '@/components/HapticWrapper';
 import Cookies from 'js-cookie';
+import ConfirmPopup from '@/components/popup/ConfirmPopup';
+import useModal from '@/hooks/useModal';
+import ServiceTerm from '@/components/auth/terms/ServiceTerm';
 
 const Page = () => {
 
   const router = useRouter();
-
+  const { openModal, closeModal } = useModal();
   const handleLogout = async () => {
     try {
-      await apiClient.request(LOGOUT_API);
+      // TODO: 부하 시 REDIS 세션 삭제로 처리할 예정
+      // await apiClient.request(LOGOUT_API);
       // 쿠키에서 삭제.
       Cookies.remove('access_token');
     } catch (error) {
@@ -22,8 +26,19 @@ const Page = () => {
   };
 
   const handleSignout = async () => {
-    const res = await apiClient.request(SIGNOUT_API);
-    router.push('/auth/login');
+    openModal({
+      component: ConfirmPopup,
+      props: {
+        contents: '정말 탈퇴하시겠습니까? <br/> 탈퇴 시 30일간 재가입이 불가능합니다.',
+        confirmLabel: '탈퇴하기',
+        confirmCallback: () => {
+          closeModal();
+        },
+      },
+      key: 'confirmPopup',
+    });
+    // const res = await apiClient.request(SIGNOUT_API);
+    // router.push('/auth/login');
   };
 
   return (
@@ -50,8 +65,9 @@ const Page = () => {
 
           <li className={css({})}>
             <button onClick={() => {
+
             }}>
-              비밀번호 찾기
+              비밀번호 변경
             </button>
           </li>
 

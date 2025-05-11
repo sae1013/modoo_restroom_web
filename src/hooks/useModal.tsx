@@ -8,7 +8,7 @@ const useModal = () => {
     modalStore.openModal(option);
   };
 
-  const closeModal = (key: string) => {
+  const closeModal = (key?: string) => {
     modalStore.closeModal(key);
   };
   return { openModal, closeModal };
