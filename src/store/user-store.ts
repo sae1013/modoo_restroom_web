@@ -1,5 +1,15 @@
 import { createStore } from 'zustand/vanilla';
 
+export type UserProfile = {
+  admin: boolean;
+  createdAt: Date;
+  email: string;
+  membership: string;
+  name: string;
+  nickname: string;
+  phoneNumber: string;
+}
+
 export type User = {
   email: string;
 };

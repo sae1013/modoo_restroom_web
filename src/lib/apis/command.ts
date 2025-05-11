@@ -19,6 +19,14 @@ export const LOGOUT_API: Command = {
 };
 
 /**
+ * User(유저) API
+ */
+export const GET_USER_PROFILE: Command = {
+  path: '/users/profile',
+  method: 'GET',
+};
+
+/**
  * Place(장소) API
  */
 export const GET_PLACE_API: Command = {

@@ -97,7 +97,8 @@ export const useCreateReview = () => {
           const queryKey = query.queryKey as string[];
           return (
             (queryKey[0] === 'place' && queryKey[1] === variables.placeId && queryKey[2] === 'reviews') || // 특정 장소의 리뷰
-            (queryKey[0] === 'reviews' && queryKey[1] === 'user') // 유저의 리뷰
+            (queryKey[0] === 'user' && queryKey[1] === 'reviews') // 유저의 리뷰
+
           );
         },
       });
