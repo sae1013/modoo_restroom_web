@@ -8,6 +8,7 @@ import Input from '@/components/common/inputs/Input';
 import InputError from '@/components/common/inputs/InputError';
 import apiClient from '@/lib/apis/apiClient';
 import { SIGNIN_API } from '@/lib/apis/command';
+import Cookies from 'js-cookie';
 
 const Login = () => {
   const [isPasswordStep, setIsPasswordStep] = useState(false);
@@ -35,9 +36,7 @@ const Login = () => {
 
   useEffect(() => {
     const email = decodeURIComponent(searchParams.get('email') || '');
-    console.log('rerender');
     if (email) {
-      console.log('here!');
       setIsPasswordStep(true);
     } else {
       setIsPasswordStep(false);
@@ -50,17 +49,24 @@ const Login = () => {
 
   const handleLogin = async (email, password) => {
     try {
-      await apiClient.request(SIGNIN_API, {
+      const res = await apiClient.request(SIGNIN_API, {
         body: {
           email, password,
         },
         withCredentials: true,
       });
+      Cookies.set('access_token', res.result, {
+        expires: 3,             // 만료: 3일
+        path: '/',              // 모든 경로에서 접근 가능
+        secure: process.env.NODE_ENV === 'production',  // https 환경에서만 전송
+        sameSite: 'lax',        // CSRF 보호 레벨
+      });
+
+
     } catch (err) {
       console.log(err);
     }
-    console.log('login 성공???');
-    router.push('/search');
+
   };
 
   const handleNext = async () => {
@@ -70,6 +76,7 @@ const Login = () => {
     } else {
       // 로그인 처리
       await handleLogin(_watchEmail, _watchPassword);
+      router.push('/search');
     }
   };
 

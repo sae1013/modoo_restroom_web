@@ -33,7 +33,6 @@ class ApiClient {
         if (accessToken) {
           config.headers.Authorization = `Bearer ${accessToken}`;
         }
-        console.log(config);
         return config;
       },
       (error) => Promise.reject(error),
@@ -49,7 +48,7 @@ class ApiClient {
   public async request<T>(command: Command, option: RequestOption = {}): Promise<T> {
     let { path, method, baseUrl } = command;
     const { pathParams, queryParams } = option;
-
+    console.log(pathParams, queryParams);
     // 1) pathParam
     if (pathParams) {
       Object.entries(pathParams).forEach(([key, value]) => {
@@ -74,10 +73,6 @@ class ApiClient {
     // baseUrl이 있는경우 오버라이딩
     if (baseUrl) {
       config.baseURL = baseUrl;
-    }
-
-    if (option.queryParams) {
-      config.params = option.queryParams;
     }
 
     if (option.body && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {

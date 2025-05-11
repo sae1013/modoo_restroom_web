@@ -4,21 +4,35 @@ import ReviewCardBody from '@/components/common/cards/ReviewCardBody';
 import ReviewCardFooter from '@/components/common/cards/ReviewCardFooter';
 import apiClient from '@/lib/apis/apiClient';
 import { DELETE_REVIEW } from '@/lib/apis/command';
+import { useDeleteReview } from '@/lib/apis/review';
+import useModal from '@/hooks/useModal';
+import AlertPopup from '@/components/popup/AlertPopup';
+import { formatDate } from '@/utils/DateUtil';
+import React from 'react';
+import { placeStatusOp } from '@/utils/mapper';
 
-const Reviews = () => {
+interface ReviewsProps {
+  reviews: any;
+}
 
+const Reviews = ({ reviews }: ReviewsProps) => {
+  const { mutate: deleteReview, isPending } = useDeleteReview();
+  const { openModal } = useModal();
 
   const handleDeleteReview = async (placeId: number, reviewId: number) => {
-    await apiClient.request(DELETE_REVIEW, {
-      body: {
-        placeId,
-        reviewId,
+    deleteReview(reviewId, {
+      onSuccess: () => {
+        setTimeout(() => {
+          openModal({
+            component: AlertPopup,
+            props: {
+              contents: '삭제되었어요',
+            },
+            key: 'success_popup',
+          });
+        }, 400);
       },
     });
-  };
-
-  const handlePopupEditReview = (placeId, reviewId) => {
-    // 수정 바텀시트 띄우기
   };
 
   return <>
@@ -30,9 +44,16 @@ const Reviews = () => {
       },
     })}>
       {/*컨텐츠 영역*/}
-      {[1, 2, 3].map((item, i) => {
+      {reviews?.map((review) => {
+        const filterTags = Object.entries(placeStatusOp).reduce((tags, [key, val]) => {
+          if (review[key]) {
+            tags.push(val);
+          }
+          return tags;
+        }, [] as string[]);
+
         return (
-          <li key={i}
+          <li key={review.id}
               className={css({ borderBottom: '2px solid #f2f2f2' })}>
             <div
               className={css({
@@ -41,7 +62,7 @@ const Reviews = () => {
                 display: 'flex',
 
               })}>
-              <p>장소: 연화로 99</p>
+              <p>{review?.place?.name}</p>
               <div
                 className={css({
                   marginLeft: 'auto',
@@ -49,15 +70,15 @@ const Reviews = () => {
                   fontSize: '14px',
                 })}>
 
-                <Button
-                  variant="default"
-                  onClick={() => {
-                    handlePopupEditReview(item.placeId, item.id);
-                  }}
-                  className={css({
-                    marginRight: '10px',
-                  })}>편집
-                </Button>
+                {/*<Button*/}
+                {/*  variant="default"*/}
+                {/*  onClick={() => {*/}
+                {/*    handlePopupEditReview(item.placeId, item.id);*/}
+                {/*  }}*/}
+                {/*  className={css({*/}
+                {/*    marginRight: '10px',*/}
+                {/*  })}>편집*/}
+                {/*</Button>*/}
 
                 <Button variant="default" onClick={() => {
                   handleDeleteReview(item.placeId, item.id);
@@ -67,9 +88,9 @@ const Reviews = () => {
               </div>
             </div>
             <ReviewCardBody>
-              화장실 비밀번호 5633 여자 3322 입니다. 개좋았어요 휴지없음. 화장실 개추움. 비번자주바뀜.
+              {review?.content}
             </ReviewCardBody>
-            <ReviewCardFooter tags={['장애인 화장실', '남녀혼용']} date={'2025.03.21'} />
+            <ReviewCardFooter tags={filterTags} date={formatDate(review.createAt)} rating={review.rating} />
           </li>
         );
       })}
