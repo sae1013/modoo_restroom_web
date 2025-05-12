@@ -30,21 +30,26 @@ const ConfirmPopup = ({ contents, confirmLabel = '확인', confirmCallback, ...p
       animate="visible" // 나타날 때 상태 지정
       exit="exit" // 사라질 때 상태 지정
     >
-      <div>
-        <IoMdAlert fill={'#55BCBD'} />
+      <div
+        className={css({
+          width: '50%',
+          margin: '0 auto',
+          padding: '30 0',
+        })}
+      >
+        <IoMdAlert fill={'#55BCBD'} size="100%" />
       </div>
       <p
         className={css({
           textAlign: 'center',
           fontWeight: '600',
           fontSize: '18px',
-          color: 'neutral.700',
+          color: 'neutral.500',
           position: 'relative',
-          bottom: '50',
+          marginBottom: '40px',
         })}
-      >
-        {contents}
-      </p>
+        dangerouslySetInnerHTML={{ __html: contents }}
+      ></p>
       <button
         className={css({
           width: '100%',

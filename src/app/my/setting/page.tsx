@@ -8,9 +8,9 @@ import Cookies from 'js-cookie';
 import ConfirmPopup from '@/components/popup/ConfirmPopup';
 import useModal from '@/hooks/useModal';
 import ServiceTerm from '@/components/auth/terms/ServiceTerm';
+import AlertPopup from '@/components/popup/AlertPopup';
 
 const Page = () => {
-
   const router = useRouter();
   const { openModal, closeModal } = useModal();
   const handleLogout = async () => {
@@ -33,72 +33,100 @@ const Page = () => {
         confirmLabel: '탈퇴하기',
         confirmCallback: () => {
           closeModal();
+          setTimeout(async () => {
+            try {
+              const res = await apiClient.request(SIGNOUT_API);
+              openModal({
+                component: AlertPopup,
+                props: {
+                  contents: '그동안 사용해주셔서 감사합니다',
+                  onCloseCallback: () => {
+                    router.push('/auth/login');
+                    closeModal();
+                  },
+                },
+                key: 'success_popup',
+              });
+            } catch (err) {}
+          }, 100);
         },
       },
       key: 'confirmPopup',
     });
-    // const res = await apiClient.request(SIGNOUT_API);
-    // router.push('/auth/login');
   };
 
   return (
-    <div className={css({
-      fontWeight: '500',
-    })}>
-      <section className={css({
-
-        paddingTop: '16px',
-      })}>
-        <p className={css({
-          fontWeight: '700',
-          fontSize: '15px',
-          color: 'neutral.800',
-          marginBottom: '16px',
-        })}>사용자 설정
+    <div
+      className={css({
+        fontWeight: '500',
+      })}
+    >
+      <section
+        className={css({
+          paddingTop: '16px',
+        })}
+      >
+        <p
+          className={css({
+            fontWeight: '700',
+            fontSize: '15px',
+            color: 'neutral.800',
+            marginBottom: '16px',
+          })}
+        >
+          사용자 설정
         </p>
-        <ul className={css({
-          color: 'neutral.700',
-          '& li:not(:last-child)': {
-            padding: '16px',
-          },
-        })}>
-
+        <ul
+          className={css({
+            color: 'neutral.700',
+            '& li:not(:last-child)': {
+              padding: '16px',
+            },
+          })}
+        >
           <li className={css({})}>
-            <button onClick={() => {
-
-            }}>
-              비밀번호 변경
-            </button>
+            <button onClick={() => {}}>비밀번호 변경</button>
           </li>
 
           <li className={css({})}></li>
         </ul>
       </section>
 
-      <section className={css({
-        borderTop: '3px solid',
-        borderTopColor: 'neutral.100',
-        paddingTop: '16px',
-      })}>
-        <p className={css({
-          fontWeight: '700',
-          fontSize: '15px',
-          color: 'neutral.800',
-          marginBottom: '16px',
-        })}>기타
+      <section
+        className={css({
+          borderTop: '3px solid',
+          borderTopColor: 'neutral.100',
+          paddingTop: '16px',
+        })}
+      >
+        <p
+          className={css({
+            fontWeight: '700',
+            fontSize: '15px',
+            color: 'neutral.800',
+            marginBottom: '16px',
+          })}
+        >
+          기타
         </p>
-        <ul className={css({
-          color: 'neutral.700',
-          '& li': {
-            padding: '16px',
-          },
-        })}>
+        <ul
+          className={css({
+            color: 'neutral.700',
+            '& li': {
+              padding: '16px',
+            },
+          })}
+        >
           <li className={css({})}>버전 정보</li>
           <HapticWrapper>
-            <li className={css({})} onClick={handleLogout}>로그아웃</li>
+            <li className={css({})} onClick={handleLogout}>
+              로그아웃
+            </li>
           </HapticWrapper>
           <HapticWrapper>
-            <li className={css({})} onClick={handleSignout}>회원탈퇴</li>
+            <li className={css({})} onClick={handleSignout}>
+              회원탈퇴
+            </li>
           </HapticWrapper>
         </ul>
       </section>

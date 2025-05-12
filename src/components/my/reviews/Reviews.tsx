@@ -28,87 +28,92 @@ const Reviews = ({ reviews }: ReviewsProps) => {
         confirmLabel: '삭제하기',
         confirmCallback: () => {
           closeModal();
+          setTimeout(() => {
+            deleteReview(reviewId, {
+              onSuccess: () => {
+                setTimeout(() => {
+                  openModal({
+                    component: AlertPopup,
+                    props: {
+                      contents: '삭제되었어요',
+                    },
+                    key: 'success_popup',
+                  });
+                }, 400);
+              },
+            });
+          }, 200);
         },
       },
       key: 'confirm_popup',
     });
-    // deleteReview(reviewId, {
-    //   onSuccess: () => {
-    //     setTimeout(() => {
-    //       openModal({
-    //         component: AlertPopup,
-    //         props: {
-    //           contents: '삭제되었어요',
-    //         },
-    //         key: 'success_popup',
-    //       });
-    //     }, 400);
-    //   },
-    // });
   };
 
-  return <>
-    {/* 컨텐츠영역*/}
-    <ul className={css({
-      marginTop: '20px',
-      '& > li': {
-        marginBottom: '16px',
-      },
-    })}>
-      {/*컨텐츠 영역*/}
-      {reviews?.map((review) => {
-        const filterTags = Object.entries(placeStatusOp).reduce((tags, [key, val]) => {
-          if (review[key]) {
-            tags.push(val);
-          }
-          return tags;
-        }, [] as string[]);
+  return (
+    <>
+      {/* 컨텐츠영역*/}
+      <ul
+        className={css({
+          marginTop: '20px',
+          '& > li': {
+            marginBottom: '16px',
+          },
+        })}
+      >
+        {/*컨텐츠 영역*/}
+        {reviews?.map((review) => {
+          const filterTags = Object.entries(placeStatusOp).reduce((tags, [key, val]) => {
+            if (review[key]) {
+              tags.push(val);
+            }
+            return tags;
+          }, [] as string[]);
 
-        return (
-          <li key={review.id}
-              className={css({ borderBottom: '2px solid #f2f2f2' })}>
-            <div
-              className={css({
-                fontSize: '16px',
-                fontWeight: '600',
-                display: 'flex',
-
-              })}>
-              <p>{review?.place?.name}</p>
+          return (
+            <li key={review.id} className={css({ borderBottom: '2px solid #f2f2f2' })}>
               <div
                 className={css({
-                  marginLeft: 'auto',
-                  color: '#757575',
-                  fontSize: '14px',
-                })}>
+                  fontSize: '16px',
+                  fontWeight: '600',
+                  display: 'flex',
+                })}
+              >
+                <p>{review?.place?.name}</p>
+                <div
+                  className={css({
+                    marginLeft: 'auto',
+                    color: '#757575',
+                    fontSize: '14px',
+                  })}
+                >
+                  {/*<Button*/}
+                  {/*  variant="default"*/}
+                  {/*  onClick={() => {*/}
+                  {/*    handlePopupEditReview(item.placeId, item.id);*/}
+                  {/*  }}*/}
+                  {/*  className={css({*/}
+                  {/*    marginRight: '10px',*/}
+                  {/*  })}>편집*/}
+                  {/*</Button>*/}
 
-                {/*<Button*/}
-                {/*  variant="default"*/}
-                {/*  onClick={() => {*/}
-                {/*    handlePopupEditReview(item.placeId, item.id);*/}
-                {/*  }}*/}
-                {/*  className={css({*/}
-                {/*    marginRight: '10px',*/}
-                {/*  })}>편집*/}
-                {/*</Button>*/}
-
-                <Button variant="default" onClick={() => {
-                  handleDeleteReview(review.id);
-                }}>삭제
-                </Button>
-
+                  <Button
+                    variant="default"
+                    onClick={() => {
+                      handleDeleteReview(review.id);
+                    }}
+                  >
+                    삭제
+                  </Button>
+                </div>
               </div>
-            </div>
-            <ReviewCardBody>
-              {review?.content}
-            </ReviewCardBody>
-            <ReviewCardFooter tags={filterTags} date={formatDate(review.createAt)} rating={review.rating} />
-          </li>
-        );
-      })}
-
-    </ul>
-  </>;
+              <ReviewCardBody>{review?.content}</ReviewCardBody>
+              <ReviewCardFooter tags={filterTags} date={formatDate(review.createAt)} rating={review.rating} />
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
 };
 
 export default Reviews;

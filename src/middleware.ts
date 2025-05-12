@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { redirect } from 'next/navigation';
 
+const protectedRoutes = ['/search/:path*', '/my/:page*', '/auth/login', '/auth/signup'];
+
 export async function middleware(req: NextRequest) {
   // 정적 자산 (CSS, JS, 이미지 등)에 대한 요청은 예외 처리
   if (req.nextUrl.pathname.startsWith('/_next')) {
@@ -22,17 +24,13 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // 로그인이 필요한 페이지에 진입했을 때.
+  // // 로그인이 필요한 페이지에 진입했을 때.
   if (!accessToken) {
     return NextResponse.redirect(new URL('/auth/login', req.url));
   }
-  console.log('redirect');
 
   return NextResponse.next();
-
-
 }
-
 export const config = {
-  matcher: ['/search/:path*', '/my/:page*', '/auth/login', '/auth/signup'],
+  matcher: protectedRoutes,
 };

@@ -7,7 +7,7 @@ import LottieAnimation from '@/components/common/LottieAnimation';
 import useModal from '@/hooks/useModal';
 import { motion } from 'framer-motion';
 
-const AlertPopup = ({ contents, ...props }: any) => {
+const AlertPopup = ({ contents, onCloseCallback, ...props }: any) => {
   const { closeModal } = useModal();
   // 애니메이션 상태 정의
   const popupVariants = {
@@ -62,6 +62,10 @@ const AlertPopup = ({ contents, ...props }: any) => {
           color: '#fff',
         })}
         onClick={() => {
+          if (onCloseCallback) {
+            onCloseCallback();
+            return;
+          }
           closeModal('success_popup');
         }}
       >
