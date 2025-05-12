@@ -18,6 +18,16 @@ export const LOGOUT_API: Command = {
   method: 'GET',
 };
 
+// 문자인증
+export const requestAuthCodePhoneNumber: Command = {
+  path: '/auth/sms/request',
+  method: 'POST',
+};
+
+export const verifyAuthCodePhoneNumber: Command = {
+  path: '/auth/sms/verify',
+  method: 'POST',
+};
 /**
  * User(유저) API
  */

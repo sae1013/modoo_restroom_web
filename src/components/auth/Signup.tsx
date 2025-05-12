@@ -15,6 +15,8 @@ import useModal from '@/hooks/useModal';
 import ServiceTerm from '@/components/auth/terms/ServiceTerm';
 import PrivacyTerm from '@/components/auth/terms/PrivacyTerm';
 import GpsTerm from '@/components/auth/terms/GpsTerm';
+import apiClient from '@/lib/apis/apiClient';
+import { verifyAuthCodePhoneNumber, requestAuthCodePhoneNumber } from '@/lib/apis/command';
 
 interface SignupForm {
   email: string;
@@ -32,6 +34,7 @@ const defaultFormValue = {
   name: '',
   phoneNumber: '',
   gender: '',
+  verifyCode: '',
 };
 
 function Signup() {
@@ -43,33 +46,48 @@ function Signup() {
   });
   const password = watch('password');
   const _watchPhoneNum = watch('phoneNumber');
+  const _watchVerifyCode = watch('verifyCode');
+  console.log('_watchVerifyCode', _watchVerifyCode);
 
   const [isServiceAgree, setIsServiceAgree] = useState(false);
   const [isPrivacyAgree, setIsPrivacyAgree] = useState(false);
   const [isGpsAgree, setIsGpsAgree] = useState(false);
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(false);
-  const [isValidatingPhoneNumber, setIsValidatingPhoneNumber] = useState(false);
 
-  const [authErrorMsg, setAuthErrorMsg] = useState('');
-  // 핸드폰 문자인증
-  const handleAuthPhoneNum = (e: MouseEvent<HTMLButtonElement>) => {
+  const [authErrorMsg, setAuthErrorMsg] = useState('인증번호를 다시 확인해주세요');
+  // 인증번호 검증하기
+  const handleAuthPhoneNum = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    try {
+      const res = await apiClient.request(verifyAuthCodePhoneNumber, {
+        body: {
+          phoneNumber: _watchPhoneNum,
+          authCode: _watchVerifyCode,
+        },
+      });
+      // 인증성공시 완료처리
+      setIsValidPhoneNumber(true);
+      setAuthErrorMsg('');
 
-    // 인증성공시 완료처리
-    setIsValidPhoneNumber(true);
+    } catch (err) {
+      setAuthErrorMsg('인증번호를 다시 확인하세요');
+    }
 
-    // 인증 에러 메시지
   };
 
-  // 인증번호 인증하기
-  const requestAuthNum = (e: MouseEvent<HTMLButtonElement>) => {
+  // 인증번호 요청하기
+  const requestAuthNum = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    try {
+      const res = await apiClient.request(requestAuthCodePhoneNumber, {
+        body: {
+          phoneNumber: _watchPhoneNum,
+        },
+      });
 
+    } catch (err) {
 
-    console.log('인증성공');
-    setIsValidatingPhoneNumber(true);
-
-
+    }
   };
 
   // 이용약관 바텀시트 오픈
@@ -184,15 +202,15 @@ function Signup() {
         {errors?.name?.message && <InputError>{errors?.name?.message}</InputError>}
       </Section>
 
-      <Section position="relative" backgroundColor={isValidatingPhoneNumber ? '#F2F2F2' : '#fff'}>
-        <Input disabled={isValidatingPhoneNumber} placeholder="휴대폰 번호를 입력해주세요"
+      <Section position="relative" backgroundColor={isValidPhoneNumber ? '#F2F2F2' : '#fff'}>
+        <Input disabled={isValidPhoneNumber} placeholder="휴대폰 번호를 입력해주세요"
                type="number" {...register('phoneNumber', {
           required: '숫자만 입력해주세요',
           pattern: {
             value: /^[0-9]+$/,
             message: '숫자만 입력해주세요',
           },
-        })} color={isValidatingPhoneNumber ? '#9E9E9E' : '#333'}
+        })} color={isValidPhoneNumber ? '#9E9E9E' : '#333'}
         />
         <button className={css({
             position: 'absolute',
@@ -210,36 +228,49 @@ function Signup() {
             },
           },
         )} onClick={requestAuthNum}
-                disabled={!!errors?.phoneNumber?.message || isValidatingPhoneNumber || !_watchPhoneNum}>인증번호 요청
+                disabled={!!errors?.phoneNumber?.message || isValidPhoneNumber}>인증번호 요청
         </button>
         {errors?.phoneNumber?.message && <InputError>{errors?.phoneNumber?.message}</InputError>}
       </Section>
 
-      {isValidatingPhoneNumber &&
-        <Section position="relative" backgroundColor={isValidPhoneNumber ? '#F2F2F2' : '#fff'}
-                 color={isValidPhoneNumber ? '#9E9E9E' : '#333'}>
-          <Input placeholder="인증번호를 입력해주세요." type="number" disabled={isValidPhoneNumber}
-                 color={isValidPhoneNumber ? '#9E9E9E' : '#333'} />
-          <button className={css({
-              position: 'absolute',
-              top: '10px',
-              right: '8px',
-              backgroundColor: '#55CBCD',
-              borderRadius: '20px',
-              padding: '10px 10px',
-              color: '#fff',
-              fontWeight: '500',
-              fontSize: '15px',
-              _disabled: {
-                opacity: '40%',
-              },
-            },
-          )} onClick={handleAuthPhoneNum} disabled={isValidPhoneNumber}>인증하기
-          </button>
-          {authErrorMsg && <InputError>{authErrorMsg}</InputError>}
-        </Section>
-      }
 
+      <Section position="relative" backgroundColor={isValidPhoneNumber ? '#F2F2F2' : '#fff'}
+               color={isValidPhoneNumber ? '#9E9E9E' : '#333'}>
+        <Input placeholder="인증번호를 입력해주세요." type="number" disabled={isValidPhoneNumber}
+               {...register('verifyCode', {
+                 required: '인증코드를 입력하세요',
+               })}
+               color={isValidPhoneNumber ? '#9E9E9E' : '#333'} />
+        <button className={css({
+            position: 'absolute',
+            top: '10px',
+            right: '8px',
+            backgroundColor: '#55CBCD',
+            borderRadius: '20px',
+            padding: '10px 10px',
+            color: '#fff',
+            fontWeight: '500',
+            fontSize: '15px',
+            _disabled: {
+              opacity: '40%',
+            },
+          },
+        )} onClick={handleAuthPhoneNum} disabled={isValidPhoneNumber}>인증하기
+        </button>
+      </Section>
+      {authErrorMsg && <InputError>{authErrorMsg}</InputError>}
+      {isValidPhoneNumber && (
+        <div className={css({
+          display: 'flex',
+          alignItems: 'center',
+        })}>
+          <FaCheck fill={'#55BCBD'}></FaCheck>
+          <p className={css({
+            color: '#55BCBD',
+            marginLeft: '4px',
+          })}>인증이 완료되었습니다</p>
+        </div>
+      )}
 
       {/* 남 여 선택*/}
       <Section>

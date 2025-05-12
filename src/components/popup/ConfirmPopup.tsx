@@ -3,9 +3,12 @@ import { css } from '@styled-system/css';
 import { IoMdAlert } from 'react-icons/io';
 import useModal from '@/hooks/useModal';
 import { motion } from 'framer-motion';
+import { IoClose } from 'react-icons/io5';
+import React from 'react';
 
 const ConfirmPopup = ({ contents, confirmLabel = '확인', confirmCallback, ...props }: any) => {
   // 애니메이션 상태 정의
+  const { closeModal } = useModal();
   const popupVariants = {
     hidden: { opacity: 0, scale: 0.8 },
     visible: { opacity: 1, scale: 1, transition: { duration: 0.2 } },
@@ -30,6 +33,18 @@ const ConfirmPopup = ({ contents, confirmLabel = '확인', confirmCallback, ...p
       animate="visible" // 나타날 때 상태 지정
       exit="exit" // 사라질 때 상태 지정
     >
+      <div className={css({
+        width: '35px',
+        height: '35px',
+        marginLeft: 'auto',
+        marginRight: '4px',
+        marginTop: '10px',
+
+      })} onClick={() => {
+        closeModal();
+      }}>
+        <IoClose size={25} />
+      </div>
       <div
         className={css({
           width: '50%',
