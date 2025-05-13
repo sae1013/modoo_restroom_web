@@ -54,7 +54,7 @@ function Signup() {
   const [isGpsAgree, setIsGpsAgree] = useState(false);
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(false);
 
-  const [authErrorMsg, setAuthErrorMsg] = useState('인증번호를 다시 확인해주세요');
+  const [authErrorMsg, setAuthErrorMsg] = useState('');
   // 인증번호 검증하기
   const handleAuthPhoneNum = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
