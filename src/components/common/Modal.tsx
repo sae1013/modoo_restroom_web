@@ -6,7 +6,7 @@ import { css } from '@styled-system/css';
 
 const Modal = () => {
   const { modalStack } = useModalStore((state) => state);
-
+  console.log(modalStack.length);
   return (
     <div
       id="root-modal"
@@ -49,12 +49,16 @@ const Modal = () => {
             }
             return null;
           }
-          console.log('component', typeof component);
+
           const Component = component;
           return (
-            <Component key={key} {...props} style={{
+
+            <div style={{
+              position: 'fixed',
               zIndex: 2 * (i + 1) + 1,
-            }}></Component>
+            }}>
+              <Component key={key} {...props} ></Component>
+            </div>
           );
         })}
       </AnimatePresence>

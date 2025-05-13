@@ -92,7 +92,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   const fetchPlaces = async (lat: number, lng: number, radius: number) => {
     try {
-      const res = await axios.get(`http://192.168.219.125:8000/places/nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
+      const res = await axios.get(`http://192.168.219.127:8000/places/nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
       return res.data;
     } catch (err) {
       console.log(err);

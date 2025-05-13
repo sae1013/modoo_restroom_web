@@ -78,10 +78,13 @@ const RegisterBottomSheet = (props) => {
     <BottomSheet {...otherProps}>
       <BsHeader
         onClose={() => {
-          closeModal('register');
+          closeModal();
+
         }}
       ></BsHeader>
-      <BsContents>
+      <BsContents className={css({
+        overflow: 'scroll',
+      })}>
         <div>
           <p
             className={css({
