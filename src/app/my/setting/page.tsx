@@ -1,7 +1,7 @@
 'use client';
 import { css } from '@styled-system/css';
 import apiClient from '@/lib/apis/apiClient';
-import { LOGOUT_API, SIGNOUT_API } from '@/lib/apis/command';
+import { LOGOUT_API, SIGNOUT_API, UNREGISTER } from '@/lib/apis/command';
 import { useRouter } from 'next/navigation';
 import HapticWrapper from '@/components/HapticWrapper';
 import Cookies from 'js-cookie';
@@ -9,16 +9,18 @@ import ConfirmPopup from '@/components/popup/ConfirmPopup';
 import useModal from '@/hooks/useModal';
 import ServiceTerm from '@/components/auth/terms/ServiceTerm';
 import AlertPopup from '@/components/popup/AlertPopup';
+import { logoutCookie } from '@/utils/cookiesUtil';
 
 const Page = () => {
   const router = useRouter();
   const { openModal, closeModal } = useModal();
+
   const handleLogout = async () => {
     try {
       // TODO: 부하 시 REDIS 세션 삭제로 처리할 예정
       // await apiClient.request(LOGOUT_API);
       // 쿠키에서 삭제.
-      Cookies.remove('access_token');
+      logoutCookie();
     } catch (error) {
       console.log(error);
     }
@@ -35,19 +37,22 @@ const Page = () => {
           closeModal();
           setTimeout(async () => {
             try {
-              const res = await apiClient.request(SIGNOUT_API);
+              const res = await apiClient.request(UNREGISTER);
+              logoutCookie();
               openModal({
                 component: AlertPopup,
                 props: {
                   contents: '그동안 사용해주셔서 감사합니다',
                   onCloseCallback: () => {
-                    router.push('/auth/login');
                     closeModal();
+                    router.push('/auth/login');
+
                   },
                 },
                 key: 'success_popup',
               });
-            } catch (err) {}
+            } catch (err) {
+            }
           }, 100);
         },
       },
@@ -85,7 +90,9 @@ const Page = () => {
           })}
         >
           <li className={css({})}>
-            <button onClick={() => {}}>비밀번호 변경</button>
+            <button onClick={() => {
+            }}>비밀번호 변경
+            </button>
           </li>
 
           <li className={css({})}></li>

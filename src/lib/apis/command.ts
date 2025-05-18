@@ -1,16 +1,11 @@
 import { Command } from '@/lib/apis/apiClient';
 
 /**
- * Auth (회원가입, 로그아웃, 로그인) API
+ * Auth (로그아웃, 로그인) API
  */
 export const SIGNIN_API: Command = {
   path: '/auth/login',
   method: 'POST',
-};
-
-export const SIGNOUT_API: Command = {
-  path: '/auth/signout',
-  method: 'DELETE',
 };
 
 export const LOGOUT_API: Command = {
@@ -34,6 +29,21 @@ export const verifyAuthCodePhoneNumber: Command = {
 export const GET_USER_PROFILE: Command = {
   path: '/users/profile',
   method: 'GET',
+};
+
+export const SIGNOUT_API: Command = {
+  path: '/users',
+  method: 'DELETE',
+};
+
+export const REGISTER: Command = {
+  path: '/users',
+  method: 'POST',
+};
+
+export const UNREGISTER: Command = {
+  path: '/users',
+  method: 'DELETE',
 };
 
 /**
