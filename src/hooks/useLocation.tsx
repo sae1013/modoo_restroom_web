@@ -3,7 +3,7 @@
 import React, { useEffect } from 'react';
 
 
-export const useLocation = (setCurrentLocation: any, setIsGranted: any, setHasInitLocation: any) => {
+export const useLocation = (setCurrentLocation: any, setIsGranted: any, setHasInitLocation: any, setGpsGranted: any) => {
   const [isLoadedCallBack, setIsLoadedCallback] = React.useState(false);
   useEffect(() => {
     (window as any).getCurrentLocation = (lat, lng) => {
@@ -18,6 +18,8 @@ export const useLocation = (setCurrentLocation: any, setIsGranted: any, setHasIn
     (window as any).watchLocationListener = (lat, lng) => {
       setCurrentLocation({ lat, lng });
     };
+
+    // (window as any).
     setIsLoadedCallback(true);
   }, []);
   return isLoadedCallBack;

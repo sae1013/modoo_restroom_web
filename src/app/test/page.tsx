@@ -6,18 +6,7 @@ import LogService from '@/utils/LogService';
 
 const Page = () => {
 
-  // useEffect(() => {
-  //   if (!window) return;
-  //   window.ReactNativeWebView.postMessage(JSON.stringify({
-  //     command: 'GET_CURRENT_LOCATION',
-  //     param: 'getCurrentLocation',
-  //   }));
-  //
-  //   window.getCurrentLocation = (lat, lng) => {
-  //     LogService.log(`${lat},${lng}`);
-  //   };
-  //
-  // }, [window]);
+
   const register = () => {
     console.log('클릭');
     window.ReactNativeWebView.postMessage(JSON.stringify({

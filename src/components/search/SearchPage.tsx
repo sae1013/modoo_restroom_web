@@ -42,8 +42,8 @@ const SearchPage = ({ data }: SearchPageProps) => {
   });
   const [hasInitLocation, setHasInitLocation] = useState(false);
   const [isGranted, setIsGranted] = useState(false);
-  const [permission, setPermission] = useState(false);
-  const isLoadedCallback = useLocation(setCurrentLocation, setIsGranted, setHasInitLocation);
+  const [isGpsGranted, setGpsGranted] = useState(false);
+  const isLoadedCallback = useLocation(setCurrentLocation, setIsGranted, setHasInitLocation, setGpsGranted);
 
   const { popToastMessage } = useToast();
 
@@ -55,7 +55,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
     let name = roadAddress || jibunAddress;
 
     const existPlace = places.find((place: any) => place.location.coordinates[1] === Number(addrAndGeoInfo.lat) && place.location.coordinates[0] === Number(addrAndGeoInfo.lng));
-    console.log('existPlace', existPlace);
+
     // 이미 존재하는 장소를 찍은경우
     if (existPlace) {
       openModal({
