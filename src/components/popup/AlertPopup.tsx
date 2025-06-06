@@ -1,5 +1,5 @@
 'use client';
-// import css from 'styled-jsx/css';
+
 import { css } from '@styled-system/css';
 import animationData from 'public/animations/register_success.main.json';
 import LottieAnimation from '@/components/common/LottieAnimation';

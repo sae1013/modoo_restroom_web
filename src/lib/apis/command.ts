@@ -13,14 +13,28 @@ export const LOGOUT_API: Command = {
   method: 'GET',
 };
 
+export const SIGNUP_API: Command = {
+  path: '/users',
+  method: 'POST',
+};
 // 문자인증
-export const requestAuthCodePhoneNumber: Command = {
-  path: '/auth/sms/request',
+// export const requestAuthCodePhoneNumber: Command = {
+//   path: '/auth/sms/request',
+//   method: 'POST',
+// };
+//
+// export const verifyAuthCodePhoneNumber: Command = {
+//   path: '/auth/sms/verify',
+//   method: 'POST',
+// };
+
+export const requestAuthCodeByEmail: Command = {
+  path: '/users/email/request-authcode',
   method: 'POST',
 };
 
-export const verifyAuthCodePhoneNumber: Command = {
-  path: '/auth/sms/verify',
+export const verifyAuthCodeByEmail: Command = {
+  path: '/users/email/verify-authcode',
   method: 'POST',
 };
 /**

@@ -16,7 +16,11 @@ import ServiceTerm from '@/components/auth/terms/ServiceTerm';
 import PrivacyTerm from '@/components/auth/terms/PrivacyTerm';
 import GpsTerm from '@/components/auth/terms/GpsTerm';
 import apiClient from '@/lib/apis/apiClient';
-import { verifyAuthCodePhoneNumber, requestAuthCodePhoneNumber } from '@/lib/apis/command';
+import { requestAuthCodeByEmail, SIGNUP_API, verifyAuthCodeByEmail } from '@/lib/apis/command';
+import useToast from '@/hooks/useToast';
+import { ApiError } from '@/types/common';
+import { useRouter } from 'next/navigation';
+import AlertPopup from '@/components/popup/AlertPopup';
 
 interface SignupForm {
   email: string;
@@ -45,29 +49,32 @@ function Signup() {
     defaultValues: defaultFormValue,
   });
   const password = watch('password');
-  const _watchPhoneNum = watch('phoneNumber');
+  const _watchEmail = watch('email');
   const _watchVerifyCode = watch('verifyCode');
-  console.log('_watchVerifyCode', _watchVerifyCode);
+
+  const { popToastMessage } = useToast();
+  const router = useRouter();
 
   const [isServiceAgree, setIsServiceAgree] = useState(false);
   const [isPrivacyAgree, setIsPrivacyAgree] = useState(false);
   const [isGpsAgree, setIsGpsAgree] = useState(false);
-  const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(false);
+  const [isValidEmail, setIsValidEmail] = useState(false);
 
   const [authErrorMsg, setAuthErrorMsg] = useState('');
   // 인증번호 검증하기
-  const handleAuthPhoneNum = async (e: MouseEvent<HTMLButtonElement>) => {
+  const handleVerifyAuthCode = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const res = await apiClient.request(verifyAuthCodePhoneNumber, {
+      const res = await apiClient.request(verifyAuthCodeByEmail, {
         body: {
-          phoneNumber: _watchPhoneNum,
-          authCode: _watchVerifyCode,
+          email: _watchEmail,
+          code: _watchVerifyCode,
         },
       });
       // 인증성공시 완료처리
-      setIsValidPhoneNumber(true);
+      setIsValidEmail(true);
       setAuthErrorMsg('');
+      popToastMessage('success', '이메일 인증을 성공했어요.');
 
     } catch (err) {
       setAuthErrorMsg('인증번호를 다시 확인하세요');
@@ -76,15 +83,16 @@ function Signup() {
   };
 
   // 인증번호 요청하기
-  const requestAuthNum = async (e: MouseEvent<HTMLButtonElement>) => {
+  const handleRequestAuthCode = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      const res = await apiClient.request(requestAuthCodePhoneNumber, {
+      const res = await apiClient.request(requestAuthCodeByEmail, {
         body: {
-          phoneNumber: _watchPhoneNum,
+          email: _watchEmail,
         },
       });
-
+      popToastMessage('success', '인증번호가 전송되었어요.');
+      // 인증코드 발송 토스트메시지
     } catch (err) {
 
     }
@@ -149,8 +157,36 @@ function Signup() {
     }
   };
 
-  const onSubmit: SubmitHandler<SignupForm> = (data) => {
+  const onSubmit: SubmitHandler<SignupForm> = async (data) => {
     console.log('submit', data);
+    const body = {
+      email: data.email,
+      phoneNumber: data.phoneNumber || '',
+      password: data.password,
+      gender: data.gender,
+      name: data.name,
+    };
+    try {
+      const res = await apiClient.request(SIGNUP_API, {
+        body,
+      });
+      openModal({
+        component: AlertPopup,
+        props: {
+          contents: '가입 되었습니다.',
+          onCloseCallback: () => {
+            closeModal();
+            // 성공시 회원가입 팝업을 띄우고 확인 시 메인으로 이동.
+            router.push('/auth/login');
+
+          },
+        },
+        key: 'success_popup',
+      });
+    } catch (err) {
+      if (!(err instanceof Error)) return;
+      popToastMessage('error', err?.message);
+    }
   };
 
   return (
@@ -160,8 +196,8 @@ function Signup() {
 
     })}
           onSubmit={handleSubmit(onSubmit)}>
-      <Section>
-        <Input {...register('email', {
+      <Section position={'relative'} backgroundColor={isValidEmail ? '#F2F2F2' : '#fff'}>
+        <Input disabled={isValidEmail} {...register('email', {
           required: '필수 입력값입니다.',
           pattern: {
             value: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
@@ -169,7 +205,61 @@ function Signup() {
           },
         })}
                placeholder="이메일을 입력해주세요" type="email" />
+        <button className={css({
+            position: 'absolute',
+            top: '10px',
+            right: '8px',
+            backgroundColor: '#55CBCD',
+            borderRadius: '20px',
+            padding: '10px 10px',
+            color: '#fff',
+            fontWeight: '500',
+            fontSize: '15px',
+            _disabled: {
+              opacity: '40%',
+            },
+          },
+        )} onClick={handleRequestAuthCode} disabled={isValidEmail}>인증요청
+        </button>
         {errors?.email?.message && <InputError>{errors?.email?.message}</InputError>}
+      </Section>
+
+      <Section position="relative" backgroundColor={isValidEmail ? '#F2F2F2' : '#fff'}
+               color={isValidEmail ? '#9E9E9E' : '#333'}>
+        <Input placeholder="인증번호를 입력해주세요." type="number" disabled={isValidEmail}
+               {...register('verifyCode', {
+                 required: '인증코드를 입력하세요',
+               })}
+               color={isValidEmail ? '#9E9E9E' : '#333'} />
+        <button className={css({
+            position: 'absolute',
+            top: '10px',
+            right: '8px',
+            backgroundColor: '#55CBCD',
+            borderRadius: '20px',
+            padding: '10px 10px',
+            color: '#fff',
+            fontWeight: '500',
+            fontSize: '15px',
+            _disabled: {
+              opacity: '40%',
+            },
+          },
+        )} onClick={handleVerifyAuthCode} disabled={isValidEmail}>인증하기
+        </button>
+        {/* 인증실패시 팝업띄우기 */}
+        {isValidEmail && (
+          <div className={css({
+            display: 'flex',
+            alignItems: 'center',
+          })}>
+            <FaCheck fill={'#55BCBD'}></FaCheck>
+            <p className={css({
+              color: '#55BCBD',
+              marginLeft: '4px',
+            })}>인증이 완료되었습니다</p>
+          </div>
+        )}
       </Section>
 
       <Section>
@@ -180,8 +270,11 @@ function Signup() {
             message: '최소 8자 이상 입력해주세요.',
           },
           pattern: {
-            value: /^(?:(?=.*[A-Z])(?=.*[a-z])|(?=.*[A-Z])(?=.*\d)|(?=.*[A-Z])(?=.*[^A-Za-z0-9])|(?=.*[a-z])(?=.*\d)|(?=.*[a-z])(?=.*[^A-Za-z0-9])|(?=.*\d)(?=.*[^A-Za-z0-9])).+$/,
-            message: '영어 대문자, 소문자, 숫자, 특수문자 중 최소 2종류 이상을 포함해야 합니다.',
+            // (?=.*[A-Za-z]) : 영문자 최소 1회
+            // (?=.*\d)      : 숫자 최소 1회
+            // [A-Za-z\d]{8,} : 영문자·숫자로 구성된 8자 이상
+            value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+            message: '비밀번호는 영문자와 숫자를 포함한 8자 이상이어야 합니다',
           },
         })} placeholder="비밀번호를 입력해주세요" type="password" />
         {errors?.password?.message && <InputError>{errors?.password?.message}</InputError>}
@@ -201,76 +294,6 @@ function Signup() {
         })} type="text" />
         {errors?.name?.message && <InputError>{errors?.name?.message}</InputError>}
       </Section>
-
-      <Section position="relative" backgroundColor={isValidPhoneNumber ? '#F2F2F2' : '#fff'}>
-        <Input disabled={isValidPhoneNumber} placeholder="휴대폰 번호를 입력해주세요"
-               type="number" {...register('phoneNumber', {
-          required: '숫자만 입력해주세요',
-          pattern: {
-            value: /^[0-9]+$/,
-            message: '숫자만 입력해주세요',
-          },
-        })} color={isValidPhoneNumber ? '#9E9E9E' : '#333'}
-        />
-        <button className={css({
-            position: 'absolute',
-            top: '10px',
-            right: '8px',
-            backgroundColor: '#55CBCD',
-            borderRadius: '20px',
-            padding: '10px 10px',
-            color: '#fff',
-            fontWeight: '500',
-            fontSize: '15px',
-            _disabled: {
-              opacity: '40%',
-
-            },
-          },
-        )} onClick={requestAuthNum}
-                disabled={!!errors?.phoneNumber?.message || isValidPhoneNumber}>인증번호 요청
-        </button>
-        {errors?.phoneNumber?.message && <InputError>{errors?.phoneNumber?.message}</InputError>}
-      </Section>
-
-
-      <Section position="relative" backgroundColor={isValidPhoneNumber ? '#F2F2F2' : '#fff'}
-               color={isValidPhoneNumber ? '#9E9E9E' : '#333'}>
-        <Input placeholder="인증번호를 입력해주세요." type="number" disabled={isValidPhoneNumber}
-               {...register('verifyCode', {
-                 required: '인증코드를 입력하세요',
-               })}
-               color={isValidPhoneNumber ? '#9E9E9E' : '#333'} />
-        <button className={css({
-            position: 'absolute',
-            top: '10px',
-            right: '8px',
-            backgroundColor: '#55CBCD',
-            borderRadius: '20px',
-            padding: '10px 10px',
-            color: '#fff',
-            fontWeight: '500',
-            fontSize: '15px',
-            _disabled: {
-              opacity: '40%',
-            },
-          },
-        )} onClick={handleAuthPhoneNum} disabled={isValidPhoneNumber}>인증하기
-        </button>
-      </Section>
-      {authErrorMsg && <InputError>{authErrorMsg}</InputError>}
-      {isValidPhoneNumber && (
-        <div className={css({
-          display: 'flex',
-          alignItems: 'center',
-        })}>
-          <FaCheck fill={'#55BCBD'}></FaCheck>
-          <p className={css({
-            color: '#55BCBD',
-            marginLeft: '4px',
-          })}>인증이 완료되었습니다</p>
-        </div>
-      )}
 
       {/* 남 여 선택*/}
       <Section>
@@ -448,7 +471,7 @@ function Signup() {
         _disabled: {
           backgroundColor: '#AAE5E6',
         },
-      })} type={'submit'} disabled={!isServiceAgree || !isPrivacyAgree || !isGpsAgree || !isValidPhoneNumber}>
+      })} type={'submit'} disabled={!isServiceAgree || !isPrivacyAgree || !isGpsAgree || !isValidEmail}>
         가입하기
       </button>
     </form>
