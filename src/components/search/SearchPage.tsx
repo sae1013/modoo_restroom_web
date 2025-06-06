@@ -41,7 +41,9 @@ const SearchPage = ({ data }: SearchPageProps) => {
     lng: 127.12379119155949,
   });
   const [hasInitLocation, setHasInitLocation] = useState(false);
-  const [isGranted, setIsGranted] = useState(false);
+  const [isGranted, setIsGranted] = useState(true);
+  const isGrantedRef = useRef(isGranted);
+
   const [isGpsGranted, setGpsGranted] = useState(false);
   const isLoadedCallback = useLocation(setCurrentLocation, setIsGranted, setHasInitLocation, setGpsGranted);
 
@@ -200,6 +202,10 @@ const SearchPage = ({ data }: SearchPageProps) => {
   };
 
   useEffect(() => {
+    isGrantedRef.current = isGranted;
+  }, [isGranted]);
+
+  useEffect(() => {
     if (!currentLocation) return;
     const { lat, lng } = currentLocation;
     markCurrentPosition(lat, lng);
@@ -228,6 +234,46 @@ const SearchPage = ({ data }: SearchPageProps) => {
     }));
 
   }, [isLoadedCallback]);
+
+  useEffect(() => {
+    // 첫 진입시, foreground 위치 체크 리스너 추가
+    window.ReactNativeWebView.postMessage(JSON.stringify({
+      command: 'WATCH_FOREGROUND_LOCATION_PERMISSION',
+      param: {
+        callback: 'requestLocationPermission',
+      },
+    }));
+  }, [isLoadedCallback]);
+
+  // 권한조회
+  useEffect(() => {
+    window.ReactNativeWebView.postMessage(JSON.stringify({
+      command: 'REQUEST_LOCATION_PERMISSION',
+      param: {
+        callback: 'requestLocationPermission',
+      },
+    }));
+  }, [isLoadedCallback, isGranted]);
+
+  useEffect(() => {
+    if (isGranted) {
+      return;
+    }
+
+    openModal({
+      component: AlertPopup,
+      props: {
+        contents: '위치권한이 없습니다. 설정해주세요',
+        onCloseCallback: () => {
+          if (isGrantedRef.current) {
+            closeModal();
+          }
+        },
+      },
+      key: 'success_popup',
+    });
+  }, [isGranted]);
+
   // // 초기 카메라 이동(내위치)
   useEffect(() => {
     if (!hasInitLocation) return;
