@@ -10,7 +10,7 @@ interface ButtonProps extends JsxHTMLProps<ButtonHTMLAttributes<HTMLButtonElemen
 const StyledFilterButton = styled('button', {
   base: {
     fontWeight: '700',
-    padding: '6px 8px',
+    padding: '4px 6px',
     fontSize: '13px',
     borderRadius: '20px',
     // backgroundColor: 'gray.100',

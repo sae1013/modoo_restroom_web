@@ -13,20 +13,10 @@ export const LOGOUT_API: Command = {
   method: 'GET',
 };
 
-export const SIGNUP_API: Command = {
-  path: '/users',
+export const CHANGE_PASSWORD: Command = {
+  path: '/change/password',
   method: 'POST',
 };
-// 문자인증
-// export const requestAuthCodePhoneNumber: Command = {
-//   path: '/auth/sms/request',
-//   method: 'POST',
-// };
-//
-// export const verifyAuthCodePhoneNumber: Command = {
-//   path: '/auth/sms/verify',
-//   method: 'POST',
-// };
 
 export const requestAuthCodeByEmail: Command = {
   path: '/users/email/request-authcode',
@@ -45,12 +35,7 @@ export const GET_USER_PROFILE: Command = {
   method: 'GET',
 };
 
-export const SIGNOUT_API: Command = {
-  path: '/users',
-  method: 'DELETE',
-};
-
-export const REGISTER: Command = {
+export const SIGNUP_API: Command = {
   path: '/users',
   method: 'POST',
 };

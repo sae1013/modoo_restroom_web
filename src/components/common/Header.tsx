@@ -44,6 +44,8 @@ const Header = ({ data }: HeaderProps) => {
       displayName = '설정';
       break;
 
+    case '/my/change_password':
+      displayName = '비밀번호 변경하기'
     default:
       break;
   }

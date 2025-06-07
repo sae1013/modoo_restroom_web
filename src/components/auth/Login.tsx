@@ -9,6 +9,7 @@ import InputError from '@/components/common/inputs/InputError';
 import apiClient from '@/lib/apis/apiClient';
 import { SIGNIN_API } from '@/lib/apis/command';
 import Cookies from 'js-cookie';
+import { triggerHaptic } from '@/utils/nativeBridge';
 
 const Login = () => {
   const [isPasswordStep, setIsPasswordStep] = useState(false);
@@ -161,6 +162,7 @@ const Login = () => {
       <button
         disabled={disableBtn || false}
         onClick={() => {
+          triggerHaptic();
           handleNext();
         }}
         className={css({
@@ -186,7 +188,10 @@ const Login = () => {
       {/* 이메일 주소 입력 하단 영역 */}
       <div>
         <a
-          onClick={() => moveToSignup()}
+          onClick={() => {
+            triggerHaptic();
+            moveToSignup();
+          }}
           className={css({
             fontWeight: 700,
             display: 'inline-block',

@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { IoClose } from 'react-icons/io5';
 import React from 'react';
 
-const ConfirmPopup = ({ contents, confirmLabel = '확인', confirmCallback, ...props }: any) => {
+const ConfirmPopup = ({ contents, confirmLabel = '확인', confirmCallback, Icon, ...props }: any) => {
   // 애니메이션 상태 정의
   const { closeModal } = useModal();
   const popupVariants = {
@@ -52,7 +52,7 @@ const ConfirmPopup = ({ contents, confirmLabel = '확인', confirmCallback, ...p
           padding: '30 0',
         })}
       >
-        <IoMdAlert fill={'#55BCBD'} size="100%" />
+        <Icon fill={'#55BCBD'} size="100%" />
       </div>
       <p
         className={css({
@@ -62,6 +62,9 @@ const ConfirmPopup = ({ contents, confirmLabel = '확인', confirmCallback, ...p
           color: 'neutral.500',
           position: 'relative',
           marginBottom: '40px',
+          overflowWrap: 'break-word',
+          whiteSpace: 'normal',
+          padding: '0 16',
         })}
         dangerouslySetInnerHTML={{ __html: contents }}
       ></p>

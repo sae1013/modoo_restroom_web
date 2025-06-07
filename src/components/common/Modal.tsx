@@ -53,7 +53,7 @@ const Modal = () => {
           const Component = component;
           return (
 
-            <div style={{
+            <div key={i} style={{
               position: 'fixed',
               zIndex: 2 * (i + 1) + 1,
             }}>

@@ -22,6 +22,8 @@ import { useMapStore } from '@/provider/root-store-provider';
 import useToast from '@/hooks/useToast';
 import AlertPopup from '@/components/popup/AlertPopup';
 import { useLocation } from '@/hooks/useLocation';
+import ConfirmPopup from '@/components/popup/ConfirmPopup';
+import { IoMdSettings } from 'react-icons/io';
 
 type ICurrentLocation = {
   lat: number;
@@ -94,7 +96,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   const fetchPlaces = async (lat: number, lng: number, radius: number) => {
     try {
-      const res = await axios.get(`http://192.168.219.127:8000/places/nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
+      const res = await axios.get(`http://192.168.219.128:8000/places/nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
       return res.data;
     } catch (err) {
       console.log(err);
@@ -237,6 +239,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   useEffect(() => {
     // 첫 진입시, foreground 위치 체크 리스너 추가
+    if (!window.ReactNativeWebView || !isLoadedCallback) return;
     window.ReactNativeWebView.postMessage(JSON.stringify({
       command: 'WATCH_FOREGROUND_LOCATION_PERMISSION',
       param: {
@@ -247,6 +250,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   // 권한조회
   useEffect(() => {
+    if (!window.ReactNativeWebView || !isLoadedCallback) return;
     window.ReactNativeWebView.postMessage(JSON.stringify({
       command: 'REQUEST_LOCATION_PERMISSION',
       param: {
@@ -254,6 +258,26 @@ const SearchPage = ({ data }: SearchPageProps) => {
       },
     }));
   }, [isLoadedCallback, isGranted]);
+
+  useEffect(() => {
+    openModal({
+      component: ConfirmPopup,
+      props: {
+        contents: '위치사용 권한이 없습니다. <br/> 확인을 누르면 권한설정 화면으로 이동합니다.',
+        Icon: IoMdSettings,
+        confirmCallback: () => {
+          if (isGrantedRef.current) {
+            closeModal();
+          } else {
+            window.ReactNativeWebView.postMessage(JSON.stringify({
+              command: 'LINK_TO_LOCATION_SETTING',
+            }));
+          }
+        },
+      },
+      key: 'success_popup',
+    });
+  }, []);
 
   useEffect(() => {
     if (isGranted) {
@@ -264,7 +288,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
       component: AlertPopup,
       props: {
         contents: '위치권한이 없습니다. 설정해주세요',
-        onCloseCallback: () => {
+        confirmCallback: () => {
           if (isGrantedRef.current) {
             closeModal();
           }

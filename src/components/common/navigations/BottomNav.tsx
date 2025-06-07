@@ -22,16 +22,15 @@ const BottomNav = () => {
       bottom: '0',
       backgroundColor: '#fff',
       opacity: 0.9,
-      width: '200px',
+      width: '100px',
       // width: '100%',
       height: '50px',
       left: '50%',
       transform: 'translateX(-50%)',
-      // borderRadius: '30px',
       borderTopRightRadius: '30px',
       borderTopLeftRadius: '30px',
       boxShadow: '0px 0px 5px rgba(0,0,0,0.4)',
-      // backgroun
+
       backdropFilter: 'blur(10px)',
     })}>
       <ul className={css({
@@ -41,16 +40,16 @@ const BottomNav = () => {
         alignItems: 'center',
         justifyContent: 'center',
       })}>
-        <HapticWrapper>
-          <li data-path="/search" onClick={movePage}>
-            <FaMapMarkedAlt size={24} fill="#55BCBD" />
-          </li>
-        </HapticWrapper>
-        <HapticWrapper>
-          <li data-path="/my/like" onClick={movePage}>
-            <FaHeart size={24} fill="#55BCBD" />
-          </li>
-        </HapticWrapper>
+        {/*<HapticWrapper>*/}
+        {/*  <li data-path="/search" onClick={movePage}>*/}
+        {/*    <FaMapMarkedAlt size={24} fill="#55BCBD" />*/}
+        {/*  </li>*/}
+        {/*</HapticWrapper>*/}
+        {/*<HapticWrapper>*/}
+        {/*  <li data-path="/my/like" onClick={movePage}>*/}
+        {/*    <FaHeart size={24} fill="#55BCBD" />*/}
+        {/*  </li>*/}
+        {/*</HapticWrapper>*/}
         <HapticWrapper>
           <li data-path="/my/profile" onClick={movePage}><FaUserCircle size={24} fill="#55BCBD" /></li>
         </HapticWrapper>

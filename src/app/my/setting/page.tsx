@@ -1,15 +1,15 @@
 'use client';
 import { css } from '@styled-system/css';
 import apiClient from '@/lib/apis/apiClient';
-import { LOGOUT_API, SIGNOUT_API, UNREGISTER } from '@/lib/apis/command';
+import { LOGOUT_API, UNREGISTER } from '@/lib/apis/command';
 import { useRouter } from 'next/navigation';
 import HapticWrapper from '@/components/HapticWrapper';
-import Cookies from 'js-cookie';
+
 import ConfirmPopup from '@/components/popup/ConfirmPopup';
 import useModal from '@/hooks/useModal';
-import ServiceTerm from '@/components/auth/terms/ServiceTerm';
 import AlertPopup from '@/components/popup/AlertPopup';
 import { logoutCookie } from '@/utils/cookiesUtil';
+import { IoMdAlert } from 'react-icons/io';
 
 const Page = () => {
   const router = useRouter();
@@ -32,6 +32,7 @@ const Page = () => {
       component: ConfirmPopup,
       props: {
         contents: '정말 탈퇴하시겠습니까? <br/> 탈퇴 시 30일간 재가입이 불가능합니다.',
+        Icon: IoMdAlert,
         confirmLabel: '탈퇴하기',
         confirmCallback: () => {
           closeModal();
@@ -91,6 +92,7 @@ const Page = () => {
         >
           <li className={css({})}>
             <button onClick={() => {
+              router.push('/my/change_password');
             }}>비밀번호 변경
             </button>
           </li>

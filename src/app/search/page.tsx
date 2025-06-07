@@ -6,8 +6,7 @@ import BottomNav from '@/components/common/navigations/BottomNav';
 
 const Page = async () => {
   try {
-    // const res = await axios.get('http://localhost:8000/places');
-    // const restrooms = res.data;
+
 
     return (
       <>
@@ -18,7 +17,7 @@ const Page = async () => {
       </>
     );
   } catch (err) {
-    // return <div>에러페이지</div>;
+
   }
 };
 
