@@ -24,6 +24,8 @@ import AlertPopup from '@/components/popup/AlertPopup';
 import { useLocation } from '@/hooks/useLocation';
 import ConfirmPopup from '@/components/popup/ConfirmPopup';
 import { IoMdSettings } from 'react-icons/io';
+import apiClient from '@/lib/apis/apiClient';
+import { GET_PLACE_API } from '@/lib/apis/command';
 
 type ICurrentLocation = {
   lat: number;
@@ -72,7 +74,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
     openModal({
       component: EmptyBottomSheet,
-      props: { name, roadAddress, jibunAddress, lat, lng },
+      props: { name, roadAddress, jibunAddress, lat, lng, setPlaces },
       key: 'unregistered',
     });
     return;
@@ -81,7 +83,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   const moveMapToTargetLocation = (lat: number, lng: number) => {
     const newCenter = new window.naver.maps.LatLng(lat, lng);
-    window.map.panTo(newCenter);
+    window.map.setCenter(newCenter);
   };
 
   const getCurrentViewCenter = () => {
@@ -96,8 +98,12 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   const fetchPlaces = async (lat: number, lng: number, radius: number) => {
     try {
-      const res = await axios.get(`http://192.168.219.128:8000/places/nearby?lat=${lat}&lng=${lng}&radius=${radius}`);
-      return res.data;
+      const res = await apiClient.request(GET_PLACE_API, {
+        queryParams: {
+          lat, lng, radius,
+        },
+      });
+      return res;
     } catch (err) {
       console.log(err);
       throw err;
@@ -111,7 +117,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
     const places = await fetchPlaces(lat, lng, 2000);
     setPlaces(places);
-    drawMarkers(places);
+    // drawMarkers(places);
 
   };
 
@@ -120,7 +126,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
   };
 
   const drawMarkers = (places: any) => {
-    popToastMessage('success', `반경에 ${places.length}개의 화장실이 있어요`);
+    popToastMessage('success', `반경에 ${places?.length}개의 화장실이 있어요`);
     console.log('drawMarkers()');
     if (window.ReactNativeWebView) {
       // window.ReactNativeWebView.postMessage('drawMarkers()');
@@ -301,6 +307,11 @@ const SearchPage = ({ data }: SearchPageProps) => {
     };
     fetchData();
   }, [hasInitLocation]);
+
+  useEffect(() => {
+    if (places.length < 1) return;
+    drawMarkers(places);
+  }, [places]);
 
   return (
     <>

@@ -23,7 +23,17 @@ import AlertPopup from '@/components/popup/AlertPopup';
 const RegisterBottomSheet = (props) => {
   const { closeModal } = useModal();
   const { popToastMessage } = useToast();
-  const { name = '', roadAddress = '', jibunAddress = '', lat = 0, lng = 0, placeId = -1, ...otherProps } = props;
+  const {
+    name = '',
+    roadAddress = '',
+    jibunAddress = '',
+    lat = 0,
+    lng = 0,
+    placeId = -1,
+    setPlaces,
+    mode = 'existPlace',
+    ...otherProps
+  } = props;
   // formData
   const [isSelectOp1, setSelectOp1] = useState(false);
   const [isSelectOp2, setSelectOp2] = useState(false);
@@ -65,6 +75,9 @@ const RegisterBottomSheet = (props) => {
           props: {
             contents: '성공적으로 등록했어요',
             onCloseCallback: () => {
+              if (mode === 'newPlace') {
+                setPlaces((prev: any) => [...prev, data.result]);
+              }
               closeModal('success_register');
               closeModal('register');
             },

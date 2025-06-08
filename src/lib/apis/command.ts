@@ -49,7 +49,7 @@ export const UNREGISTER: Command = {
  * Place(장소) API
  */
 export const GET_PLACE_API: Command = {
-  path: '/places',
+  path: '/places/nearby',
   method: 'GET',
 };
 

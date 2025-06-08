@@ -9,7 +9,7 @@ import Button from '@/components/common/buttons/Button';
 
 const EmptyBottomSheet = (props) => {
   const { closeModal, openModal } = useModal();
-  const { name, roadAddress, jibunAddress, lat, lng } = props;
+  const { name, roadAddress, jibunAddress, lat, lng, setPlaces } = props;
   return (
     <BottomSheet
       {...props}
@@ -28,7 +28,7 @@ const EmptyBottomSheet = (props) => {
           className={css({
             width: '50%',
             margin: 'auto',
-            
+
           })}
         >
           <div
@@ -76,7 +76,7 @@ const EmptyBottomSheet = (props) => {
               openModal({
                 component: RegisterBottomSheet,
                 props: {
-                  name, roadAddress, jibunAddress, lat, lng,
+                  name, roadAddress, jibunAddress, lat, lng, setPlaces, mode: 'newPlace',
                 },
                 key: 'register',
               });
