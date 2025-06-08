@@ -259,7 +259,11 @@ const SearchPage = ({ data }: SearchPageProps) => {
     }));
   }, [isLoadedCallback, isGranted]);
 
+
   useEffect(() => {
+    if (isGranted) {
+      return;
+    }
     openModal({
       component: ConfirmPopup,
       props: {
@@ -272,25 +276,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
             window.ReactNativeWebView.postMessage(JSON.stringify({
               command: 'LINK_TO_LOCATION_SETTING',
             }));
-          }
-        },
-      },
-      key: 'success_popup',
-    });
-  }, []);
-
-  useEffect(() => {
-    if (isGranted) {
-      return;
-    }
-
-    openModal({
-      component: AlertPopup,
-      props: {
-        contents: '위치권한이 없습니다. 설정해주세요',
-        confirmCallback: () => {
-          if (isGrantedRef.current) {
-            closeModal();
           }
         },
       },

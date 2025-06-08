@@ -60,16 +60,17 @@ const RegisterBottomSheet = (props) => {
     };
     createReviewMutation.mutate(body, {
       onSuccess: (data, variables, context) => {
-        closeModal('register');
-        setTimeout(() => {
-          openModal({
-            component: AlertPopup,
-            props: {
-              contents: '성공적으로 등록했어요',
+        openModal({
+          component: AlertPopup,
+          props: {
+            contents: '성공적으로 등록했어요',
+            onCloseCallback: () => {
+              closeModal();
+              closeModal();
             },
-            key: 'success_popup',
-          });
-        }, 400);
+          },
+          key: 'success_register',
+        });
       },
     });
   };

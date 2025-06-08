@@ -66,7 +66,7 @@ const AlertPopup = ({ contents, onCloseCallback, ...props }: any) => {
             onCloseCallback();
             return;
           }
-          closeModal('success_popup');
+          closeModal();
         }}
       >
         확인

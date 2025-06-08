@@ -58,7 +58,7 @@ const ReviewBottomSheet = (props) => {
   return (
     <BottomSheet {...props}>
       <BsHeader onClose={() => {
-        closeModal('reviewBottomSheet');
+        closeModal();
       }}>
 
         <div className={css({
@@ -132,13 +132,15 @@ const ReviewBottomSheet = (props) => {
         <div className={css({
             marginTop: '8px',
             maxHeight: '550px',
-            paddingBottom: '50px',
-            overflowY: 'auto',
+            paddingBottom: '180px',
+            overflowY: 'scroll',
+            pointerEvents: 'auto',
+
             '& > div': {
               marginTop: '14px',
             },
           },
-        )}>
+        )} onClick={e => e.stopPropagation()}>
           {filteredReviews.map((review, idx) => {
             const filterTags = Object.entries(placeStatusOp).reduce((tags, [key, val]) => {
               if (review[key]) {

@@ -19,7 +19,7 @@ const StyledButton = styled('button', {
         // (만약 HTML 버튼 기본 스타일을 조금 변경하고 싶다면 여기서 일부 속성을 정의할 수 있습니다.)
       },
       wide: {
-        position: 'relative',
+        // position: 'absolute',
         bottom: 0,
         width: '100%',
         height: '50px',

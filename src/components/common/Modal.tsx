@@ -6,20 +6,29 @@ import { css } from '@styled-system/css';
 
 const Modal = () => {
   const { modalStack } = useModalStore((state) => state);
-  console.log(modalStack.length);
+
   return (
     <div
+      onClick={(event) => {
+        event.stopPropagation();
+      }}
+      onTouchStart={(event) => {
+        event.stopPropagation();
+      }}
       id="root-modal"
       style={{
         position: 'fixed',
         zIndex: 999,
         height: '100vh',
+        width: '100wh',
+        touchAction: 'none',
+        pointerEvents: 'auto',
       }}
     >
-      {modalStack.map((_, i) => {
+      {modalStack.map((item, i) => {
         return (
           <div
-            key={i}
+            key={item.key}
             style={{
               zIndex: 2 * (i + 1),
             }}
@@ -27,8 +36,9 @@ const Modal = () => {
               position: 'fixed',
               width: '100%',
               height: '100vh',
-
               backgroundColor: 'rgba(0,0,0,0.3)',
+              touchAction: 'none',
+              pointerEvents: 'auto',
             })}
           ></div>
         );
@@ -56,6 +66,8 @@ const Modal = () => {
             <div key={i} style={{
               position: 'fixed',
               zIndex: 2 * (i + 1) + 1,
+              // touchAction: 'none',
+              // pointerEvents: 'auto',
             }}>
               <Component key={key} {...props} ></Component>
             </div>

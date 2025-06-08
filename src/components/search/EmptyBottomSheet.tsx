@@ -19,7 +19,7 @@ const EmptyBottomSheet = (props) => {
     >
       <BsHeader
         onClose={() => {
-          closeModal('unregistered');
+          closeModal();
         }}
       ></BsHeader>
 
@@ -71,7 +71,7 @@ const EmptyBottomSheet = (props) => {
         <Button
           mode="haptic"
           onClick={() => {
-            closeModal('unregistered');
+            closeModal();
             setTimeout(() => {
               openModal({
                 component: RegisterBottomSheet,

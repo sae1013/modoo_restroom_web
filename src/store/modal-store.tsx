@@ -47,7 +47,7 @@ export const createModalStore = () => {
             };
           }
 
-          // 해당 key값에 맞는 모달을 염
+          // 해당 key를 제외한 모달만 남김
           const newModalStack = state.modalStack.filter((x) => x.key !== key);
           return {
             modalStack: newModalStack,

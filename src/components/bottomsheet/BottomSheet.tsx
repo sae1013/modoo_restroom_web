@@ -38,7 +38,7 @@ const BottomSheet = ({ children, onCloseCallback, ...props }: BottomSheetProps) 
 
   useLayoutEffect(() => {
     // 콘텐츠 컨테이너의 높이를 측정하여 targetHeight에 저장
-    const maxHeight = window?.visualViewport?.height || 0;
+    const maxHeight = window?.visualViewport?.height - 10 || 0;
 
     if (wrapperRef.current) {
       setWrapperHeight(Math.min(wrapperRef.current.clientHeight, maxHeight));
