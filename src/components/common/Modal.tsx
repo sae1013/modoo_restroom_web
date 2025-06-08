@@ -8,13 +8,8 @@ const Modal = () => {
   const { modalStack } = useModalStore((state) => state);
 
   return (
+
     <div
-      onClick={(event) => {
-        event.stopPropagation();
-      }}
-      onTouchStart={(event) => {
-        event.stopPropagation();
-      }}
       id="root-modal"
       style={{
         position: 'fixed',
@@ -25,24 +20,24 @@ const Modal = () => {
         pointerEvents: 'auto',
       }}
     >
-      {modalStack.map((item, i) => {
-        return (
-          <div
-            key={item.key}
-            style={{
-              zIndex: 2 * (i + 1),
-            }}
-            className={css({
-              position: 'fixed',
-              width: '100%',
-              height: '100vh',
-              backgroundColor: 'rgba(0,0,0,0.3)',
-              touchAction: 'none',
-              pointerEvents: 'auto',
-            })}
-          ></div>
-        );
-      })}
+      {/*{modalStack.map((item, i) => {*/}
+      {/*  return (*/}
+      {/*    <div*/}
+      {/*      key={item.key}*/}
+      {/*      style={{*/}
+      {/*        zIndex: 2 * (i + 1),*/}
+      {/*      }}*/}
+      {/*      className={css({*/}
+      {/*        position: 'fixed',*/}
+      {/*        width: '100%',*/}
+      {/*        height: '100vh',*/}
+      {/*        backgroundColor: 'rgba(0,0,0,0.3)',*/}
+      {/*        touchAction: 'none',*/}
+      {/*        pointerEvents: 'auto',*/}
+      {/*      })}*/}
+      {/*    ></div>*/}
+      {/*  );*/}
+      {/*})}*/}
 
       <AnimatePresence
         onExitComplete={() => {
@@ -62,15 +57,30 @@ const Modal = () => {
 
           const Component = component;
           return (
+            <React.Fragment key={key}>
+              <div
 
-            <div key={i} style={{
-              position: 'fixed',
-              zIndex: 2 * (i + 1) + 1,
-              // touchAction: 'none',
-              // pointerEvents: 'auto',
-            }}>
-              <Component key={key} {...props} ></Component>
-            </div>
+                style={{
+                  zIndex: 2 * (i + 1),
+                }}
+                className={css({
+                  position: 'fixed',
+                  width: '100%',
+                  height: '100vh',
+                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  touchAction: 'none',
+                  pointerEvents: 'auto',
+                })}
+              ></div>
+              <div style={{
+                position: 'fixed',
+                zIndex: 2 * (i + 1) + 1,
+                // touchAction: 'none',
+                // pointerEvents: 'auto',
+              }}>
+                <Component {...props} ></Component>
+              </div>
+            </React.Fragment>
           );
         })}
       </AnimatePresence>

@@ -42,7 +42,7 @@ export default async function RootLayout({
     <StyledJsxRegistry>
       <ReactQueryProviders>
         <RootStoreProvider userData={initUser}>
-          <div id="modal-root"></div>
+          {/*<div id="modal-root"></div>*/}
           <Modal></Modal>
           {/*<InitWebviewCallback></InitWebviewCallback>*/}
           <HeaderLayout></HeaderLayout>
