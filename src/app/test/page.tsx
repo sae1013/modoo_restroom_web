@@ -15,7 +15,8 @@ const Page = () => {
         callback: 'watchLocationListener',
       },
     }));
-    window.watchLocationListener = ({ lat, lng }) => {
+    // @ts-ignore
+    (window as any).watchLocationListener = ({ lat, lng }) => {
       console.log(lat, lng);
     };
 
@@ -49,7 +50,7 @@ const Page = () => {
             callback: 'requestLocationPermission',
           },
         }));
-        window.requestLocationPermission = (status) => {
+        (window as any).requestLocationPermission = (status: boolean) => {
           console.log(status);
         };
       }}>위치권한 체크
@@ -62,7 +63,7 @@ const Page = () => {
       }}>위치 권한 팝업 띄우기.
       </button>
       <button onClick={() => {
-        window.requestLocationPermission = (status) => {
+        (window as any).requestLocationPermission = (status: boolean) => {
           console.log(status);
         };
 

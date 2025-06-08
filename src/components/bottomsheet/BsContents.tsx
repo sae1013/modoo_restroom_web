@@ -2,6 +2,7 @@ import { styled } from '../../../styled-system/jsx';
 
 interface BsContentsProps {
   children?: React.ReactNode;
+  className?: any;
 }
 
 const Wrapper = styled('div', {
