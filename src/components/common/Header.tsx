@@ -15,7 +15,9 @@ const Header = ({ data }: HeaderProps) => {
 
   const router = useRouter();
   const pathname = usePathname();
-
+  if (pathname === '/search') {
+    return null;
+  }
   // 경로에 따른 displayName 설정
   let displayName = '';
   switch (pathname) {
@@ -45,7 +47,7 @@ const Header = ({ data }: HeaderProps) => {
       break;
 
     case '/my/change_password':
-      displayName = '비밀번호 변경하기'
+      displayName = '비밀번호 변경하기';
     default:
       break;
   }
@@ -66,6 +68,8 @@ const Header = ({ data }: HeaderProps) => {
         alignItems: 'center',
         paddingLeft: '16px',
         paddingRight: '16px',
+        background: 'white',
+        zIndex: 1,
       })}
     >
       {/* < 아이콘  */}
@@ -84,6 +88,7 @@ const Header = ({ data }: HeaderProps) => {
           fontSize: '18px',
           textAlign: 'center',
           flex: 1,
+
         })}
       >
         {displayName}

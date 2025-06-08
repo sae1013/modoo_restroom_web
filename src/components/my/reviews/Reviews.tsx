@@ -11,6 +11,7 @@ import { formatDate } from '@/utils/DateUtil';
 import React from 'react';
 import { placeStatusOp } from '@/utils/mapper';
 import ConfirmPopup from '@/components/popup/ConfirmPopup';
+import { IoMdAlert, IoMdSettings } from 'react-icons/io';
 
 interface ReviewsProps {
   reviews: any;
@@ -21,11 +22,15 @@ const Reviews = ({ reviews }: ReviewsProps) => {
   const { openModal, closeModal } = useModal();
 
   const handleDeleteReview = async (reviewId: number) => {
+    console.log(reviewId);
+
     openModal({
       component: ConfirmPopup,
+      key: 'delete_review',
       props: {
         contents: '리뷰를 삭제하시겠어요?',
         confirmLabel: '삭제하기',
+        Icon: IoMdAlert,
         confirmCallback: () => {
           closeModal();
           setTimeout(() => {
