@@ -65,8 +65,8 @@ const RegisterBottomSheet = (props) => {
           props: {
             contents: '성공적으로 등록했어요',
             onCloseCallback: () => {
-              closeModal();
-              closeModal();
+              closeModal('success_register');
+              closeModal('register');
             },
           },
           key: 'success_register',
