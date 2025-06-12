@@ -18,7 +18,7 @@ import { triggerHaptic } from '@/utils/nativeBridge';
 import HapticWrapper from '@/components/HapticWrapper';
 import { NATIVE_MSG } from '@/lib/natives/message';
 import NativeMsgService from '@/lib/natives/NativeMsgService';
-import { useMapStore } from '@/provider/root-store-provider';
+import { usePlaceStore } from '@/provider/root-store-provider';
 import useToast from '@/hooks/useToast';
 import AlertPopup from '@/components/popup/AlertPopup';
 import { useLocation } from '@/hooks/useLocation';
@@ -30,20 +30,21 @@ import { GET_PLACE_API } from '@/lib/apis/command';
 type ICurrentLocation = {
   lat: number;
   lng: number;
-}
+};
 
 interface SearchPageProps {
   data: any;
 }
 
-
 const SearchPage = ({ data }: SearchPageProps) => {
   const { openModal, closeModal } = useModal();
-  const [places, setPlaces] = useState([]);
+  const { places, setPlaces } = usePlaceStore((state) => state);
   const [currentLocation, setCurrentLocation] = useState<ICurrentLocation>({
     lat: 37.48145437352808,
     lng: 127.12379119155949,
   });
+
+  // 한번이라도 위치정보를 얻는다면 true.
   const [hasInitLocation, setHasInitLocation] = useState(false);
   const [isGranted, setIsGranted] = useState(true);
   const isGrantedRef = useRef(isGranted);
@@ -56,31 +57,34 @@ const SearchPage = ({ data }: SearchPageProps) => {
   const myMarkerRef = useRef<any>(null); // 현재 내위치의 마커
   const markersRef = useRef<any[]>([]);
 
-  const onClickMapHandler = useCallback((addrAndGeoInfo: any) => {
-    const { roadAddress, jibunAddress, lat, lng } = addrAndGeoInfo;
-    let name = roadAddress || jibunAddress;
+  const onClickMapHandler = useCallback(
+    (addrAndGeoInfo: any) => {
+      const { roadAddress, jibunAddress, lat, lng } = addrAndGeoInfo;
+      let name = roadAddress || jibunAddress;
 
-    const existPlace = places.find((place: any) => place.location.coordinates[1] === Number(addrAndGeoInfo.lat) && place.location.coordinates[0] === Number(addrAndGeoInfo.lng));
+      const existPlace = places.find((place: any) => place.location.coordinates[1] === Number(addrAndGeoInfo.lat) && place.location.coordinates[0] === Number(addrAndGeoInfo.lng));
 
-    // 이미 존재하는 장소를 찍은경우
-    if (existPlace) {
+      // 이미 존재하는 장소를 찍은경우
+      if (existPlace) {
+        openModal({
+          component: ReviewBottomSheet,
+          props: { placeId: existPlace?.id, name, roadAddress, jibunAddress, lat, lng },
+          key: 'reviewBottomSheet',
+        });
+        return;
+      }
+
       openModal({
-        component: ReviewBottomSheet,
-        props: { placeId: existPlace?.id, name, roadAddress, jibunAddress, lat, lng },
-        key: 'reviewBottomSheet',
+        component: EmptyBottomSheet,
+        props: { name, roadAddress, jibunAddress, lat, lng, setPlaces },
+        key: 'unregistered',
       });
       return;
-    }
+    },
+    [places.length],
+  );
 
-    openModal({
-      component: EmptyBottomSheet,
-      props: { name, roadAddress, jibunAddress, lat, lng, setPlaces },
-      key: 'unregistered',
-    });
-    return;
-
-  }, [places.length]);
-
+  // TODO: Store로 기능 빼기. (리뷰페이지에서도 써야함)
   const moveMapToTargetLocation = (lat: number, lng: number) => {
     const newCenter = new window.naver.maps.LatLng(lat, lng);
     window.map.setCenter(newCenter);
@@ -91,16 +95,18 @@ const SearchPage = ({ data }: SearchPageProps) => {
     const { _lng, _lat } = center;
 
     return {
-      lat: _lat, lng: _lng,
+      lat: _lat,
+      lng: _lng,
     };
-
   };
 
   const fetchPlaces = async (lat: number, lng: number, radius: number) => {
     try {
       const res = await apiClient.request(GET_PLACE_API, {
         queryParams: {
-          lat, lng, radius,
+          lat,
+          lng,
+          radius,
         },
       });
       return res;
@@ -108,7 +114,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
       console.log(err);
       throw err;
     }
-
   };
 
   const handleSearchTargetPlaces = async () => {
@@ -118,7 +123,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
     const places = await fetchPlaces(lat, lng, 2000);
     setPlaces(places);
     // drawMarkers(places);
-
   };
 
   const createStaticHTML = (jsxElement) => {
@@ -128,17 +132,14 @@ const SearchPage = ({ data }: SearchPageProps) => {
   const drawMarkers = (places: any) => {
     popToastMessage('success', `반경에 ${places?.length}개의 화장실이 있어요`);
     console.log('drawMarkers()');
-    if (window.ReactNativeWebView) {
-      // window.ReactNativeWebView.postMessage('drawMarkers()');
-    }
 
     // 기존의 마커들을 삭제.
-    markersRef.current.forEach(marker => {
+    markersRef.current.forEach((marker) => {
       marker.setMap(null);
     });
     markersRef.current = [];
 
-    places.forEach(place => {
+    places.forEach((place) => {
       const position = new window.naver.maps.LatLng(place.lat, place.lng);
       const marker = new window.naver.maps.Marker({
         position,
@@ -150,7 +151,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
         },
       });
       // 이벤트리스너 등록
-      window.naver.maps.Event.addListener(marker, 'click', function(e) {
+      window.naver.maps.Event.addListener(marker, 'click', function (e) {
         triggerHaptic();
         openModal({
           component: ReviewBottomSheet,
@@ -168,9 +169,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
       markersRef.current.push(marker);
     });
-
   };
-
 
   const markCurrentPosition = (lat: number, lng: number) => {
     if (!window.naver?.maps) return;
@@ -200,7 +199,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
     }
     // 기존 위치 업데이트
     myMarkerRef.current.setPosition(new window.naver.maps.LatLng(lat, lng));
-
   };
 
   const handleClickMyLocation = () => {
@@ -226,45 +224,51 @@ const SearchPage = ({ data }: SearchPageProps) => {
     // 첫 렌더링시 위치 받아오고, 실시간 리스너등록.
     if (!window.ReactNativeWebView || !isLoadedCallback) return;
     // 현재 위치 받아오기
-    window.ReactNativeWebView.postMessage(JSON.stringify({
-      command: 'GET_CURRENT_LOCATION',
-      param: {
-        callback: 'getCurrentLocation',
-      },
-    }));
+    window.ReactNativeWebView.postMessage(
+      JSON.stringify({
+        command: 'GET_CURRENT_LOCATION',
+        param: {
+          callback: 'getCurrentLocation',
+        },
+      }),
+    );
 
     // 실시간 이벤트 리스너 등록.
-    window.ReactNativeWebView.postMessage(JSON.stringify({
-      command: 'ADD_LISTENER_WATCH_LOCATION',
-      param: {
-        callback: 'watchLocationListener',
-      },
-    }));
-
+    window.ReactNativeWebView.postMessage(
+      JSON.stringify({
+        command: 'ADD_LISTENER_WATCH_LOCATION',
+        param: {
+          callback: 'watchLocationListener',
+        },
+      }),
+    );
   }, [isLoadedCallback]);
 
   useEffect(() => {
     // 첫 진입시, foreground 위치 체크 리스너 추가
     if (!window.ReactNativeWebView || !isLoadedCallback) return;
-    window.ReactNativeWebView.postMessage(JSON.stringify({
-      command: 'WATCH_FOREGROUND_LOCATION_PERMISSION',
-      param: {
-        callback: 'requestLocationPermission',
-      },
-    }));
+    window.ReactNativeWebView.postMessage(
+      JSON.stringify({
+        command: 'WATCH_FOREGROUND_LOCATION_PERMISSION',
+        param: {
+          callback: 'requestLocationPermission',
+        },
+      }),
+    );
   }, [isLoadedCallback]);
 
   // 권한조회
   useEffect(() => {
     if (!window.ReactNativeWebView || !isLoadedCallback) return;
-    window.ReactNativeWebView.postMessage(JSON.stringify({
-      command: 'REQUEST_LOCATION_PERMISSION',
-      param: {
-        callback: 'requestLocationPermission',
-      },
-    }));
+    window.ReactNativeWebView.postMessage(
+      JSON.stringify({
+        command: 'REQUEST_LOCATION_PERMISSION',
+        param: {
+          callback: 'requestLocationPermission',
+        },
+      }),
+    );
   }, [isLoadedCallback, isGranted]);
-
 
   useEffect(() => {
     if (isGranted) {
@@ -279,9 +283,11 @@ const SearchPage = ({ data }: SearchPageProps) => {
           if (isGrantedRef.current) {
             closeModal();
           } else {
-            window.ReactNativeWebView.postMessage(JSON.stringify({
-              command: 'LINK_TO_LOCATION_SETTING',
-            }));
+            window.ReactNativeWebView.postMessage(
+              JSON.stringify({
+                command: 'LINK_TO_LOCATION_SETTING',
+              }),
+            );
           }
         },
       },
@@ -289,13 +295,12 @@ const SearchPage = ({ data }: SearchPageProps) => {
     });
   }, [isGranted]);
 
-  // // 초기 카메라 이동(내위치)
+  // 위치정보를 받아올 수 있을 때, 자동으로 카메라를 이동
   useEffect(() => {
     if (!hasInitLocation) return;
 
     moveMapToTargetLocation(currentLocation.lat, currentLocation.lng);
   }, [hasInitLocation]);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -303,7 +308,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
       const { lat, lng } = currentLocation;
       const places = await fetchPlaces(lat, lng, 2000);
       setPlaces(places);
-      drawMarkers(places);
+      // drawMarkers(places);
     };
     fetchData();
   }, [hasInitLocation]);
@@ -317,37 +322,42 @@ const SearchPage = ({ data }: SearchPageProps) => {
     <>
       <NaverMap onClick={onClickMapHandler} />
       <HapticWrapper>
-        <button onClick={handleSearchTargetPlaces}
-                className={css({
-                  zIndex: 99,
-                  position: 'fixed',
-                  bottom: '70px',
-                  left: '50%',
-                  transform: 'translateX(-50%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  backgroundColor: 'white',
-                  borderRadius: '30px',
-                  fontSize: '13px',
-                  gap: '5px',
-                  padding: '5px 10px',
-                  boxShadow: '0px 0px 5px rgba(0,0,0,0.4)',
-                })}>
+        <button
+          onClick={handleSearchTargetPlaces}
+          className={css({
+            zIndex: 99,
+            position: 'fixed',
+            bottom: '70px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: 'white',
+            borderRadius: '30px',
+            fontSize: '13px',
+            gap: '5px',
+            padding: '5px 10px',
+            boxShadow: '0px 0px 5px rgba(0,0,0,0.4)',
+          })}
+        >
           <GrRefresh size={18}></GrRefresh>
           <p>이지역 재검색</p>
         </button>
       </HapticWrapper>
       <HapticWrapper>
-        <div className={css({
-          zIndex: 99,
-          position: 'fixed',
-          bottom: '30px',
-          right: '20px',
-          padding: '8px',
-          backgroundColor: '#fff',
-          borderRadius: '50%',
-          boxShadow: '0px 0px 5px rgba(0,0,0,0.4)',
-        })} onClick={handleClickMyLocation}>
+        <div
+          className={css({
+            zIndex: 99,
+            position: 'fixed',
+            bottom: '30px',
+            right: '20px',
+            padding: '8px',
+            backgroundColor: '#fff',
+            borderRadius: '50%',
+            boxShadow: '0px 0px 5px rgba(0,0,0,0.4)',
+          })}
+          onClick={handleClickMyLocation}
+        >
           <MdOutlineMyLocation size={25} color="#55CBCD"></MdOutlineMyLocation>
         </div>
       </HapticWrapper>

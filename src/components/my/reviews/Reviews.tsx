@@ -12,6 +12,8 @@ import React from 'react';
 import { placeStatusOp } from '@/utils/mapper';
 import ConfirmPopup from '@/components/popup/ConfirmPopup';
 import { IoMdAlert, IoMdSettings } from 'react-icons/io';
+import { usePlaceStore } from '@/provider/root-store-provider';
+import { useRouter } from 'next/navigation';
 
 interface ReviewsProps {
   reviews: any;
@@ -20,6 +22,31 @@ interface ReviewsProps {
 const Reviews = ({ reviews }: ReviewsProps) => {
   const { mutate: deleteReview, isPending } = useDeleteReview();
   const { openModal, closeModal } = useModal();
+  const { setPlaces } = usePlaceStore((state) => state);
+  const router = useRouter();
+  const handleViewReview = (review: any) => {
+    // 장소를 전역에 추가.
+    setPlaces(review.place); // addPlace기능추가. (단일 아이템)
+
+    // 메인 페이지로 이동
+    setTimeout(() => {
+      router.push('/search');
+    });
+
+    // 해당 위치로 지도 이동 .
+    setTimeout(() => {
+      
+    }, 300);
+    // 해당 아이템에 대한 place를 추가하고,300ms 이후에
+    // step1. 메인화면으로 이동
+    // step2. 카메라 이동
+    // step3. 리뷰 팝업 띄우기.
+    // openModal({
+    //   component: ReviewBottomSheet,
+    //   props: { placeId: existPlace?.id, name, roadAddress, jibunAddress, lat, lng },
+    //   key: 'reviewBottomSheet',
+    // });
+  };
 
   const handleDeleteReview = async (reviewId: number) => {
     console.log(reviewId);
@@ -75,7 +102,13 @@ const Reviews = ({ reviews }: ReviewsProps) => {
           }, [] as string[]);
 
           return (
-            <li key={review.id} className={css({ borderBottom: '2px solid #f2f2f2' })}>
+            <li
+              key={review.id}
+              className={css({ borderBottom: '2px solid #f2f2f2' })}
+              onClick={() => {
+                handleViewReview(review);
+              }}
+            >
               <div
                 className={css({
                   fontSize: '16px',
@@ -103,7 +136,8 @@ const Reviews = ({ reviews }: ReviewsProps) => {
 
                   <Button
                     variant="default"
-                    onClick={() => {
+                    onClick={(e: React.MouseEvent) => {
+                      e.stopPropagation();
                       handleDeleteReview(review.id);
                     }}
                   >
