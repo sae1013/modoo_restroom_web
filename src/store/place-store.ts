@@ -8,6 +8,7 @@ export type PlaceState = {
 
 export type PlaceActions = {
   setPlaces: (place: PlaceState) => void;
+  addPlace: (place: PlaceState) => void;
 };
 
 export type PlaceStore = PlaceState & PlaceActions;
@@ -21,6 +22,11 @@ export const createPlaceStore = (initState: PlaceState = defaultIntialState) => 
     return {
       ...initState,
       setPlaces: (places: Place) => set(() => ({ places: places })),
+      addPlace: (place) => {
+        set((state) => ({
+          places: [...state.places, place],
+        }));
+      },
     };
   });
 };

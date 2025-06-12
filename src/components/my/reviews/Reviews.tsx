@@ -14,6 +14,8 @@ import ConfirmPopup from '@/components/popup/ConfirmPopup';
 import { IoMdAlert, IoMdSettings } from 'react-icons/io';
 import { usePlaceStore } from '@/provider/root-store-provider';
 import { useRouter } from 'next/navigation';
+import { moveMapToTargetLocation } from '@/utils/naverMapUtils';
+import ReviewBottomSheet from '@/components/search/ReviewBottomSheet';
 
 interface ReviewsProps {
   reviews: any;
@@ -22,11 +24,13 @@ interface ReviewsProps {
 const Reviews = ({ reviews }: ReviewsProps) => {
   const { mutate: deleteReview, isPending } = useDeleteReview();
   const { openModal, closeModal } = useModal();
-  const { setPlaces } = usePlaceStore((state) => state);
+  const { addPlace } = usePlaceStore((state) => state);
+
   const router = useRouter();
   const handleViewReview = (review: any) => {
+    const { lat, lng, place } = review;
     // 장소를 전역에 추가.
-    setPlaces(review.place); // addPlace기능추가. (단일 아이템)
+    addPlace(review.place);
 
     // 메인 페이지로 이동
     setTimeout(() => {
@@ -35,17 +39,25 @@ const Reviews = ({ reviews }: ReviewsProps) => {
 
     // 해당 위치로 지도 이동 .
     setTimeout(() => {
-      
-    }, 300);
-    // 해당 아이템에 대한 place를 추가하고,300ms 이후에
-    // step1. 메인화면으로 이동
-    // step2. 카메라 이동
-    // step3. 리뷰 팝업 띄우기.
-    // openModal({
-    //   component: ReviewBottomSheet,
-    //   props: { placeId: existPlace?.id, name, roadAddress, jibunAddress, lat, lng },
-    //   key: 'reviewBottomSheet',
-    // });
+      moveMapToTargetLocation(lat, lng);
+    }, 500);
+
+    // 리뷰 팝업 띄우기.
+    setTimeout(() => {
+      openModal({
+        component: ReviewBottomSheet,
+        props: {
+          placeId: place?.id,
+          name: place.name,
+          roadAddress: place.roadAddr,
+          jibunAddress: place.jibunAddr,
+          lat,
+          lng,
+        },
+        key: 'reviewBottomSheet',
+      });
+    }, 500);
+
   };
 
   const handleDeleteReview = async (reviewId: number) => {

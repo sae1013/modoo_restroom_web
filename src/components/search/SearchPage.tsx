@@ -26,6 +26,7 @@ import ConfirmPopup from '@/components/popup/ConfirmPopup';
 import { IoMdSettings } from 'react-icons/io';
 import apiClient from '@/lib/apis/apiClient';
 import { GET_PLACE_API } from '@/lib/apis/command';
+import { moveMapToTargetLocation } from '@/utils/naverMapUtils';
 
 type ICurrentLocation = {
   lat: number;
@@ -84,12 +85,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
     [places.length],
   );
 
-  // TODO: Store로 기능 빼기. (리뷰페이지에서도 써야함)
-  const moveMapToTargetLocation = (lat: number, lng: number) => {
-    const newCenter = new window.naver.maps.LatLng(lat, lng);
-    window.map.setCenter(newCenter);
-  };
-
   const getCurrentViewCenter = () => {
     const center = window.map.getCenter();
     const { _lng, _lat } = center;
@@ -130,9 +125,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
   };
 
   const drawMarkers = (places: any) => {
-    popToastMessage('success', `반경에 ${places?.length}개의 화장실이 있어요`);
-    console.log('drawMarkers()');
-
+    // popToastMessage('success', `반경에 ${places?.length}개의 화장실이 있어요`);
     // 기존의 마커들을 삭제.
     markersRef.current.forEach((marker) => {
       marker.setMap(null);
@@ -151,7 +144,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
         },
       });
       // 이벤트리스너 등록
-      window.naver.maps.Event.addListener(marker, 'click', function (e) {
+      window.naver.maps.Event.addListener(marker, 'click', function(e) {
         triggerHaptic();
         openModal({
           component: ReviewBottomSheet,
