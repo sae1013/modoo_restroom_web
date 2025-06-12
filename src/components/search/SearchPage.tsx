@@ -117,7 +117,8 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
     const places = await fetchPlaces(lat, lng, 2000);
     setPlaces(places);
-    // drawMarkers(places);
+    popToastMessage('success', `반경에 ${places?.length}개의 화장실이 있어요`);
+
   };
 
   const createStaticHTML = (jsxElement) => {
@@ -125,7 +126,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
   };
 
   const drawMarkers = (places: any) => {
-    // popToastMessage('success', `반경에 ${places?.length}개의 화장실이 있어요`);
     // 기존의 마커들을 삭제.
     markersRef.current.forEach((marker) => {
       marker.setMap(null);

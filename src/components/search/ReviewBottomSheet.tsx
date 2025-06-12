@@ -65,6 +65,7 @@ const ReviewBottomSheet = (props) => {
           fontWeight: '600',
           fontSize: '18px',
           padding: '4px 16px 0',
+          marginBottom: '16px',
         })}>
           <p>{name}</p>
           <StarRating rating={5} containerSx={{ display: 'inline-block' }}></StarRating>
@@ -74,7 +75,7 @@ const ReviewBottomSheet = (props) => {
             marginLeft: '5px',
             color: '#757575',
           })}>{`(후기 ${data?.result?.reviewCount || 0}개)`}</span>
-          <Horizontal />
+
         </div>
       </BsHeader>
 
