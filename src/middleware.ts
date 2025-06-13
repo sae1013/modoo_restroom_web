@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { redirect } from 'next/navigation';
-
-const protectedRoutes = ['/search/:path*', '/my/:page*', '/auth/login', '/auth/signup'];
 
 export async function middleware(req: NextRequest) {
   // 정적 자산 (CSS, JS, 이미지 등)에 대한 요청은 예외 처리
@@ -33,5 +30,10 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: protectedRoutes,
+  matcher: [
+    '/search/:path*',
+    '/my/:page*',
+    '/auth/login',
+    '/auth/signup',
+  ],
 };

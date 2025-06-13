@@ -59,7 +59,6 @@ const Modal = () => {
           return (
             <React.Fragment key={key}>
               <div
-
                 style={{
                   zIndex: 2 * (i + 1),
                 }}

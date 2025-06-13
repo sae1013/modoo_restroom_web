@@ -11,7 +11,6 @@ const Wrapper = styled('div', {
     width: '100%',
     backgroundColor: '#fff',
     padding: '0 1rem',
-
   },
 });
 
@@ -19,4 +18,5 @@ const BsFooter = ({ children }: BsFooterProps) => {
   return <Wrapper>{children}</Wrapper>;
 };
 
+BsFooter.displayName = 'BsFooter';
 export default BsFooter;

@@ -11,7 +11,6 @@ const Wrapper = styled('div', {
     position: 'relative',
     paddingTop: '16px',
     paddingBottom: '4px',
-
   },
 });
 
@@ -35,13 +34,15 @@ const BsHeader = ({ onClose, children }: BsHeaderProps) => {
     <Wrapper>
       {/*<Handle onClick={onClose} />*/}
       <HapticWrapper>
-        <div className={css({
-          width: '35px',
-          height: '35px',
-          marginLeft: 'auto',
-          marginRight: '10px',
-
-        })} onClick={onClose}>
+        <div
+          className={css({
+            width: '35px',
+            height: '35px',
+            marginLeft: 'auto',
+            marginRight: '10px',
+          })}
+          onClick={onClose}
+        >
           <IoClose size={25} />
         </div>
       </HapticWrapper>
@@ -51,4 +52,5 @@ const BsHeader = ({ onClose, children }: BsHeaderProps) => {
   );
 };
 
+BsHeader.displayName = 'BsHeader';
 export default BsHeader;

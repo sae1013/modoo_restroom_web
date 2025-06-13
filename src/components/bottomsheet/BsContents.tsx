@@ -18,4 +18,5 @@ const BsContents = ({ children, ...props }: BsContentsProps) => {
   return <Wrapper {...props}>{children}</Wrapper>;
 };
 
+BsContents.displayName = 'BsContents';
 export default BsContents;
