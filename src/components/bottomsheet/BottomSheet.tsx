@@ -1,3 +1,4 @@
+'use client';
 import React, { ComponentType, ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
@@ -32,9 +33,9 @@ const BottomSheet = ({ children, onCloseCallback, ...props }: BottomSheetProps) 
 
   const childrenArray = React.Children.toArray(children);
 
-  const header = childrenArray.find((child) => React.isValidElement(child) && typeof child.type === 'function' && child.type.name === 'BsHeader');
-  const contents = childrenArray.find((child) => React.isValidElement(child) && typeof child.type === 'function' && child.type.name === 'BsContents');
-  const footer = childrenArray.find((child) => React.isValidElement(child) && typeof child.type === 'function' && child.type.name === 'BsFooter');
+  const header = childrenArray.find((child) => React.isValidElement(child) && typeof child.type === 'function' && (child.type as any).displayName === 'BsHeader');
+  const contents = childrenArray.find((child) => React.isValidElement(child) && typeof child.type === 'function' && (child.type as any).displayName === 'BsContents');
+  const footer = childrenArray.find((child) => React.isValidElement(child) && typeof child.type === 'function' && (child.type as any).displayName === 'BsFooter');
 
   useLayoutEffect(() => {
     // 콘텐츠 컨테이너의 높이를 측정하여 targetHeight에 저장
