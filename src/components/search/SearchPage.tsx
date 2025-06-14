@@ -27,6 +27,7 @@ import { IoMdSettings } from 'react-icons/io';
 import apiClient from '@/lib/apis/apiClient';
 import { GET_PLACE_API } from '@/lib/apis/command';
 import { moveMapToTargetLocation } from '@/utils/naverMapUtils';
+import { Place } from '@/store/place-store';
 
 type ICurrentLocation = {
   lat: number;
@@ -97,7 +98,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
   const fetchPlaces = async (lat: number, lng: number, radius: number) => {
     try {
-      const res = await apiClient.request(GET_PLACE_API, {
+      const res = await apiClient.request<Place[]>(GET_PLACE_API, {
         queryParams: {
           lat,
           lng,
@@ -117,7 +118,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
     const places = await fetchPlaces(lat, lng, 2000);
     setPlaces(places);
-    popToastMessage('success', `반경에 ${places?.length}개의 화장실이 있어요`);
+    popToastMessage('success', `반경에 ${places.length}개의 화장실이 있어요`);
 
   };
 

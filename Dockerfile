@@ -1,5 +1,5 @@
 # ── Stage 1: Builder ─────────────────────────────────────
-FROM node:22-slim AS builder
+FROM node:22 AS builder
 WORKDIR /app
 
 # ① 의존성 매니페스트 + Panda 설정 파일 먼저 복사
@@ -17,7 +17,7 @@ RUN yarn build
 
 
 # ── Stage 2: Runner ──────────────────────────────────────
-FROM node:22-slim AS runner
+FROM node:22 AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 

@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  web:
+    image: haewuso:web   # 미리 빌드해 둔 로컬 이미지 태그
+    container_name: haewuso
+#    env_file:
+#      - /Users/minwoojung/repo/modoo_toilet_web/.env
+#    environment:
+#      - NAVER_CLIENT_ID = ${NAVER_CLIENT_ID}
+#      - NEXT_PUBLIC_HAEWUSO_URL = ${NEXT_PUBLIC_HAEWUSO_URL}
+
+    ports:
+      - "3000:3000"
+    restart: on-failure
