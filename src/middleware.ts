@@ -22,9 +22,9 @@ export async function middleware(req: NextRequest) {
   }
 
   // 로그인이 필요한 페이지에 진입했을 때.
-  // if (!accessToken) {
-  //   return NextResponse.redirect(new URL('/auth/login', req.url));
-  // }
+  if (!accessToken) {
+    return NextResponse.redirect(new URL('/auth/login', req.url));
+  }
 
   return NextResponse.next();
 }
