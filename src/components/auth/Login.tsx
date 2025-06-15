@@ -62,10 +62,12 @@ const Login = () => {
         secure: process.env.NODE_ENV === 'production',  // https 환경에서만 전송
         sameSite: 'lax',        // CSRF 보호 레벨
       });
-
+      router.push('/search');
 
     } catch (err) {
-      console.log(err);
+      // err.response?.data?: message, code, statusCode: 401
+      console.log(err.response?.data?.message);
+      // TODO: 비밀번호 확인 모달
     }
 
   };
@@ -76,8 +78,8 @@ const Login = () => {
       router.push(`login?email=${encodedEmail}`);
     } else {
       // 로그인 처리
-      await handleLogin(_watchEmail, _watchPassword);
-      router.push('/search');
+      const email = decodeURIComponent(searchParams.get('email') || '');
+      await handleLogin(email, _watchPassword);
     }
   };
 
