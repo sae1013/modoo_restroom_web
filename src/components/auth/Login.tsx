@@ -10,6 +10,8 @@ import apiClient from '@/lib/apis/apiClient';
 import { SIGNIN_API } from '@/lib/apis/command';
 import Cookies from 'js-cookie';
 import { triggerHaptic } from '@/utils/nativeBridge';
+import useModal from '@/hooks/useModal';
+import ConfirmPopup from '@/components/popup/ConfirmPopup';
 
 const Login = () => {
   const [isPasswordStep, setIsPasswordStep] = useState(false);
@@ -20,7 +22,7 @@ const Login = () => {
     mode: 'onTouched',
     reValidateMode: 'onChange',
   });
-
+  const { openModal, closeModal } = useModal();
   const _watchEmail = watch('email');
   const _watchPassword = watch('password');
 
@@ -52,24 +54,34 @@ const Login = () => {
     try {
       const res = await apiClient.request(SIGNIN_API, {
         body: {
-          email, password,
+          email,
+          password,
         },
         withCredentials: true,
       });
       Cookies.set('access_token', res.result, {
-        expires: 3,             // 만료: 3일
-        path: '/',              // 모든 경로에서 접근 가능
-        secure: process.env.NODE_ENV === 'production',  // https 환경에서만 전송
-        sameSite: 'lax',        // CSRF 보호 레벨
+        expires: 3, // 만료: 3일
+        path: '/', // 모든 경로에서 접근 가능
+        secure: process.env.NODE_ENV === 'production', // https 환경에서만 전송
+        sameSite: 'lax', // CSRF 보호 레벨
       });
       router.push('/search');
-
     } catch (err) {
       // err.response?.data?: message, code, statusCode: 401
-      console.log(err.response?.data?.message);
+      openModal({
+        component: ConfirmPopup,
+        props: {
+          contents: err?.response?.data?.message,
+          confirmCallback: () => {
+            closeModal();
+          },
+        },
+        key: 'confirm',
+      });
+      return;
+
       // TODO: 비밀번호 확인 모달
     }
-
   };
 
   const handleNext = async () => {
@@ -91,10 +103,11 @@ const Login = () => {
         padding: '2rem',
       })}
     >
-
-      <div className={css({
-        marginTop: '3rem',
-      })}>
+      <div
+        className={css({
+          marginTop: '3rem',
+        })}
+      >
         <p
           className={css({
             fontWeight: 600,
@@ -137,7 +150,6 @@ const Login = () => {
               fontSize: '1.2rem',
               width: '100%',
               borderBottom: '2px solid #55CBCD',
-
             })}
           ></Input>
         ) : (
@@ -159,8 +171,7 @@ const Login = () => {
           ></Input>
         )}
       </div>
-      {formState?.errors?.email?.message &&
-        <InputError>{formState?.errors?.email?.message}</InputError>}
+      {formState?.errors?.email?.message && <InputError>{formState?.errors?.email?.message}</InputError>}
       <button
         disabled={disableBtn || false}
         onClick={() => {
@@ -185,7 +196,6 @@ const Login = () => {
       >
         {isPasswordStep ? '로그인' : '다음 >'}
       </button>
-
 
       {/* 이메일 주소 입력 하단 영역 */}
       <div>
