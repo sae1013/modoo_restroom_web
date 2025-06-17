@@ -78,8 +78,11 @@ const RegisterBottomSheet = (props) => {
               if (mode === 'newPlace') {
                 setPlaces((prev: any) => [...prev, data.result]);
               }
-              closeModal('success_register');
-              closeModal('register');
+              closeModal();
+              setTimeout(() => {
+                closeModal();
+              }, 200);
+
             },
           },
           key: 'success_register',

@@ -6,6 +6,7 @@ import { GrPrevious } from 'react-icons/gr';
 import { usePathname } from 'next/navigation';
 import { IoMdSettings } from 'react-icons/io';
 import HapticWrapper from '@/components/HapticWrapper';
+import { sizing } from '@mui/system';
 
 interface HeaderProps {
   data?: any;
@@ -61,11 +62,14 @@ const Header = ({ data }: HeaderProps) => {
   return (
     <div
       className={css({
+        // boxSizing: 'border-box',
         position: 'fixed',
         width: '100%',
-        height: '70px',
+        // height: '100px',
         display: 'flex',
         alignItems: 'center',
+        paddingTop: 'calc(var(--safe-area-insets-top, 0px) + 10px)',
+        // marginTop: 'var(--safe-area-insets-top, 0px)',
         paddingLeft: '16px',
         paddingRight: '16px',
         background: 'white',
