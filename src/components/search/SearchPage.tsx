@@ -321,7 +321,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
           className={css({
             zIndex: 99,
             position: 'fixed',
-            bottom: '70px',
+            bottom: 'calc(var(--safe-area-insets-top, 0px) + 55px)',
             left: '50%',
             transform: 'translateX(-50%)',
             display: 'flex',
@@ -343,7 +343,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
           className={css({
             zIndex: 99,
             position: 'fixed',
-            bottom: '30px',
+            bottom: 'calc(var(--safe-area-insets-bottom, 0px) + 10px)',
             right: '20px',
             padding: '8px',
             backgroundColor: '#fff',
