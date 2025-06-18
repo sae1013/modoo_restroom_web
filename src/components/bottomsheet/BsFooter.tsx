@@ -6,11 +6,12 @@ interface BsFooterProps {
 
 const Wrapper = styled('div', {
   base: {
-    position: 'absolute',
-    bottom: '10px',
+    position: 'relative',
     width: '100%',
     backgroundColor: '#fff',
     padding: '0 1rem',
+    paddingBottom: 'calc(var(--safe-area-insets-bottom, 0px) + 10px)',
+
   },
 });
 

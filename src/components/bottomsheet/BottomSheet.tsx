@@ -10,8 +10,7 @@ const Wrapper = styled(motion.div)<{ maxHeight: number }>`
     left: 0;
     bottom: 0;
     width: 100%;
-
-    max-height: ${({ maxHeight }) => `${maxHeight}px`}; /* ← 동적 max-height */
+        //max-height: ${({ maxHeight }) => `${maxHeight}px`}; /* ← 동적 max-height */
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     background-color: #fff;
@@ -42,7 +41,7 @@ const BottomSheet = ({ children, onCloseCallback, ...props }: BottomSheetProps) 
     const maxHeight = (window?.visualViewport?.height || 10) - 10;
 
     if (wrapperRef.current) {
-      setWrapperHeight(Math.min(wrapperRef.current.clientHeight, maxHeight));
+      // setWrapperHeight(Math.min(wrapperRef.current.clientHeight, maxHeight));
     }
   }, []);
   const variantOption = {
@@ -51,13 +50,13 @@ const BottomSheet = ({ children, onCloseCallback, ...props }: BottomSheetProps) 
     exit: { y: wrapperHeight + SMOOTH_BOTTOM_OFFSET },
   };
 
-  if (wrapperHeight <= 0) {
-    return (
-      <div ref={wrapperRef} style={{ visibility: 'hidden' }}>
-        {children}
-      </div>
-    );
-  }
+  // if (wrapperHeight <= 0) {
+  //   return (
+  //     <div ref={wrapperRef} style={{ visibility: 'hidden' }}>
+  //       {children}
+  //     </div>
+  //   );
+  // }
   return (
     <Wrapper
       {...props}
@@ -66,7 +65,6 @@ const BottomSheet = ({ children, onCloseCallback, ...props }: BottomSheetProps) 
       variants={variantOption}
       initial="hidden" // 초기 상태 지정
       animate="visible" // 나타날 때 상태 지정
-
       exit="exit"
       transition={{ type: 'spring', stiffness: 250, damping: 30 }}
     >
