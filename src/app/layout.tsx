@@ -83,7 +83,6 @@ export default async function RootLayout({
         .getPropertyValue('--safe-area-insets-top')
     );
       `
-
       }
     </Script>
 

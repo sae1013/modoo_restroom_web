@@ -11,6 +11,7 @@ const Wrapper = styled('div', {
     position: 'relative',
     paddingTop: '16px',
     paddingBottom: '4px',
+    flexGrow: 1,
   },
 });
 

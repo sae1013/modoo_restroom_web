@@ -105,7 +105,7 @@ const Login = () => {
     >
       <div
         className={css({
-          marginTop: '3rem',
+          marginTop: 'calc(var(--safe-area-insets-top, 0px) + 3rem)'
         })}
       >
         <p

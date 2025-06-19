@@ -12,11 +12,15 @@ const GpsTerm = () => {
     <BottomSheet>
       <BsHeader onClose={() => {
         closeModal('gpsTerm');
-      }}></BsHeader>
+      }}>
+        <p className={css({
+          fontWeight: 700,
+          padding: '16px 16px 8px',
+          fontSize: '18px',
+        })}>위치정보기반 서비스 이용약관</p>
+      </BsHeader>
       <BsContents>
         <div className={css({
-          height: '78vh',
-          overflow: 'scroll',
           paddingBottom: '50px',
         })}>
           <p>제1조 (목적)<br />

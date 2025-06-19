@@ -12,7 +12,7 @@ const Wrapper = styled('div', {
     backgroundColor: '#fff',
     padding: '0 1rem',
     paddingBottom: 'calc(var(--safe-area-insets-bottom, 0px) + 10px)',
-
+    flexGrow:1,
   },
 });
 

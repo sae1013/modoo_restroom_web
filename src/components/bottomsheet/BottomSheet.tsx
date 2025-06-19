@@ -8,7 +8,7 @@ const Wrapper = styled(motion.div)<{ maxHeight: number }>`
     display: flex;
     flex-direction: column;
     position: fixed;
-    left: 0;
+    //left: 0;
     bottom: 0;
     width: 100%;
     max-height: 90vh;
@@ -16,7 +16,6 @@ const Wrapper = styled(motion.div)<{ maxHeight: number }>`
     border-top-right-radius: 8px;
     background-color: #fff;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.6);
-    overflow: hidden;
 `;
 
 interface BottomSheetProps {
