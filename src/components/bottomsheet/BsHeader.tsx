@@ -27,11 +27,12 @@ const Handle = styled('div', {
 interface BsHeaderProps {
   onClose: () => void;
   children?: React.ReactNode;
+  className?: any;
 }
 
-const BsHeader = ({ onClose, children }: BsHeaderProps) => {
+const BsHeader = ({ onClose, children, ...props }: BsHeaderProps) => {
   return (
-    <Wrapper>
+    <Wrapper {...props}>
       {/*<Handle onClick={onClose} />*/}
       <HapticWrapper>
         <div
