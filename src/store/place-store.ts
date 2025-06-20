@@ -22,10 +22,12 @@ export const createPlaceStore = (initState: PlaceState = defaultIntialState) => 
     return {
       ...initState,
       setPlaces: (places: Place) => set(() => ({ places: places })),
-      addPlace: (place) => {
-        set((state) => ({
-          places: [...state.places, place],
-        }));
+      addPlace: (place: Place) => {
+        set((state) => {
+          // 중복제거하고 삽입
+          const filteredPlaces = state.places.filter((p) => p.id !== place.id);
+          return { places: [...filteredPlaces, place] };
+        });
       },
     };
   });
