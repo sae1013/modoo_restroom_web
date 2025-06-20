@@ -1,14 +1,14 @@
 import { FaMapMarkerAlt } from 'react-icons/fa';
 
-
 import React from 'react';
 
-const Marker = () => {
+const Marker = (props: { color: string }) => {
+  const { color } = props;
+
   return (
     <div className={'custom-marker'}>
-      <FaMapMarkerAlt size={30} fill="#F44336" />
+      <FaMapMarkerAlt size={30} fill={color} />
     </div>
   );
 };
 export default Marker;
-

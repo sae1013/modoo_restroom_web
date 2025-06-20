@@ -40,7 +40,7 @@ interface SearchPageProps {
 
 const SearchPage = ({ data }: SearchPageProps) => {
   const { openModal, closeModal } = useModal();
-  const { places, setPlaces } = usePlaceStore((state) => state);
+  const { places, setPlaces, selectedPlaceId, setSelectedPlaceId } = usePlaceStore((state) => state);
   const [currentLocation, setCurrentLocation] = useState<ICurrentLocation>({
     lat: 37.48145437352808,
     lng: 127.12379119155949,
@@ -68,6 +68,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
 
       // 이미 존재하는 장소를 찍은경우
       if (existPlace) {
+        setSelectedPlaceId(existPlace.id);
         openModal({
           component: ReviewBottomSheet,
           props: { placeId: existPlace?.id, name, roadAddress, jibunAddress, lat, lng },
@@ -76,6 +77,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
         return;
       }
 
+      setSelectedPlaceId(-1);
       openModal({
         component: EmptyBottomSheet,
         props: { name, roadAddress, jibunAddress, lat, lng, setPlaces },
@@ -119,7 +121,6 @@ const SearchPage = ({ data }: SearchPageProps) => {
     const places = await fetchPlaces(lat, lng, 2000);
     setPlaces(places);
     popToastMessage('success', `반경에 ${places.length}개의 화장실이 있어요`);
-
   };
 
   const createStaticHTML = (jsxElement) => {
@@ -134,18 +135,19 @@ const SearchPage = ({ data }: SearchPageProps) => {
     markersRef.current = [];
 
     places.forEach((place) => {
+      const highlightColor = place.id === selectedPlaceId ? '#3498db' : '#F44336';
       const position = new window.naver.maps.LatLng(place.lat, place.lng);
       const marker = new window.naver.maps.Marker({
         position,
         map: window.map,
         title: place.id,
         icon: {
-          content: createStaticHTML(<Marker />),
+          content: createStaticHTML(<Marker color={highlightColor} />),
           anchor: new window.naver.maps.Point(15, 15),
         },
       });
       // 이벤트리스너 등록
-      window.naver.maps.Event.addListener(marker, 'click', function(e) {
+      window.naver.maps.Event.addListener(marker, 'click', function (e) {
         triggerHaptic();
         openModal({
           component: ReviewBottomSheet,
@@ -210,6 +212,20 @@ const SearchPage = ({ data }: SearchPageProps) => {
     const { lat, lng } = currentLocation;
     markCurrentPosition(lat, lng);
   }, [currentLocation]);
+
+  // selectedPlaceId가 바뀔때 아이콘 업데이트 이로직은 좀생각해보게
+  // useEffect(() => {
+  //   if(selectedPlaceId === null){
+  //     // NOTE: 다시 원복효과...
+  //   }
+  //   markersRef.current.forEach((marker) => {
+  //     const isSelected = marker.getTitle() === selectedPlaceId;
+  //     if (isSelected) {
+  //       marker.setIcon(<Marker color={'#3498db'} />);
+  //       return;
+  //     }
+  //   });
+  // }, [selectedPlaceId]);
 
   /**
    * ----------------위치 추적 hooks 등록----------------------
