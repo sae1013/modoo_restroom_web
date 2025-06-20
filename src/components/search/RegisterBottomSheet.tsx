@@ -19,21 +19,12 @@ import useToast from '@/hooks/useToast';
 import { placeStatusOp } from '@/utils/mapper';
 import { useCreateReview } from '@/lib/apis/review';
 import AlertPopup from '@/components/popup/AlertPopup';
+import { usePlaceStore } from '@/provider/root-store-provider';
 
 const RegisterBottomSheet = (props) => {
   const { closeModal } = useModal();
   const { popToastMessage } = useToast();
-  const {
-    name = '',
-    roadAddress = '',
-    jibunAddress = '',
-    lat = 0,
-    lng = 0,
-    placeId = -1,
-    setPlaces,
-    mode = 'existPlace',
-    ...otherProps
-  } = props;
+  const { name = '', roadAddress = '', jibunAddress = '', lat = 0, lng = 0, placeId = -1, mode = 'existPlace', ...otherProps } = props;
   // formData
   const [isSelectOp1, setSelectOp1] = useState(false);
   const [isSelectOp2, setSelectOp2] = useState(false);
@@ -44,6 +35,8 @@ const RegisterBottomSheet = (props) => {
 
   const [rating, setRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
+
+  const { addPlace } = usePlaceStore((state) => state);
 
   const createReviewMutation = useCreateReview();
   const { openModal } = useModal();
@@ -76,13 +69,12 @@ const RegisterBottomSheet = (props) => {
             contents: '성공적으로 등록했어요',
             onCloseCallback: () => {
               if (mode === 'newPlace') {
-                setPlaces((prev: any) => [...prev, data.result]);
+                addPlace(data.result);
               }
               closeModal();
               setTimeout(() => {
                 closeModal();
               }, 200);
-
             },
           },
           key: 'success_register',
@@ -96,12 +88,13 @@ const RegisterBottomSheet = (props) => {
       <BsHeader
         onClose={() => {
           closeModal();
-
         }}
       ></BsHeader>
-      <BsContents className={css({
-        overflow: 'scroll',
-      })}>
+      <BsContents
+        className={css({
+          overflow: 'scroll',
+        })}
+      >
         <div>
           <p
             className={css({

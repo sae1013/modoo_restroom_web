@@ -32,8 +32,8 @@ const StyledButton = styled('button', {
         color: 'white',
         fontWeight: '600',
         _disabled: {
-          opacity: 0.5,               // 80%
-          cursor: 'not-allowed',      // 클릭 막힌 커서
+          opacity: 0.5, // 80%
+          cursor: 'not-allowed', // 클릭 막힌 커서
         },
       },
     },
@@ -45,11 +45,19 @@ const StyledButton = styled('button', {
 });
 
 const Button = ({ mode, onClick, ...props }: ButtonProps) => {
-  return <StyledButton {...props} onClick={() => {
-    if (mode === 'haptic') {
-      triggerHaptic();
-    }
-    onClick();
-  }}>{props.children}</StyledButton>;
+  return (
+    <StyledButton
+      {...props}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (mode === 'haptic') {
+          triggerHaptic();
+        }
+        onClick();
+      }}
+    >
+      {props.children}
+    </StyledButton>
+  );
 };
 export default Button;

@@ -18,7 +18,7 @@ class ApiClient {
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_HAEWUSO_URL : 'http://192.168.219.128:8000',
+      baseURL: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_HAEWUSO_URL : 'https://api.haewuso.shop',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
@@ -48,7 +48,6 @@ class ApiClient {
   public async request<T>(command: Command, option: RequestOption = {}): Promise<T> {
     let { path, method, baseUrl } = command;
     const { pathParams, queryParams } = option;
-    console.log(pathParams, queryParams);
     // 1) pathParam
     if (pathParams) {
       Object.entries(pathParams).forEach(([key, value]) => {

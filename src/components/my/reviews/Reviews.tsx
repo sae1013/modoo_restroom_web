@@ -24,13 +24,16 @@ interface ReviewsProps {
 const Reviews = ({ reviews }: ReviewsProps) => {
   const { mutate: deleteReview, isPending } = useDeleteReview();
   const { openModal, closeModal } = useModal();
-  const { addPlace } = usePlaceStore((state) => state);
+  const { addPlace, setSelectedPlaceId } = usePlaceStore((state) => state);
 
   const router = useRouter();
   const handleViewReview = (review: any) => {
-    const { lat, lng, place } = review;
+    const { place } = review;
+    const { lat, lng } = place;
+
     // 장소를 전역에 추가.
     addPlace(review.place);
+    setSelectedPlaceId(place?.id);
 
     // 메인 페이지로 이동
     setTimeout(() => {
@@ -38,6 +41,9 @@ const Reviews = ({ reviews }: ReviewsProps) => {
     });
 
     // 해당 위치로 지도 이동 .
+    /**
+     * 개선: 메인페이지로 돌아가는경우 현재 내위치로 이동하고 타겟 장소로 이동해서 플리커링같이 이상함이있음.
+     */
     setTimeout(() => {
       moveMapToTargetLocation(lat, lng);
     }, 500);
@@ -57,11 +63,10 @@ const Reviews = ({ reviews }: ReviewsProps) => {
         key: 'reviewBottomSheet',
       });
     }, 500);
-
   };
 
   const handleDeleteReview = async (reviewId: number) => {
-    console.log(reviewId);
+    console.log('삭제하기??');
 
     openModal({
       component: ConfirmPopup,
@@ -117,7 +122,8 @@ const Reviews = ({ reviews }: ReviewsProps) => {
             <li
               key={review.id}
               className={css({ borderBottom: '2px solid #f2f2f2' })}
-              onClick={() => {
+              onClick={(event) => {
+                event.stopPropagation();
                 handleViewReview(review);
               }}
             >
@@ -148,8 +154,7 @@ const Reviews = ({ reviews }: ReviewsProps) => {
 
                   <Button
                     variant="default"
-                    onClick={(e: React.MouseEvent) => {
-                      e.stopPropagation();
+                    onClick={() => {
                       handleDeleteReview(review.id);
                     }}
                   >

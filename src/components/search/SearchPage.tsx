@@ -134,7 +134,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
     });
     markersRef.current = [];
 
-    places.forEach((place) => {
+    (places || []).forEach((place) => {
       const highlightColor = place.id === selectedPlaceId ? '#3498db' : '#F44336';
       const position = new window.naver.maps.LatLng(place.lat, place.lng);
       const marker = new window.naver.maps.Marker({
@@ -147,8 +147,9 @@ const SearchPage = ({ data }: SearchPageProps) => {
         },
       });
       // 이벤트리스너 등록
-      window.naver.maps.Event.addListener(marker, 'click', function (e) {
+      window.naver.maps.Event.addListener(marker, 'click', function () {
         triggerHaptic();
+        setSelectedPlaceId(place.id);
         openModal({
           component: ReviewBottomSheet,
           props: {
@@ -213,19 +214,23 @@ const SearchPage = ({ data }: SearchPageProps) => {
     markCurrentPosition(lat, lng);
   }, [currentLocation]);
 
-  // selectedPlaceId가 바뀔때 아이콘 업데이트 이로직은 좀생각해보게
-  // useEffect(() => {
-  //   if(selectedPlaceId === null){
-  //     // NOTE: 다시 원복효과...
-  //   }
-  //   markersRef.current.forEach((marker) => {
-  //     const isSelected = marker.getTitle() === selectedPlaceId;
-  //     if (isSelected) {
-  //       marker.setIcon(<Marker color={'#3498db'} />);
-  //       return;
-  //     }
-  //   });
-  // }, [selectedPlaceId]);
+  // 선택된 장소에 대한 마커 하이라이트 위 방식대로하면 문제 있을 것 같은데...
+  useEffect(() => {
+    markersRef.current.forEach((marker) => {
+      const isSelected = marker.getTitle() === selectedPlaceId;
+      if (isSelected) {
+        marker.setIcon({
+          content: createStaticHTML(<Marker color={'#3498db'} />),
+          anchor: new window.naver.maps.Point(15, 15),
+        });
+      } else {
+        marker.setIcon({
+          content: createStaticHTML(<Marker color={'#F44336'} />),
+          anchor: new window.naver.maps.Point(15, 15),
+        });
+      }
+    });
+  }, [selectedPlaceId]);
 
   /**
    * ----------------위치 추적 hooks 등록----------------------
