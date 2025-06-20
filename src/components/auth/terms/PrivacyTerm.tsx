@@ -22,8 +22,6 @@ const PrivacyTerm = () => {
       </BsHeader>
       <BsContents>
         <div className={css({
-          height: '78vh',
-          overflow: 'scroll',
           paddingBottom: '50px',
 
         })}>

@@ -2,6 +2,7 @@ import { styled } from '../../../styled-system/jsx';
 
 interface BsFooterProps {
   children?: React.ReactNode;
+  className?: any;
 }
 
 const Wrapper = styled('div', {
@@ -11,12 +12,12 @@ const Wrapper = styled('div', {
     backgroundColor: '#fff',
     padding: '0 1rem',
     paddingBottom: 'calc(var(--safe-area-insets-bottom, 0px) + 10px)',
-
+    flexGrow:1,
   },
 });
 
-const BsFooter = ({ children }: BsFooterProps) => {
-  return <Wrapper>{children}</Wrapper>;
+const BsFooter = ({ children, ...props }: BsFooterProps) => {
+  return <Wrapper {...props}>{children}</Wrapper>;
 };
 
 BsFooter.displayName = 'BsFooter';

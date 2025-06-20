@@ -167,7 +167,6 @@ function Signup() {
   };
 
   const onSubmit: SubmitHandler<SignupForm> = async (data) => {
-    console.log('submit', data);
     const body = {
       email: data.email,
       phoneNumber: data.phoneNumber || '',
@@ -200,6 +199,8 @@ function Signup() {
   return (
     <form
       className={css({
+        paddingTop: 'calc(var(--safe-area-insets-top, 0px))',
+        paddingBottom: 'calc(var(--safe-area-insets-Bottom, 0px))',
         height: '100%',
         overflowY: 'scroll',
       })}
@@ -241,7 +242,8 @@ function Signup() {
         {errors?.email?.message && <InputError>{errors?.email?.message}</InputError>}
       </Section>
 
-      <Section position="relative" backgroundColor={isValidEmail ? '#F2F2F2' : '#fff'} color={isValidEmail ? '#9E9E9E' : '#333'}>
+      <Section position="relative" backgroundColor={isValidEmail ? '#F2F2F2' : '#fff'}
+               color={isValidEmail ? '#9E9E9E' : '#333'}>
         <Input
           placeholder="인증번호를 입력해주세요."
           type="number"
@@ -367,7 +369,8 @@ function Signup() {
             >
               남
             </span>
-            <RadioCheckBox value="male" marginTop="10px" alignSelf="flex-start" {...register('gender', { required: '옵션을 선택해주세요.' })} />
+            <RadioCheckBox value="male" marginTop="10px"
+                           alignSelf="flex-start" {...register('gender', { required: '옵션을 선택해주세요.' })} />
           </label>
 
           <label
@@ -388,7 +391,8 @@ function Signup() {
             >
               여
             </span>
-            <RadioCheckBox {...register('gender', { required: '옵션을 선택해주세요.' })} value="female" marginTop="10px" alignSelf="flex-start" />
+            <RadioCheckBox {...register('gender', { required: '옵션을 선택해주세요.' })} value="female" marginTop="10px"
+                           alignSelf="flex-start" />
           </label>
         </fieldset>
         {errors?.gender?.message && <InputError>{errors?.gender?.message}</InputError>}
@@ -427,7 +431,7 @@ function Signup() {
 
         <div
           className={css({
-            paddingBottom: '80px',
+            paddingBottom: '20px',
           })}
         >
           <div

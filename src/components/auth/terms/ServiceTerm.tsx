@@ -22,9 +22,8 @@ const ServiceTerm = () => {
       </BsHeader>
       <BsContents>
         <div className={css({
-          height: '78vh',
           paddingBottom: '50px',
-          overflow: 'scroll',
+
         })}>
           <p>제1조 (목적)<br />
             이 약관은 해우소(이하 “회사”)가 제공하는 위치정보 기반 주변 화장실 안내 서비스(이하 “서비스”)의 이용조건 및 절차, 회사와 이용자의 권리·의무·책임사항 등을 규정함을 목적으로 합니다.

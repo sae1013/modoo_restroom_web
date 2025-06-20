@@ -56,8 +56,12 @@ const ReviewBottomSheet = (props) => {
     return null;
   }
   return (
-    <BottomSheet {...props}>
-      <BsHeader onClose={() => {
+    <BottomSheet {...props} className={css({
+      height: '90vh',
+    })}>
+      <BsHeader className={css({
+        flexGrow: 1,
+      })} onClose={() => {
         closeModal();
       }}>
 
@@ -77,20 +81,17 @@ const ReviewBottomSheet = (props) => {
           })}>{`(후기 ${data?.result?.reviewCount || 0}개)`}</span>
 
         </div>
-      </BsHeader>
-
-      <BsContents>
         <div className={css({
-          width: '100%',
-          overflowX: 'scroll',
+          paddingLeft: '10px',
+          overflow: 'scroll',
         })}>
           <div className={css({
             display: 'flex',
-            gap: '10px',
             flexWrap: 'wrap',
             width: 'max-content',
-            overflowX: 'scroll',
-            marginBottom: '10px',
+            '& > *:not(:last-child)': {
+              marginRight: '10px',
+            },
           })}>
             <FilterButton variant={isSelectOp1 ? 'selected' : ''} onClick={() => {
               setSelectOp1(prev => !prev);
@@ -127,16 +128,19 @@ const ReviewBottomSheet = (props) => {
 
           </div>
         </div>
+      </BsHeader>
 
+      <BsContents className={css({
+        overflow: 'scroll',
+        flexGrow: 8,
+      })}>
         <Horizontal />
 
         <div className={css({
             marginTop: '8px',
-            maxHeight: '550px',
-            paddingBottom: '180px',
+            paddingBottom: '40px',
             overflowY: 'scroll',
             pointerEvents: 'auto',
-
             '& > div': {
               marginTop: '14px',
             },
@@ -164,7 +168,9 @@ const ReviewBottomSheet = (props) => {
 
         </div>
       </BsContents>
-      <BsFooter>
+      <BsFooter className={css({
+        flexGrow: 1,
+      })}>
         <Button variant="wide" mode="haptic" onClick={() => {
           openModal({
             component: RegisterBottomSheet,
