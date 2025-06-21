@@ -147,7 +147,7 @@ const SearchPage = ({ data }: SearchPageProps) => {
         },
       });
       // 이벤트리스너 등록
-      window.naver.maps.Event.addListener(marker, 'click', function () {
+      window.naver.maps.Event.addListener(marker, 'click', function() {
         triggerHaptic();
         setSelectedPlaceId(place.id);
         openModal({

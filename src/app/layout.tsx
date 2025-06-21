@@ -56,7 +56,9 @@ export default async function RootLayout({
         <RootStoreProvider userData={initUser}>
           <Modal></Modal>
           <HeaderLayout></HeaderLayout>
-          <Toaster></Toaster>
+          <Toaster containerStyle={{
+            top: 'calc(var(--safe-area-insets-top, 0px) + 5px)',
+          }}></Toaster>
           <AnimationPageRoute>
             {children}
           </AnimationPageRoute>
