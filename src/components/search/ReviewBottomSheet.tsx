@@ -72,7 +72,7 @@ const ReviewBottomSheet = (props) => {
           marginBottom: '16px',
         })}>
           <p>{name}</p>
-          <StarRating rating={5} containerSx={{ display: 'inline-block' }}></StarRating>
+          <StarRating rating={data?.result?.ratingAvg || 0} containerSx={{ display: 'inline-block' }}></StarRating>
           <span className={css({
             fontSize: '14px',
             display: 'inline-block',

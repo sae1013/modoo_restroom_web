@@ -7,8 +7,6 @@ import { FaUserCircle } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 import { MouseEvent } from 'react';
 import HapticWrapper from '@/components/HapticWrapper';
-import clsx from 'clsx';
-import styles from './BottomNav.module.css';
 
 const BottomNav = () => {
   const router = useRouter();
@@ -18,7 +16,7 @@ const BottomNav = () => {
     router.push(path || '');
   };
   return (
-    // <div className={styles.bottomNav}>
+
     <div className={css({
       zIndex: 99,
       position: 'fixed',
@@ -30,8 +28,6 @@ const BottomNav = () => {
       left: '50%',
       transform: 'translateX(-50%)',
       borderRadius: '30px',
-      // borderTopRightRadius: '30px',
-      // borderTopLeftRadius: '30px',
       boxShadow: '0px 0px 5px rgba(0,0,0,0.4)',
       backdropFilter: 'blur(10px)',
     })}>
