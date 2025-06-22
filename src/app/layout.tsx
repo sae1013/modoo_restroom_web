@@ -89,7 +89,7 @@ export default async function RootLayout({
     </Script>
 
     <Script
-      src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpClientId=${process.env.NAVER_CLIENT_ID}&submodules=geocoder`}
+      src={`https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${process.env.NAVER_CLIENT_ID}&submodules=geocoder`}
       strategy={'beforeInteractive'}></Script>
     </body>
     </html>
