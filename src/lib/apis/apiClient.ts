@@ -18,7 +18,7 @@ class ApiClient {
 
   constructor() {
     this.axiosInstance = axios.create({
-      baseURL: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_HAEWUSO_URL : 'https://api.haewuso.shop',
+      baseURL: process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_HAEWUSO_URL : 'https://localhost:8000',
       timeout: 10000,
       headers: {
         'Content-Type': 'application/json',
